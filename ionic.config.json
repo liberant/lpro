@@ -1,0 +1,8 @@
+{
+  "name": "lpro",
+  "app_id": "080aac60",
+  "type": "ionic-angular",
+  "integrations": {
+    "cordova": {}
+  }
+}
