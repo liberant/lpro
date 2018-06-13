@@ -1,11 +1,8 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { Wine } from '../../models/wine-model';
-import { Observable } from 'rxjs';
-
 
 /**
- * Generated class for the ProductsPage page.
+ * Generated class for the LoginPage page.
  *
  * See https://ionicframework.com/docs/components/#navigation for more info on
  * Ionic pages and navigation.
@@ -13,21 +10,16 @@ import { Observable } from 'rxjs';
 
 @IonicPage()
 @Component({
-  selector: 'page-products',
-  templateUrl: 'products.html',
+  selector: 'page-login',
+  templateUrl: 'login.html',
 })
-export class ProductsPage {
+export class LoginPage {
 
-public productList: Observable<Wine[]>;
- 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad ProductsPage');
-  
+    console.log('ionViewDidLoad LoginPage');
   }
-
-
 
 }

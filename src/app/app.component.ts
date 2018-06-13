@@ -3,6 +3,8 @@ import { Platform, MenuController, Nav } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
+import { AngularFireAuth } from 'angularfire2/auth';
+
 import { HomePage } from '../pages/home/home';
 @Component({
   templateUrl: 'app.html'
@@ -10,13 +12,15 @@ import { HomePage } from '../pages/home/home';
 export class LpApp {
   @ViewChild(Nav) nav: Nav;
 
-  rootPage:any = HomePage;
+  rootPage:any;
   pages: Array<{title: string, component: any}>;
 
   constructor(public platform: Platform,
               public statusBar: StatusBar, 
               public splashScreen: SplashScreen, 
-              public menu: MenuController) {
+              public menu: MenuController,
+              afAuth: AngularFireAuth
+            ) {
 
     this.initializeApp();
 
@@ -25,6 +29,13 @@ export class LpApp {
       { title: 'Producers', component: 'ProducerPage' },
       { title: 'Retailers', component: 'RetailerPage' }
     ];
+
+    const authListener = afAuth.authState.subscribe(user => { if (user) {
+      this.rootPage = 'HomePage';
+      authListener.unsubscribe(); }else{
+      this.rootPage = 'LoginPage';
+      authListener.unsubscribe(); }
+      });
   }
 
   initializeApp() {
