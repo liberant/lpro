@@ -20,6 +20,7 @@ import { LpApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { AuthProvider } from '../providers/auth/auth';
 import { SettingsProvider } from '../providers/settings/settings';
+import { UsersProvider } from '../providers/users/users';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { SettingsProvider } from '../providers/settings/settings';
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     AuthProvider,
-    SettingsProvider
+    SettingsProvider,
+    UsersProvider
   ]
 })
 export class AppModule {}

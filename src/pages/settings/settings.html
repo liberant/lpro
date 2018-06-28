@@ -11,30 +11,47 @@
 
 
 <ion-content>
-  <ion-grid>
-    <ion-row>
-      <ion-col>
-        <ion-item>
-          <ion-label floating>New Region</ion-label>
-          <ion-input text [(ngModel)]="newRegion.name"></ion-input>
-        <button ion-button item-right icon-only (click)="settingsProvider.addRegion(newRegion)">
-          <ion-icon name="add"></ion-icon>
-        </button>
+  <ion-list>
+    <ion-list-header>
+    <button ion-item icon-right (click)="toggleShow('region')">Region List 
+        <ion-icon *ngIf="show.region === true" small name="arrow-dropdown"></ion-icon>
+          <ion-icon *ngIf="show.region === false" small name="arrow-dropleft">
+      </ion-icon></button> 
+    </ion-list-header>
+    <div *ngIf="show.region === true">
+      <ion-item>
+        <ion-label floating>Add New</ion-label>
+        <ion-input [(ngModel)]="region" (ionFocus)="onFocus('region')"></ion-input>
+        <button ion-button item-end icon-only (click)="add('region')"><ion-icon small name="add-circle"></ion-icon></button>
       </ion-item>
+    <ion-item *ngFor="let item of regionList | async">
+        <button ion-button item-start icon-only (click)="edit('region', item)"><ion-icon small name="cog"></ion-icon></button>
+          {{ item.name }}
+          <button ion-button item-end icon-only (click)="rem('region', item.id)"><ion-icon small name="trash"></ion-icon></button>
+    </ion-item>
+  </div>
+  </ion-list>
+  <ion-item-divider color="light"></ion-item-divider>
+  <ion-list>
+      <ion-list-header>
+        <button ion-item icon-end (click)="toggleShow('variety')">Variety List 
+          <ion-icon *ngIf="show.variety === true" small name="arrow-dropdown"></ion-icon>
+            <ion-icon *ngIf="show.variety === false" small name="arrow-dropleft">
+        </ion-icon></button> 
+      </ion-list-header>
+      <div *ngIf="show.variety === true">
+      <ion-item>
+          <ion-label floating>Add New</ion-label>
+          <ion-input [(ngModel)]="variety" (ionFocus)="onFocus('variety')"></ion-input>
+          <button ion-button item-end icon-only (click)="add('variety')"><ion-icon name="add-circle"></ion-icon></button>
+        </ion-item>
+      <ion-item *ngFor="let item of varietyList | async">
+          <button ion-button item-start icon-only (click)="edit('variety', item)"><ion-icon name="cog"></ion-icon></button>
+            {{ item.name }}
+            <button ion-button item-end icon-only (click)="rem('variety', item.id)"><ion-icon name="trash"></ion-icon></button>
+      </ion-item>
+      </div>
+    </ion-list>
 
-      </ion-col>
-      <ion-col>
-        <ion-list>
-          <ion-item *ngFor="let region of regionsList | async">
-            <p>{{region.name}}</p>
-            <button ion-button item-right icon-only (click)="editRegion(region)">
-              <ion-icon name="add"></ion-icon></button>
-            <button ion-button item-right icon-only (click)="settingsProvider.delRegion(region)">
-              <ion-icon name="trash"></ion-icon></button>
-          </ion-item>
-        </ion-list>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
  
 </ion-content>

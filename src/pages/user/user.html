@@ -1,0 +1,100 @@
+<!--
+  Generated template for the UserFormPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>userForm</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+  <ion-content padding class="user-form-page">
+
+    <ng-container *ngIf="(auth.user) || {} as user">
+      <form [formGroup]="userForm" *ngIf="!user.uid" (ngSubmit)="editUser()">
+  
+        <h3>User Details</h3>
+  
+        <ion-item>
+          <ion-label stacked>Your Contact Email address</ion-label>
+          <ion-input formControlName="email" type="email" placeholder="Your email address">
+          </ion-input>
+        </ion-item>
+        <ion-item class="error-message" *ngIf="!userForm.controls.email.valid &&
+                userForm.controls.email.dirty">
+          <p>Please enter a valid email address.</p>
+        </ion-item>
+  
+        <ion-item>
+          <ion-label stacked>Password</ion-label>
+          <ion-input formControlName="password" type="password" placeholder="Your password">
+          </ion-input>
+        </ion-item>
+        <ion-item class="error-message" *ngIf="!userForm.controls.password.valid  &&
+                userForm.controls.password.dirty">
+          <p>Your password needs more than 6 characters.</p>
+        </ion-item>
+  
+        <h3>A few more details about you</h3>
+  
+        <ion-item>
+          <ion-label stacked>Your First Name</ion-label>
+          <ion-input formControlName="firstName" type="text" placeholder="Firstname">
+          </ion-input>
+        </ion-item>
+        <ion-item class="error-message" *ngIf="!userForm.controls.firstName.valid &&
+                userForm.controls.firstName.dirty">
+          <p>Please enter a valid name.</p>
+        </ion-item>
+  
+        <ion-item>
+          <ion-label stacked>Your Last Name</ion-label>
+          <ion-input formControlName="lastName" type="text" placeholder="Lastname">
+          </ion-input>
+        </ion-item>
+        <ion-item class="error-message" *ngIf="!userForm.controls.lastName.valid &&
+                  userForm.controls.lastName.dirty">
+          <p>Please enter a valid name.</p>
+        </ion-item>
+  
+        <ion-item>
+          <ion-label stacked>Business Name</ion-label>
+          <ion-input formControlName="busName" type="text" placeholder="Displayname">
+          </ion-input>
+        </ion-item>
+        <ion-item class="error-message" *ngIf="!userForm.controls.displayName.valid &&
+                    userForm.controls.displayName.dirty">
+          <p>Please enter a valid name.</p>
+        </ion-item>
+  
+        <ion-item>
+          <ion-label stacked>Phone Number</ion-label>
+          <ion-input formControlName="phone" type="tel" placeholder="XXXX XXX XXX">
+          </ion-input>
+        </ion-item>
+        <ion-item class="error-message" *ngIf="!userForm.controls.phone.valid &&
+                      userForm.controls.phone.dirty">
+          <p>Please enter a valid phone number.</p>
+        </ion-item>
+  
+        <ion-item>
+          <ion-label stacked>Business Type</ion-label>
+          <ion-select interface="popover" formControlName="type">
+            <ion-option value="retailer">Retailer</ion-option>
+            <ion-option value="supplier">Supplier</ion-option>
+          </ion-select>
+        </ion-item>
+        <ion-item class="error-message" *ngIf="!userForm.controls.type.valid">
+          <p>You have to select a business type</p>
+        </ion-item>
+  
+        <button ion-button type="submit" [disabled]="!userForm.valid">Submit</button>
+  
+      </form>
+      </ng-container>
+</ion-content>

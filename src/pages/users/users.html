@@ -15,4 +15,13 @@
 
 <ion-content padding>
 
+    <ion-list>
+        <ion-list-header>
+          Users
+        </ion-list-header>
+        <ion-item *ngFor="let user of usersList | async">
+              {{ user.firstName }} {{ user.lastName }}
+        </ion-item>
+      </ion-list>
+
 </ion-content>

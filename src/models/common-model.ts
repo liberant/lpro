@@ -11,3 +11,8 @@ export interface Region {
     id?: string;
     name: string;
 }
+export interface Item {
+    id?: string,
+    name: string,
+    type?: string,
+    }

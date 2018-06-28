@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { Component, HostListener } from '@angular/core';
+import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 import { SettingsProvider } from '../../providers/settings/settings';
-import { Region } from '../../models/common-model';
+import { Item } from '../../models/common-model';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -12,21 +12,114 @@ import { map } from 'rxjs/operators';
   templateUrl: 'settings.html',
 })
 export class SettingsPage {
-  newRegion: Region;
-regionsList: Observable<Region[]>;
-  constructor(public navCtrl: NavController, public navParams: NavParams, public settingsProvider: SettingsProvider) {
+regionList: Observable<Item[]>;
+varietyList: Observable<Item[]>;
+variety: string;
+region: string;
+focused: string;
+  show: {
+    variety: boolean;
+    region: boolean;
+  }
+  constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController, public sp: SettingsProvider) {
+    this.show = {variety: true, region: true }
+  }
+  @HostListener('window:keyup', ['$event'])
+  keyEvent(event: KeyboardEvent): void {
+    console.log(event);
+    if (event.keyCode === 13 && this[this.focused] != null) {
+      
+      this.add(this.focused)
+    }
+    event.stopPropagation();
+
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad SettingsPage');
-    this.regionsList = this.settingsProvider.getRegionsList().snapshotChanges().pipe(
+    this.regionList = this.sp.get('region').snapshotChanges().pipe(
       map(actions => actions.map(a=> {
-        const data = a.payload.doc.data() as Region;
+        const data = a.payload.doc.data() as Item;
+        const id = a.payload.doc.id;
+        return {id, ...data};
+      }))
+    )
+    this.varietyList = this.sp.get('variety').snapshotChanges().pipe(
+      map(actions => actions.map(a=> {
+        const data = a.payload.doc.data() as Item;
         const id = a.payload.doc.id;
         return {id, ...data};
       }))
     );
-  }
+ }
 
+
+  toggleShow(prop) {
+    this.show[prop] = !this.show[prop];
+      }
+    
+      public onFocus(target: string) {
+        this.focused = target;
+        console.log(this.focused)
+      }
+    
+      edit(type, item) {
+        this.focused = type;
+        let prompt = this.alertCtrl.create({
+          title: 'Edit ' + type,
+          inputs: [
+            {
+              name: 'name',
+              value: item.name,
+            },
+          ],
+          buttons: [
+            {
+              text: 'Cancel',
+              handler: data => {
+                console.log('Cancel clicked');
+              },
+            },
+            {
+              text: 'Save',
+              handler: data => {
+                console.log(data);
+                this.sp.update(type, item.id, data);
+              },
+            },
+          ],
+        });
+        prompt.present();
+      }
+    
+    
+      add(type) {
+        this.sp.add(type, { name: this[type] })
+        this[type] = null;
+      }
+    
+      rem(type, id) {
+        
+        let prompt = this.alertCtrl.create({
+          title: 'Confirm Deletion',
+          message: 'Do you really want to delete this ' + type + '?',
+          buttons: [
+            {
+              text: 'No',
+              role: 'cancel',
+              handler: () => {
+                console.log('Cancel clicked');
+              }
+            },
+            {
+              text: 'Yes',
+              handler: () => {
+                this.sp.delete(type, id);
+              }
+            }
+          ]
+        });
+        prompt.present();
+      }
 
 }

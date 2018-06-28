@@ -4,17 +4,16 @@ import {
   AngularFirestore,
   AngularFirestoreCollection
 } from 'angularfire2/firestore';
-import * as firebase from 'firebase/app';
-import { Region } from '../../models/common-model';
+import { Item } from '../../models/common-model';
 
 
 @Injectable()
 export class SettingsProvider {
 
   userId: string;
-  private regionsListRef = this.fireStore.collection<Region>(`/regions`);
+
   constructor(
-    public fireStore: AngularFirestore,
+    public afs: AngularFirestore,
     public afAuth: AngularFireAuth
   ) {
     afAuth.authState.subscribe(user => {
@@ -22,26 +21,21 @@ export class SettingsProvider {
         this.userId = user.uid;
       }
     });
+  } 
+
+  get(path): AngularFirestoreCollection<Item> {
+    return this.afs.collection(`${path}`)
   }
 
-  getRegionsList(): AngularFirestoreCollection<Region> {
-    return this.regionsListRef;
-  }
-  addRegion(name) {
-    return this.regionsListRef.add({name});
-  }
-  editRegion(region, newRegion) {
-    return this.regionsListRef.doc(region.id).update({name: newRegion})
-  }
-  delRegion(region) {
-    return this.regionsListRef.doc(region.id).delete();
-  }
+  add(path: string, data){
+		this.afs.collection(`${path}`).add(data)
+	}
 
+	update(path:string, id, data) {
+		this.afs.doc(`${path}/${id}`).update(data);
+	}
 
-  getVarietiesList(): AngularFirestoreCollection<string> {
-    return this.fireStore.collection(
-      `/varieties`, // This creates the reference
-      ref => ref.orderBy('title') // This is the query
-    );
-  }  
+	delete(path:string, id: string) {
+		this.afs.doc(`${path}/${id}`).delete();
+	}
 }
