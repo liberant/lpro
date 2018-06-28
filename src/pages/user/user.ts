@@ -19,11 +19,11 @@ import { User } from '../../models/user-model'
 
 @IonicPage()
 @Component({
-  selector: 'page-user-form',
-  templateUrl: 'user-form.html',
+  selector: 'page-user',
+  templateUrl: 'user.html',
 })
 export class UserPage implements OnInit {
-  user: Observable<User>;
+  user: User;
   userForm: FormGroup;
   public loading: Loading;
 
@@ -37,6 +37,7 @@ export class UserPage implements OnInit {
 
 ionViewDidLoad() {
 this.user = this.navParams.get('user');
+console.log(this.user);
 }
 
   ngOnInit() {
@@ -51,17 +52,6 @@ this.user = this.navParams.get('user');
       busName: [''],
       type: ['', Validators.compose([Validators.required])],
     });
-    this.user.subscribe(user =>{
-      this.userForm.patchValue(user);
-    });
-  }
 
-  async setDetails(uid: string) {
-    if (!this.userForm.valid) {
-      console.log('Form not ready');
-    } else {
-      this.loading = this.loadingCtrl.create();
-      this.loading.present();
-    }
   }
 }

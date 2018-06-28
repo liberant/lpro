@@ -19,7 +19,7 @@
         <ion-list-header>
           Users
         </ion-list-header>
-        <ion-item *ngFor="let user of usersList | async">
+        <ion-item *ngFor="let user of usersList | async" (click)="detail(user)">
               {{ user.firstName }} {{ user.lastName }}
         </ion-item>
       </ion-list>

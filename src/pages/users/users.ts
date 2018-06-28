@@ -24,11 +24,11 @@ export class UsersPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad UsersPage');
-this.usersList = this.up.getList(`user`).valueChanges();
+this.usersList = this.up.getList('user').valueChanges();
   }
 
   detail(user: User) {
-this.navCtrl.push('UserPage', { user: user});
+this.navCtrl.push('UserPage', { user: user });
   }
 
 }
