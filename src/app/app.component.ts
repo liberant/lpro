@@ -31,7 +31,7 @@ export class LpApp {
     ];
 
     const authListener = afAuth.authState.subscribe(user => { if (user) {
-      this.rootPage = 'HomePage';
+      this.rootPage = 'AdminPage';
       authListener.unsubscribe(); }else{
       this.rootPage = 'LoginPage';
       authListener.unsubscribe(); }

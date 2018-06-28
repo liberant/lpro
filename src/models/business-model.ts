@@ -5,10 +5,10 @@ export interface Business {
     id: string;
     type: string;
     name: string;
-    website: string;
-    email: string;
-    phone: string;
-    address: Address;
+    website?: string;
+    email?: string;
+    phone?: string;
+    address?: Address;
     postAddress?: Address;
     adminId: string;
     staff?: User[];

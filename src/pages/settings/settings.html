@@ -1,8 +1,5 @@
 <!--
-  Generated template for the SettingsPage page.
-
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
+  Admin related settings page
 -->
 <ion-header>
 
@@ -13,6 +10,31 @@
 </ion-header>
 
 
-<ion-content padding>
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label floating>New Region</ion-label>
+          <ion-input text [(ngModel)]="newRegion.name"></ion-input>
+        <button ion-button item-right icon-only (click)="settingsProvider.addRegion(newRegion)">
+          <ion-icon name="add"></ion-icon>
+        </button>
+      </ion-item>
 
+      </ion-col>
+      <ion-col>
+        <ion-list>
+          <ion-item *ngFor="let region of regionsList | async">
+            <p>{{region.name}}</p>
+            <button ion-button item-right icon-only (click)="editRegion(region)">
+              <ion-icon name="add"></ion-icon></button>
+            <button ion-button item-right icon-only (click)="settingsProvider.delRegion(region)">
+              <ion-icon name="trash"></ion-icon></button>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+ 
 </ion-content>

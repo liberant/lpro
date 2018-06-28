@@ -16,6 +16,7 @@ import { IonicPage, NavController } from 'ionic-angular';
 export class AdminPage {
 
   dashboardRoot = 'DashboardPage'
+  settingsRoot = 'SettingsPage'
   usersRoot = 'UsersPage'
   businessesRoot = 'BusinessesPage'
   ordersRoot = 'OrdersPage'

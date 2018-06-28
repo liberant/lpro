@@ -7,3 +7,7 @@ export interface Address {
     postCode: number;
     country?: string;
 }
+export interface Region {
+    id?: string;
+    name: string;
+}
