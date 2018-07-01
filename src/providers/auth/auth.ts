@@ -37,6 +37,7 @@ export class AuthProvider {
     phone: string,
     busType: string,
     busName: string,
+    photoURL: string
   ): Promise<firebase.User> {
     try {
       const adminUserCredential: firebase.auth.UserCredential = await this.afAuth.auth
@@ -59,6 +60,7 @@ export class AuthProvider {
         busId: busId,
         busType: busType,
         busName: busName,
+        photoURL: photoURL,
         admin: true,
         active: true
       });

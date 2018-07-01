@@ -59,10 +59,10 @@ export class UserPage {
 
   ionViewDidLoad() {
     if (this.uid) {
-      this.up.get('user/' + this.uid).valueChanges()
+      this.fs.doc$<User>('user/' + this.uid) //.valueChanges()
        .subscribe(data =>{
          this.patchForm(data);
-       })
+       });
        console.log(this.user);   
    } 
    this.content.resize();    
