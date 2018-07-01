@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
+import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFirestore, 
   AngularFirestoreCollection, 
-  AngularFirestoreDocument 
+  AngularFirestoreDocument,
 } from 'angularfire2/firestore';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
@@ -17,9 +18,15 @@ type DocPredicate<T>          = string |  AngularFirestoreDocument<T>;
 
 @Injectable()
 export class FirestoreProvider {
+  userId: string;
 
-
-  constructor(public afs: AngularFirestore) { }
+  constructor(public afs: AngularFirestore, public afAuth: AngularFireAuth) { 
+    afAuth.authState.subscribe(user => {
+      if (user) {
+        this.userId = user.uid;
+      }
+    });
+  }
 
   /// **************
   /// Get a Reference

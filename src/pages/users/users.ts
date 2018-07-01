@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Observable } from 'rxjs';
 import { UsersProvider } from '../../providers/users/users';
+import { FirestoreProvider } from './../../providers/firestore/firestore';
 import { User } from '../../models/user-model';
 
 /**
@@ -19,12 +20,12 @@ import { User } from '../../models/user-model';
 export class UsersPage {
   usersList: Observable<User[]>
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public up: UsersProvider) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public up: UsersProvider, public fs: FirestoreProvider) {
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad UsersPage');
-this.usersList = this.up.getList('user').valueChanges();
+this.usersList = this.fs.col$<User>('user');
   }
 
   detail(uid: string) {

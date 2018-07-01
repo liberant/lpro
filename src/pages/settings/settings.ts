@@ -1,6 +1,8 @@
 import { Component, HostListener } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 import { SettingsProvider } from '../../providers/settings/settings';
+import { FirestoreProvider } from './../../providers/firestore/firestore';
+
 import { Item } from '../../models/common-model';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -21,7 +23,7 @@ focused: string;
     variety: boolean;
     region: boolean;
   }
-  constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController, public sp: SettingsProvider) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController, public sp: SettingsProvider, public fs: FirestoreProvider) {
     this.show = {variety: true, region: true }
   }
   @HostListener('window:keyup', ['$event'])
@@ -37,20 +39,10 @@ focused: string;
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad SettingsPage');
-    this.regionList = this.sp.get('region').snapshotChanges().pipe(
-      map(actions => actions.map(a=> {
-        const data = a.payload.doc.data() as Item;
-        const id = a.payload.doc.id;
-        return {id, ...data};
-      }))
-    )
-    this.varietyList = this.sp.get('variety').snapshotChanges().pipe(
-      map(actions => actions.map(a=> {
-        const data = a.payload.doc.data() as Item;
-        const id = a.payload.doc.id;
-        return {id, ...data};
-      }))
-    );
+    this.regionList = this.fs.colWithIds$<Item>('region')
+
+    this.varietyList = this.fs.colWithIds$<Item>('variety')
+
  }
 
 
@@ -84,7 +76,7 @@ focused: string;
               text: 'Save',
               handler: data => {
                 console.log(data);
-                this.sp.update(type, item.id, data);
+                this.fs.update(type+'/'+item.id, data);
               },
             },
           ],
@@ -94,7 +86,7 @@ focused: string;
     
     
       add(type) {
-        this.sp.add(type, { name: this[type] })
+        this.fs.add(type, { name: this[type] })
         this[type] = null;
       }
     
@@ -114,7 +106,7 @@ focused: string;
             {
               text: 'Yes',
               handler: () => {
-                this.sp.delete(type, id);
+                this.fs.delete(type+'/'+id);
               }
             }
           ]
