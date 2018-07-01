@@ -27,8 +27,11 @@ export class UsersPage {
 this.usersList = this.up.getList('user').valueChanges();
   }
 
-  detail(user: User) {
-this.navCtrl.push('UserPage', { user: user });
+  detail(uid: string) {
+this.navCtrl.push('UserPage', { uid: uid });
+  }
+  create() {
+    this.navCtrl.push('UserPage');
   }
 
 }

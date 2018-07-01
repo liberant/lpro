@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import {
   Alert,
   AlertController,
@@ -6,23 +6,31 @@ import {
   Loading,
   LoadingController,
   NavController,
-  NavParams
+  NavParams, Content
 } from 'ionic-angular';
-import { ReactiveFormsModule, FormBuilder, FormGroup, FormArray, Validators, AbstractControl } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators
+} from '@angular/forms';
 import { EmailValidator } from '../../validators/email';
-import { URLValidator } from '../../validators/url';
 import { Observable } from 'rxjs/Observable';
+import { map } from 'rxjs/operators';
+
 import { UsersProvider } from '../../providers/users/users';
+import { FirestoreProvider } from '../../providers/firestore/firestore';
 
-import { User } from '../../models/user-model'
-
+import { User } from '../../models/user-model';
 
 @IonicPage()
 @Component({
   selector: 'page-user',
   templateUrl: 'user.html',
 })
-export class UserPage implements OnInit {
+export class UserPage {
+  @ViewChild('userProfile') content: Content;
+
+  uid: string;
   user: User;
   userForm: FormGroup;
   public loading: Loading;
@@ -32,26 +40,50 @@ export class UserPage implements OnInit {
     public navParams: NavParams,
     public loadingCtrl: LoadingController,
     public alertCtrl: AlertController,
-    public fb: FormBuilder
-  ) { }
-
-ionViewDidLoad() {
-this.user = this.navParams.get('user');
-console.log(this.user);
-}
-
-  ngOnInit() {
-    
+    public fb: FormBuilder,
+    public up: UsersProvider,
+    public fs: FirestoreProvider
+  ) {
+    this.uid = navParams.get('uid');
     this.userForm = this.fb.group({
-      email: ['', Validators.compose([Validators.required, EmailValidator.isValid])],
-      password: ['', Validators.compose([Validators.required, Validators.minLength(6)])],
+      email: ['', Validators.compose([Validators.required])],
+      password:['', Validators.compose([Validators.minLength(6)])],
       firstName: ['', Validators.compose([Validators.required])],
       lastName: ['', Validators.compose([Validators.required])],
-      phone: ['', Validators.compose([Validators.minLength(8), Validators.maxLength(11), Validators.pattern('[0-9]+')])],
-      photoURL: [''],
+      phone: [''],
+     // photoURL: [''],
       busName: [''],
-      type: ['', Validators.compose([Validators.required])],
+      busType: ['', Validators.compose([Validators.required])]
     });
-
   }
+
+  ionViewDidLoad() {
+    if (this.uid) {
+      this.up.get('user/' + this.uid).valueChanges()
+       .subscribe(data =>{
+         this.patchForm(data);
+       })
+       console.log(this.user);   
+   } 
+   this.content.resize();    
+    }
+
+
+  patchForm(user?: User) {
+    this.userForm.patchValue({
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      phone: user.phone,
+     // photoURL: user.photoURL,
+      busName: user.busName,
+      busType: user.busType
+    });
+  }
+
+  editUser() {
+    console.log(this.userForm.value);
+  }
+
+
 }

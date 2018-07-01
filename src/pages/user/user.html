@@ -13,10 +13,9 @@
 </ion-header>
 
 
-  <ion-content padding class="user-form-page">
+  <ion-content padding class="user-form-page" #userProfile>
 
-    <ng-container *ngIf="(auth.user) || {} as user">
-      <form [formGroup]="userForm" *ngIf="!user.uid" (ngSubmit)="editUser()">
+      <form [formGroup]="userForm" (ngSubmit)="editUser()">
   
         <h3>User Details</h3>
   
@@ -25,8 +24,7 @@
           <ion-input formControlName="email" type="email" placeholder="Your email address">
           </ion-input>
         </ion-item>
-        <ion-item class="error-message" *ngIf="!userForm.controls.email.valid &&
-                userForm.controls.email.dirty">
+        <ion-item class="error-message" *ngIf="!userForm.controls.email.valid && !userForm.controls.email.pristine">
           <p>Please enter a valid email address.</p>
         </ion-item>
   
@@ -35,11 +33,9 @@
           <ion-input formControlName="password" type="password" placeholder="Your password">
           </ion-input>
         </ion-item>
-        <ion-item class="error-message" *ngIf="!userForm.controls.password.valid  &&
-                userForm.controls.password.dirty">
+        <ion-item class="error-message" *ngIf="!userForm.controls.password.valid  && !userForm.controls.password.pristine">
           <p>Your password needs more than 6 characters.</p>
-        </ion-item>
-  
+        </ion-item>  
         <h3>A few more details about you</h3>
   
         <ion-item>
@@ -47,8 +43,7 @@
           <ion-input formControlName="firstName" type="text" placeholder="Firstname">
           </ion-input>
         </ion-item>
-        <ion-item class="error-message" *ngIf="!userForm.controls.firstName.valid &&
-                userForm.controls.firstName.dirty">
+        <ion-item class="error-message" *ngIf="!userForm.controls.firstName.valid && !userForm.controls.firstName.pristine">
           <p>Please enter a valid name.</p>
         </ion-item>
   
@@ -57,8 +52,7 @@
           <ion-input formControlName="lastName" type="text" placeholder="Lastname">
           </ion-input>
         </ion-item>
-        <ion-item class="error-message" *ngIf="!userForm.controls.lastName.valid &&
-                  userForm.controls.lastName.dirty">
+        <ion-item class="error-message" *ngIf="!userForm.controls.lastName.valid && !userForm.controls.lastName.pristine">
           <p>Please enter a valid name.</p>
         </ion-item>
   
@@ -67,8 +61,7 @@
           <ion-input formControlName="busName" type="text" placeholder="Displayname">
           </ion-input>
         </ion-item>
-        <ion-item class="error-message" *ngIf="!userForm.controls.displayName.valid &&
-                    userForm.controls.displayName.dirty">
+        <ion-item class="error-message" *ngIf="!userForm.controls.busName.valid && !userForm.controls.busName.pristine">
           <p>Please enter a valid name.</p>
         </ion-item>
   
@@ -77,24 +70,22 @@
           <ion-input formControlName="phone" type="tel" placeholder="XXXX XXX XXX">
           </ion-input>
         </ion-item>
-        <ion-item class="error-message" *ngIf="!userForm.controls.phone.valid &&
-                      userForm.controls.phone.dirty">
+        <ion-item class="error-message" *ngIf="!userForm.controls.phone.valid && !userForm.controls.phone.pristine">
           <p>Please enter a valid phone number.</p>
         </ion-item>
   
         <ion-item>
           <ion-label stacked>Business Type</ion-label>
-          <ion-select interface="popover" formControlName="type">
+          <ion-select interface="popover" formControlName="busType">
             <ion-option value="retailer">Retailer</ion-option>
-            <ion-option value="supplier">Supplier</ion-option>
+            <ion-option value="producer">Producer</ion-option>
           </ion-select>
         </ion-item>
-        <ion-item class="error-message" *ngIf="!userForm.controls.type.valid">
+        <ion-item class="error-message" *ngIf="!userForm.controls.busType.valid">
           <p>You have to select a business type</p>
         </ion-item>
   
         <button ion-button type="submit" [disabled]="!userForm.valid">Submit</button>
   
       </form>
-      </ng-container>
 </ion-content>

@@ -21,6 +21,28 @@ import { HomePage } from '../pages/home/home';
 import { AuthProvider } from '../providers/auth/auth';
 import { SettingsProvider } from '../providers/settings/settings';
 import { UsersProvider } from '../providers/users/users';
+import { FirestoreProvider } from '../providers/firestore/firestore';
+
+@Injectable()
+export class LPErrorHandler implements ErrorHandler {
+  ionicErrorHandler: IonicErrorHandler;
+
+  constructor(injector: Injector) {
+    try {
+      this.ionicErrorHandler = injector.get(IonicErrorHandler);
+    } catch(e) {
+      // Unable to get the IonicErrorHandler provider, ensure
+      // IonicErrorHandler has been added to the providers list below
+    }
+  }
+
+  handleError(err: any): void {
+    Pro.monitoring.handleNewError(err);
+    // Remove this if you want to disable Ionic's auto exception handling
+    // in development mode.
+    this.ionicErrorHandler && this.ionicErrorHandler.handleError(err);
+  }
+}
 
 @NgModule({
   declarations: [
@@ -46,7 +68,11 @@ import { UsersProvider } from '../providers/users/users';
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     AuthProvider,
     SettingsProvider,
-    UsersProvider
+    UsersProvider,
+    FirestoreProvider,
+    IonicErrorHandler,
+        [{ provide: ErrorHandler, useClass: LPErrorHandler }]
   ]
 })
+
 export class AppModule {}
