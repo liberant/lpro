@@ -19,7 +19,7 @@ import { Product } from '../../models/product-model';
 })
 export class ProductsPage {
   public busId: string;
-  productsList: Observable<Product[]>
+  productsList: Observable<Product[]>;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public afs: FirestoreProvider, public modalCtrl: ModalController, public toastCtrl: ToastController) {
   }
@@ -27,7 +27,7 @@ export class ProductsPage {
   ionViewDidLoad() {
 this.afs.getBusId().then(res=>{
   this.busId = res;
-})
+});
 this.productsList = this.afs.col$<Product>('product');
   }
 
@@ -44,20 +44,20 @@ this.navCtrl.push('ProductPage', { id: id });
   }
   addToList(type:string, product: Product) {
     this.afs.upsert('business/'+this.busId+'/'+type+'/'+product.id, product).then(res =>{
-      this.presentToast();
+      this.presentToast('Wine added successfully');
     })
   }
-  presentToast() {
+  presentToast(message) {
     let toast = this.toastCtrl.create({
-      message: 'Wine added successfully',
+      message: message,
       duration: 3000,
       position: 'top'
     });
-  
+
     toast.onDidDismiss(() => {
       console.log('Dismissed toast');
     });
-  
+
     toast.present();
   }
 

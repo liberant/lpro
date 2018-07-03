@@ -87,7 +87,7 @@ public  userId: string;
   }
 
   set<T>(ref: DocPredicate<T>, data: any) {
-    const timestamp = this.timestamp
+    const timestamp = this.timestamp;
     return this.doc(ref).set({
       ...data,
       updatedAt: timestamp,
@@ -108,7 +108,7 @@ public  userId: string;
   }
 
   add<T>(ref: CollectionPredicate<T>, data) {
-    const timestamp = this.timestamp
+    const timestamp = this.timestamp;
     return this.col(ref).add({
       ...data,
       updatedAt: timestamp,
@@ -124,7 +124,7 @@ public  userId: string;
 
   /// If doc exists update, otherwise set
   upsert<T>(ref: DocPredicate<T>, data: any) {
-    const doc = this.doc(ref).snapshotChanges().take(1).toPromise()
+    const doc = this.doc(ref).snapshotChanges().take(1).toPromise();
 
     return doc.then(snap => {
       return snap.payload.exists ? this.update(ref, data) : this.set(ref, data)
@@ -138,11 +138,11 @@ public  userId: string;
 
 
   inspectDoc(ref: DocPredicate<any>): void {
-    const tick = new Date().getTime()
+    const tick = new Date().getTime();
     this.doc(ref).snapshotChanges()
         .take(1)
         .do(d => {
-          const tock = new Date().getTime() - tick
+          const tock = new Date().getTime() - tick;
           console.log(`Loaded Document in ${tock}ms`, d)
         })
         .subscribe()
@@ -150,11 +150,11 @@ public  userId: string;
 
 
   inspectCol(ref: CollectionPredicate<any>): void {
-    const tick = new Date().getTime()
+    const tick = new Date().getTime();
     this.col(ref).snapshotChanges()
         .take(1)
         .do(c => {
-          const tock = new Date().getTime() - tick
+          const tock = new Date().getTime() - tick;
           console.log(`Loaded Collection in ${tock}ms`, c)
         })
         .subscribe()
@@ -191,13 +191,13 @@ public  userId: string;
 
   /// Just an example, you will need to customize this method.
   atomic() {
-    const batch = firebase.firestore().batch()
+    const batch = firebase.firestore().batch();
     /// add your operations here
 
     const itemDoc = firebase.firestore().doc('items/myCoolItem');
     const userDoc = firebase.firestore().doc('users/userId');
 
-    const currentTime = this.timestamp
+    const currentTime = this.timestamp;
 
     batch.update(itemDoc, { timestamp: currentTime });
     batch.update(userDoc, { timestamp: currentTime });
@@ -206,9 +206,9 @@ public  userId: string;
     return batch.commit()
   }
 
-  get(ref, val) {
-   return  this.afs.doc(ref).ref.get().then(doc => {
-     return doc.get(val);
+  get(ref, val): Promise<string> {
+   return this.afs.doc(ref).ref.get().then(doc => {
+    return  doc.get(val);
    });
   }
 
@@ -226,7 +226,7 @@ console.log(userProfile);
   }
   */
  getBusId(): Promise<string> {
-  return this.storage.get('busId')
+  return this.storage.get('busId');
 }
 
 }

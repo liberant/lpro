@@ -1,0 +1,62 @@
+<!--
+  Generated template for the WineListPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>wine-list</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <h2>{{listType}}</h2>
+      </ion-col>
+    </ion-row>
+    <ion-row *ngIf="listType=='winelist'">
+      <ion-col col-8>Name</ion-col><ion-col col-2 >Qty</ion-col><ion-col></ion-col>
+    </ion-row>
+    <ion-row *ngIf="listType=='shortlist'">
+      <ion-col col-8>Name</ion-col><ion-col col-2 >Add</ion-col><ion-col>Contact</ion-col>
+    </ion-row>
+    <ion-row *ngFor="let product of productsList | async">
+      <ion-col col-8>
+      <ion-item>
+        <span (click)="detail(product.id)">{{ product.name }} {{ product.variety }}</span>
+            <ion-note item-end>{{product.cartonSize}} @ ${{product.unitCost}}</ion-note>
+      </ion-item>
+          </ion-col>
+      <ion-col col-2>
+        <ion-item *ngIf="listType=='winelist'">
+          <ion-input type="number" [(ngModel)]="product.qty" [ngModelOptions]="{standalone: true}" placeholder="0">{{product.qty}}
+          </ion-input>
+        </ion-item>
+        <ion-item *ngIf="listType=='shortlist'">
+          <button ion-button icon-right icon-only (click)="addList(product)">
+            <ion-icon small name="wine"></ion-icon>
+          </button>
+        </ion-item>
+      </ion-col>
+      <ion-col>
+        <ion-item *ngIf="listType=='winelist'">
+          <button ion-button icon-right icon-only (click)="placeOrder(product)">
+            <ion-icon small name="add"></ion-icon>
+        </button>
+      </ion-item>
+        <ion-item *ngIf="listType=='shortlist'">
+        <button ion-button icon-right icon-only (click)="contact(product.pid)">
+          <ion-icon small name="phone"></ion-icon>
+        </button>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+      <button ion-button block (click)="closeModal()">Done</button>
+</ion-content>

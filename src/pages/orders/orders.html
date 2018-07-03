@@ -15,4 +15,16 @@
 
 <ion-content padding>
 
+  <ion-list>
+    <ion-list-header>
+      <h3>Orders</h3>
+    </ion-list-header>
+    <ion-item *ngFor="let order of ordersList | async">
+      <span (click)="detail(order.id)">{{ order.prodName }} {{ order.orderDate }}</span><ion-note>{{order.total}}</ion-note>
+      <button ion-button left (click)="receive(order)" color="light"><ion-icon name="clipboard"></ion-icon>Receive </button>
+      <button ion-button right (click)="accept(order)" color="light"><ion-icon name="clipboard"></ion-icon>Accept </button>
+      <button ion-button right (click)="ship(order)" color="danger"><ion-icon name="trash"></ion-icon>Ship</button>
+    </ion-item>
+  </ion-list>
+
 </ion-content>

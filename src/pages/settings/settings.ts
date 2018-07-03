@@ -22,7 +22,7 @@ focused: string;
   show: {
     variety: boolean;
     region: boolean;
-  }
+  };
   constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController, public sp: SettingsProvider, public fs: FirestoreProvider) {
     this.show = {variety: true, region: true }
   }
@@ -30,7 +30,7 @@ focused: string;
   keyEvent(event: KeyboardEvent): void {
     console.log(event);
     if (event.keyCode === 13 && this[this.focused] != null) {
-      
+
       this.add(this.focused)
     }
     event.stopPropagation();
@@ -39,7 +39,7 @@ focused: string;
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad SettingsPage');
-    this.regionList = this.fs.colWithIds$<Item>('region')
+    this.regionList = this.fs.colWithIds$<Item>('region');
 
     this.varietyList = this.fs.colWithIds$<Item>('variety')
 
@@ -49,12 +49,12 @@ focused: string;
   toggleShow(prop) {
     this.show[prop] = !this.show[prop];
       }
-    
+
       public onFocus(target: string) {
         this.focused = target;
         console.log(this.focused)
       }
-    
+
       edit(type, item) {
         this.focused = type;
         let prompt = this.alertCtrl.create({
@@ -83,15 +83,15 @@ focused: string;
         });
         prompt.present();
       }
-    
-    
+
+
       add(type) {
-        this.fs.add(type, { name: this[type] })
+        this.fs.add(type, { name: this[type] });
         this[type] = null;
       }
-    
+
       rem(type, id) {
-        
+
         let prompt = this.alertCtrl.create({
           title: 'Confirm Deletion',
           message: 'Do you really want to delete this ' + type + '?',

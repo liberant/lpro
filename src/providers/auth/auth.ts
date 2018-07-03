@@ -16,6 +16,8 @@ import { Business } from '../../models/business-model';
 @Injectable()
 export class AuthProvider {
 public userId: string;
+public busId: string;
+public busType: string;
 public user: User;
 public userRef: AngularFirestoreDocument<User>;
   constructor(
@@ -48,11 +50,12 @@ public userRef: AngularFirestoreDocument<User>;
     if (!this.user) { await this.userRef.valueChanges().subscribe(res => {
       this.user = res;
     });
-    console.log('infunct' + this.user)
   }
     await this.storage.set('uid', this.userId);
     await this.storage.set('busId', this.user.busId);
+    this.busId = this.user.busId;
     await this.storage.set('type', this.user.busType);
+    this.busType = this.user.busType;
       console.log(this.user);
   }
 

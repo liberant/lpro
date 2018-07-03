@@ -1,0 +1,84 @@
+<!--
+  Generated template for the ProductFormPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Product Form</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+  <ion-content padding class="product-form-page" #productProfile>
+
+      <form [formGroup]="productForm" (ngSubmit)="editProduct()">
+  
+        <h3>Product Details</h3>
+  
+
+        <ion-item>
+          <ion-label stacked>Your Product Name</ion-label>
+          <ion-input formControlName="name" type="text" placeholder="Firstname">
+          </ion-input>
+        </ion-item>
+        <ion-item class="error-message" *ngIf="!productForm.controls.name.valid && !productForm.controls.name.pristine">
+          <p>Please enter a valid name.</p>
+        </ion-item>
+
+        <ion-item>
+          <ion-label stacked>Producer</ion-label>
+          <ion-select interface="popover"  formControlName="producer" [class.invalid]="!productForm.controls.producer.valid && !productForm.controls.producer.pristine">
+              <ion-option *ngFor="let producer of producerList | async" (ionSelect)="updprod(producer.id)">{{producer.name}}</ion-option>
+          </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label stacked>Vintage</ion-label>
+        <ion-datetime formControlName="vintage" displayFormat="YYYY" pickerFormat="YYYY" placeholder="Year" [class.invalid]="!productForm.controls.vintage.valid && !productForm.controls.vintage.pristine"></ion-datetime>
+    </ion-item>
+    <ion-item class="error-message" *ngIf="!productForm.controls.vintage.valid  &&  !productForm.controls.vintage.pristine">
+        <p>You need to enter a vintage.</p>
+    </ion-item>
+
+      <ion-item>
+        <ion-label stacked>Region</ion-label>
+        <ion-select interface="popover" formControlName="region" [class.invalid]="!productForm.controls.region.valid && !productForm.controls.region.pristine">
+            <ion-option *ngFor="let region of regionList | async">{{region.name}}</ion-option>
+        </ion-select>
+    </ion-item>
+
+        <ion-item>
+          <ion-label stacked>Variety</ion-label>
+          <ion-select interface="popover" formControlName="variety" [class.invalid]="!productForm.controls.variety.valid && !productForm.controls.variety.pristine">
+              <ion-option *ngFor="let variety of varietyList | async">{{variety.name}}</ion-option>
+          </ion-select>
+      </ion-item>
+  
+        <ion-item>
+          <ion-label stacked>Carton Size</ion-label>
+          <ion-input formControlName="cartonSize" type="number" placeholder="Lastname">
+          </ion-input>
+        </ion-item>
+        <ion-item class="error-message" *ngIf="!productForm.controls.cartonSize.valid && !productForm.controls.cartonSize.pristine">
+          <p>Please enter the amount in the carton</p>
+        </ion-item>
+  
+  
+        <ion-item>
+          <ion-label stacked>Unit Cost</ion-label>
+          <ion-input formControlName="unitCost" type="number" placeholder="">
+          </ion-input>
+        </ion-item>
+        <ion-item class="error-message" *ngIf="!productForm.controls.unitCost.valid && !productForm.controls.unitCost.pristine">
+          <p>Please enter a valid unit cost price.</p>
+        </ion-item>
+
+  
+        <button ion-button type="submit" [disabled]="!productForm.valid">Submit</button>
+  
+      </form>
+</ion-content>

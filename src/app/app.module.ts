@@ -6,7 +6,7 @@ import { ErrorHandler, Injectable, Injector } from '@angular/core';
 
 Pro.init('080aac60', {
   appVersion: '0.0.1',
-})
+});
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 import { IonicStorageModule } from '@ionic/storage';

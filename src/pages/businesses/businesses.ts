@@ -17,7 +17,7 @@ import { Business } from '../../models/Business-model';
   templateUrl: 'businesses.html',
 })
 export class BusinessesPage {
-  businessesList: Observable<Business[]>
+  businessesList: Observable<Business[]>;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public fs: FirestoreProvider) {
   }

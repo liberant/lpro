@@ -18,7 +18,7 @@ import { User } from '../../models/user-model';
   templateUrl: 'users.html',
 })
 export class UsersPage {
-  usersList: Observable<User[]>
+  usersList: Observable<User[]>;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public up: UsersProvider, public fs: FirestoreProvider) {
   }

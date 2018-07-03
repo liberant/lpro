@@ -15,10 +15,10 @@ import { IonicPage, NavController } from 'ionic-angular';
 })
 export class ProducerPage {
 
-  dashboardRoot = 'DashboardPage'
-  productsRoot = 'ProductsPage'
-  ordersRooot = 'OrdersPage'
-  deliveriesRoot = 'DeliveriesPage'
+  dashboardRoot = 'DashboardPage';
+  productsRoot = 'ProductsPage';
+  ordersRooot = 'OrdersPage';
+  deliveriesRoot = 'DeliveriesPage';
 
 
   constructor(public navCtrl: NavController) {}
