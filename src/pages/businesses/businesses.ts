@@ -23,7 +23,7 @@ export class BusinessesPage {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad BusinesssPage');
+    console.log('ionViewDidLoad BusinessPage');
 this.businessesList = this.fs.col$<Business>('business');
   }
 

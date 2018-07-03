@@ -5,15 +5,16 @@ import { Pro } from '@ionic/pro';
 import { ErrorHandler, Injectable, Injector } from '@angular/core';
 
 Pro.init('080aac60', {
-  appVersion: '0.0.1'
+  appVersion: '0.0.1',
 })
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
+import { IonicStorageModule } from '@ionic/storage';
 
 import { AngularFireModule } from 'angularfire2';
-import { AngularFirestoreModule } from 'angularfire2/firestore'; 
+import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { AngularFireAuthModule } from 'angularfire2/auth';
-import { AngularFireStorageModule } from 'angularfire2/storage'; 
+import { AngularFireStorageModule } from 'angularfire2/storage';
 import { firebaseConfig } from './credentials';
 
 import { LpApp } from './app.component';
@@ -22,6 +23,7 @@ import { AuthProvider } from '../providers/auth/auth';
 import { SettingsProvider } from '../providers/settings/settings';
 import { UsersProvider } from '../providers/users/users';
 import { FirestoreProvider } from '../providers/firestore/firestore';
+import { OrdersProvider } from '../providers/orders/orders';
 
 @Injectable()
 export class LPErrorHandler implements ErrorHandler {
@@ -47,15 +49,16 @@ export class LPErrorHandler implements ErrorHandler {
 @NgModule({
   declarations: [
     LpApp,
-    HomePage
+    HomePage,
   ],
   imports: [
     BrowserModule,
     IonicModule.forRoot(LpApp),
+    IonicStorageModule.forRoot(),
     AngularFireModule.initializeApp(firebaseConfig),
     AngularFireAuthModule,
     AngularFirestoreModule,
-    AngularFireStorageModule
+    AngularFireStorageModule,
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -71,7 +74,8 @@ export class LPErrorHandler implements ErrorHandler {
     UsersProvider,
     FirestoreProvider,
     IonicErrorHandler,
-        [{ provide: ErrorHandler, useClass: LPErrorHandler }]
+    [{ provide: ErrorHandler, useClass: LPErrorHandler }],
+    OrdersProvider
   ]
 })
 

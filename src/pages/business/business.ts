@@ -77,6 +77,8 @@ export class BusinessPage {
 
   editBusiness() {
     console.log(this.businessForm.value);
+    this.fs.upsert('business/'+this.id, this.businessForm.value)
+
   }
 
 

@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { Wine } from '../../models/wine-model';
+import { IonicPage, NavController, NavParams, ModalController, ToastController } from 'ionic-angular';
 import { Observable } from 'rxjs';
-
+import { WineListPage } from './../wine-list/wine-list';
+import { FirestoreProvider } from './../../providers/firestore/firestore';
+import { Product } from '../../models/product-model';
 
 /**
  * Generated class for the ProductsPage page.
@@ -17,17 +18,47 @@ import { Observable } from 'rxjs';
   templateUrl: 'products.html',
 })
 export class ProductsPage {
+  public busId: string;
+  productsList: Observable<Product[]>
 
-public productList: Observable<Wine[]>;
- 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public afs: FirestoreProvider, public modalCtrl: ModalController, public toastCtrl: ToastController) {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad ProductsPage');
-  
+this.afs.getBusId().then(res=>{
+  this.busId = res;
+})
+this.productsList = this.afs.col$<Product>('product');
   }
 
-
+  detail(id: string) {
+this.navCtrl.push('ProductPage', { id: id });
+  }
+  create() {
+    this.navCtrl.push('ProductPage');
+  }
+  openList(type){
+    let listModal = this.modalCtrl.create('WineListPage', {type: type});
+    listModal.present();
+   //this.navCtrl.push('WineListPage', {type: type});
+  }
+  addToList(type:string, product: Product) {
+    this.afs.upsert('business/'+this.busId+'/'+type+'/'+product.id, product).then(res =>{
+      this.presentToast();
+    })
+  }
+  presentToast() {
+    let toast = this.toastCtrl.create({
+      message: 'Wine added successfully',
+      duration: 3000,
+      position: 'top'
+    });
+  
+    toast.onDidDismiss(() => {
+      console.log('Dismissed toast');
+    });
+  
+    toast.present();
+  }
 
 }

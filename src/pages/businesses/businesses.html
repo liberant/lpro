@@ -19,7 +19,7 @@
 
     <ion-list>
         <ion-list-header>
-          businesss
+          Businesses
         </ion-list-header>
         <ion-item *ngFor="let business of businessesList | async" (click)="detail(business.id)">
               {{ business.name }} {{ business.type }}

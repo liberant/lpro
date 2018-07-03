@@ -8,11 +8,19 @@
 
   <ion-navbar>
     <ion-title>Dashboard</ion-title>
-  </ion-navbar>
 
+  </ion-navbar>
+  <ion-buttons end>
+      <button ion-button icon-right icon-only (click)="auth.logoutUser();this.navCtrl.setRoot('LoginPage')">
+        <ion-icon name="power"></ion-icon>
+      </button>
+    </ion-buttons>
 </ion-header>
 
 
 <ion-content padding>
+  <h3>User ID: {{userId}}</h3>
+  <h3>Bus Id: {{busId}}</h3>
+  <h3>Type: {{type}}</h3>
 
 </ion-content>

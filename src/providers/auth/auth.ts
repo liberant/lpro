@@ -1,3 +1,5 @@
+import { StatusBar } from '@ionic-native/status-bar';
+import { NavController } from 'ionic-angular';
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from 'angularfire2/auth';
 import {
@@ -6,16 +8,29 @@ import {
   AngularFirestoreDocument
 } from 'angularfire2/firestore';
 import firebase from 'firebase/app';
+import { Storage } from '@ionic/storage';
+
 import { User } from '../../models/user-model';
 import { Business } from '../../models/business-model';
 
 @Injectable()
 export class AuthProvider {
-
+public userId: string;
+public user: User;
+public userRef: AngularFirestoreDocument<User>;
   constructor(
     public afAuth: AngularFireAuth,
     public fireStore: AngularFirestore,
-  ) { }
+    private storage: Storage
+  ) {
+    afAuth.authState.subscribe(res => {
+        this.userId = res.uid;
+        this.userRef = this.fireStore.doc<User>('user/' + res.uid);
+        this.userRef.valueChanges().subscribe(res => {
+          this.user = res;
+        })
+    });
+  }
 
   loginUser(email: string, password: string): Promise<firebase.User> {
     return this.afAuth.auth.signInWithEmailAndPassword(email, password);
@@ -26,7 +41,19 @@ export class AuthProvider {
   }
 
   logoutUser(): Promise<void> {
+    this.storage.clear();
     return this.afAuth.auth.signOut();
+  }
+  async setIds() {
+    if (!this.user) { await this.userRef.valueChanges().subscribe(res => {
+      this.user = res;
+    });
+    console.log('infunct' + this.user)
+  }
+    await this.storage.set('uid', this.userId);
+    await this.storage.set('busId', this.user.busId);
+    await this.storage.set('type', this.user.busType);
+      console.log(this.user);
   }
 
   async createAdminUser(

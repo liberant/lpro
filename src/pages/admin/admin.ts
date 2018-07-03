@@ -19,6 +19,7 @@ export class AdminPage {
   settingsRoot = 'SettingsPage'
   usersRoot = 'UsersPage'
   businessesRoot = 'BusinessesPage'
+  productsRoot = 'ProductsPage'
   ordersRoot = 'OrdersPage'
 
 

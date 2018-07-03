@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from 'angularfire2/auth';
-import { AngularFirestore, 
-  AngularFirestoreCollection, 
+import { AngularFirestore,
+  AngularFirestoreCollection,
   AngularFirestoreDocument,
 } from 'angularfire2/firestore';
+import { Storage } from '@ionic/storage';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/do';
@@ -12,15 +13,16 @@ import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/switchMap';
 
 import * as firebase from 'firebase/app';
+import { EAFNOSUPPORT } from 'constants';
 
 type CollectionPredicate<T>   = string |  AngularFirestoreCollection<T>;
 type DocPredicate<T>          = string |  AngularFirestoreDocument<T>;
 
 @Injectable()
 export class FirestoreProvider {
-  userId: string;
+public  userId: string;
 
-  constructor(public afs: AngularFirestore, public afAuth: AngularFireAuth) { 
+  constructor(public afs: AngularFirestore, public afAuth: AngularFireAuth, private storage: Storage) {
     afAuth.authState.subscribe(user => {
       if (user) {
         this.userId = user.uid;
@@ -203,5 +205,28 @@ export class FirestoreProvider {
     /// commit operations
     return batch.commit()
   }
+
+  get(ref, val) {
+   return  this.afs.doc(ref).ref.get().then(doc => {
+     return doc.get(val);
+   });
+  }
+
+  getId() {
+    return this.afs.createId();
+  }
+/*
+  async getBusId(): Promise<string> {
+    const userProfile: firebase.firestore.DocumentSnapshot = await firebase
+      .firestore()
+      .doc(`user/${this.userId}`)
+      .get();
+console.log(userProfile);
+    return userProfile.data().busId;
+  }
+  */
+ getBusId(): Promise<string> {
+  return this.storage.get('busId')
+}
 
 }

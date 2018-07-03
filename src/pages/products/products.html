@@ -1,5 +1,5 @@
 <!--
-  Generated template for the ProductsPage page.
+  Generated template for the productsPage page.
 
   See http://ionicframework.com/docs/components/#navigation for more info on
   Ionic pages and navigation.
@@ -14,5 +14,19 @@
 
 
 <ion-content padding>
+    <button ion-button item-end icon-only (click)="create()"><ion-icon small name="add-circle"></ion-icon></button>
+    <button ion-button block (click)="openList('shortlist')">Open Shortlist</button>
+    <button ion-button block (click)="openList('winelist')">Open Winelist</button>
+
+    <ion-list>
+        <ion-list-header>
+          <h3>Products</h3>
+        </ion-list-header>
+        <ion-item *ngFor="let product of productsList | async">
+              <h3 (click)="detail(product.id)">{{ product.name }} {{ product.variety }}</h3>
+              <button ion-button left (click)="addToList('shortlist', product)" color="light"><ion-icon name="clipboard"></ion-icon>Shortlist </button>
+                <button ion-button right (click)="addToList('winelist', product)" color="danger"><ion-icon name="trash"></ion-icon>Winelist</button>
+        </ion-item>
+      </ion-list>
 
 </ion-content>

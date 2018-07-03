@@ -1,6 +1,6 @@
 import { User } from './user-model';
 import { Address } from './common-model';
-import { Wine } from './wine-model';
+import { Product } from './product-model';
 export interface Business {
     id: string;
     type: string;
@@ -16,9 +16,9 @@ export interface Business {
 export interface Producer extends Business {
     region: string;
     brands: Array<string>;
-    productList: Wine[];
+    productList: Product[];
 }
 export interface Retailer extends Business {
-    shortList: Wine[];
-    wineList: Wine[];
+    shortList: Product[];
+    wineList: Product[];
 }
