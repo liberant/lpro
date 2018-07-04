@@ -37,17 +37,14 @@ export class WineListPage {
   }
 
   async placeOrder(product: Product): Promise<any> {
-    return await this.op.placeOrder(product);
+    await this.op.placeOrder(product);
     this.presentToast(product.qty +  ' bottles of ' + product.name + ' ordered');
   }
 
 
-  trackByFn(index, product) {
-    return product.id;
-  }
-
   addList(product) {
     this.afs.upsert('business/'+this.busId+'/winelist/'+product.id, product).then(res =>{
+      cosole.log(res);
       this.presentToast('Wine added successfully');
     });
     this.afs.delete('business/'+this.busId+'/winelist/'+product.id);

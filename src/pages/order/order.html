@@ -16,4 +16,39 @@
 <ion-content padding>
   {{busId}} {{busType}}
 
+  <ion-card *ngIf="order$ | async as order">
+      <img src="http://placehold.it/300x100/">
+      <ion-card-content>
+        <ion-card-title>
+{{order.producer}}
+      </ion-card-title>
+      <h3>Placed: {{order.orderDate | date: 'dd/MM/yyyy'}}
+        </h3>
+        <ion-list>
+          <ion-item>
+            <h2>{{order.prodName}}</h2>
+            <span>{{order.qty}} bottles @ ${{order.price}}ea.</span>
+          </ion-item>
+        </ion-list>
+
+         <h3> Total: ${{order.total}}</h3>
+<ion-list>
+    <ion-item>
+      <ion-label>Approved: {{order.approved}}</ion-label>
+      <ion-toggle checked={{order.approved}} (ionChange)="toggle('approved', order.approved)"></ion-toggle><ion-note item-end>{{order.approvedDate | date: 'dd/MM/yyy'}}</ion-note>
+  </ion-item>
+  <ion-item>
+    <ion-label>Shipped: {{order.shipped}}</ion-label>
+    <ion-toggle checked={{order.shipped}} (ionChange)="toggle('shipped', order.shipped)"></ion-toggle><ion-note item-end>{{order.shippedDate | date: 'dd/MM/yyy'}}</ion-note>
+  </ion-item>
+  <ion-item>
+    <ion-label>Received: {{order.received}}</ion-label>
+    <ion-toggle checked={{order.received}} (ionChange)="toggle('received', order.received)"></ion-toggle><ion-note item-end>{{order.receivedDate | date: 'dd/MM/yyy'}}</ion-note>
+  </ion-item>
+</ion-list>
+
+      </ion-card-content>
+
+  </ion-card>
+
 </ion-content>

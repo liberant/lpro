@@ -25,13 +25,11 @@ let AuthProvider = class AuthProvider {
         this.fireStore = fireStore;
         this.storage = storage;
         afAuth.authState.subscribe(res => {
-            if (res) {
-                this.userId = res.uid;
-                this.userRef = this.fireStore.doc('user/' + res.uid);
-                this.userRef.valueChanges().subscribe(res => {
-                    this.user = res;
-                });
-            }
+            this.userId = res.uid;
+            this.userRef = this.fireStore.doc('user/' + res.uid);
+            this.userRef.valueChanges().subscribe(res => {
+                this.user = res;
+            });
         });
     }
     loginUser(email, password) {
@@ -41,7 +39,6 @@ let AuthProvider = class AuthProvider {
         return this.afAuth.auth.sendPasswordResetEmail(email);
     }
     logoutUser() {
-        this.user;
         this.storage.clear();
         return this.afAuth.auth.signOut();
     }
@@ -51,11 +48,12 @@ let AuthProvider = class AuthProvider {
                 yield this.userRef.valueChanges().subscribe(res => {
                     this.user = res;
                 });
-                console.log('infunct' + this.user);
             }
             yield this.storage.set('uid', this.userId);
             yield this.storage.set('busId', this.user.busId);
+            this.busId = this.user.busId;
             yield this.storage.set('type', this.user.busType);
+            this.busType = this.user.busType;
             console.log(this.user);
         });
     }

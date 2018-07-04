@@ -11,6 +11,7 @@ export interface Business {
     address?: Address;
     postAddress?: Address;
     adminId: string;
+    photoURL?: string;
     staff?: User[];
 }
 export interface Producer extends Business {

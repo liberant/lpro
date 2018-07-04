@@ -86,6 +86,12 @@ public  userId: string;
     return firebase.firestore.FieldValue.serverTimestamp()
   }
 
+  get(ref, val): Promise<string> {
+    return this.afs.doc(ref).ref.get().then(doc => {
+      return  doc.get(val);
+    });
+  }
+
   set<T>(ref: DocPredicate<T>, data: any) {
     const timestamp = this.timestamp;
     return this.doc(ref).set({
@@ -128,6 +134,14 @@ public  userId: string;
 
     return doc.then(snap => {
       return snap.payload.exists ? this.update(ref, data) : this.set(ref, data)
+    })
+  }
+
+  change<T>(ref: DocPredicate<T>, data: any, type: string) {
+    console.log(data, type);
+    return this.doc(ref).update({
+      ...data,
+      [type]: this.timestamp
     })
   }
 
@@ -206,11 +220,6 @@ public  userId: string;
     return batch.commit()
   }
 
-  get(ref, val): Promise<string> {
-   return this.afs.doc(ref).ref.get().then(doc => {
-    return  doc.get(val);
-   });
-  }
 
   getId() {
     return this.afs.createId();

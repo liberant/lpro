@@ -43,12 +43,12 @@ let ProductsPage = class ProductsPage {
     }
     addToList(type, product) {
         this.afs.upsert('business/' + this.busId + '/' + type + '/' + product.id, product).then(res => {
-            this.presentToast();
+            this.presentToast('Wine added successfully');
         });
     }
-    presentToast() {
+    presentToast(message) {
         let toast = this.toastCtrl.create({
-            message: 'Wine added successfully',
+            message: message,
             duration: 3000,
             position: 'top'
         });

@@ -28,7 +28,7 @@ let DashboardPage = class DashboardPage {
         console.log('ionViewDidLoad DashboardPage');
         this.storage.get('uid').then(res => this.userId = res);
         this.storage.get('busId').then(res => this.busId = res);
-        this.storage.get('user').then(res => this.user = res);
+        this.storage.get('type').then(res => this.type = res);
     }
 };
 DashboardPage = __decorate([

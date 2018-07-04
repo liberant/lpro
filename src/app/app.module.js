@@ -13,7 +13,7 @@ import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { Pro } from '@ionic/pro';
 import { ErrorHandler, Injectable, Injector } from '@angular/core';
 Pro.init('080aac60', {
-    appVersion: '0.0.1'
+    appVersion: '0.0.1',
 });
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
@@ -29,6 +29,7 @@ import { AuthProvider } from '../providers/auth/auth';
 import { SettingsProvider } from '../providers/settings/settings';
 import { UsersProvider } from '../providers/users/users';
 import { FirestoreProvider } from '../providers/firestore/firestore';
+import { OrdersProvider } from '../providers/orders/orders';
 let LPErrorHandler = class LPErrorHandler {
     constructor(injector) {
         try {
@@ -57,7 +58,7 @@ AppModule = __decorate([
     NgModule({
         declarations: [
             LpApp,
-            HomePage
+            HomePage,
         ],
         imports: [
             BrowserModule,
@@ -66,7 +67,7 @@ AppModule = __decorate([
             AngularFireModule.initializeApp(firebaseConfig),
             AngularFireAuthModule,
             AngularFirestoreModule,
-            AngularFireStorageModule
+            AngularFireStorageModule,
         ],
         bootstrap: [IonicApp],
         entryComponents: [
@@ -82,7 +83,8 @@ AppModule = __decorate([
             UsersProvider,
             FirestoreProvider,
             IonicErrorHandler,
-            [{ provide: ErrorHandler, useClass: LPErrorHandler }]
+            [{ provide: ErrorHandler, useClass: LPErrorHandler }],
+            OrdersProvider
         ]
     })
 ], AppModule);

@@ -11,8 +11,9 @@ export interface Order {
     price: number;
   total: number;
   orderDate: Date;
-  shipDate?: Date;
-  recDate?: Date;
+  approvedDate?: Date;
+  shippedDate?: Date;
+  receivedDate?: Date;
   approved: boolean;
   shipped: boolean;
   received: boolean;

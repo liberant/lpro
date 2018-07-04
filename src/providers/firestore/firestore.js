@@ -7,17 +7,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFirestore, } from 'angularfire2/firestore';
+import { Storage } from '@ionic/storage';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/take';
@@ -25,9 +18,10 @@ import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/switchMap';
 import * as firebase from 'firebase/app';
 let FirestoreProvider = class FirestoreProvider {
-    constructor(afs, afAuth) {
+    constructor(afs, afAuth, storage) {
         this.afs = afs;
         this.afAuth = afAuth;
+        this.storage = storage;
         afAuth.authState.subscribe(user => {
             if (user) {
                 this.userId = user.uid;
@@ -72,6 +66,11 @@ let FirestoreProvider = class FirestoreProvider {
     /// Firebase Server Timestamp
     get timestamp() {
         return firebase.firestore.FieldValue.serverTimestamp();
+    }
+    get(ref, val) {
+        return this.afs.doc(ref).ref.get().then(doc => {
+            return doc.get(val);
+        });
     }
     set(ref, data) {
         const timestamp = this.timestamp;
@@ -156,20 +155,23 @@ let FirestoreProvider = class FirestoreProvider {
     getId() {
         return this.afs.createId();
     }
+    /*
+      async getBusId(): Promise<string> {
+        const userProfile: firebase.firestore.DocumentSnapshot = await firebase
+          .firestore()
+          .doc(`user/${this.userId}`)
+          .get();
+    console.log(userProfile);
+        return userProfile.data().busId;
+      }
+      */
     getBusId() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const userProfile = yield firebase
-                .firestore()
-                .doc(`user/${this.userId}`)
-                .get();
-            console.log(userProfile);
-            return userProfile.data().busId;
-        });
+        return this.storage.get('busId');
     }
 };
 FirestoreProvider = __decorate([
     Injectable(),
-    __metadata("design:paramtypes", [AngularFirestore, AngularFireAuth])
+    __metadata("design:paramtypes", [AngularFirestore, AngularFireAuth, Storage])
 ], FirestoreProvider);
 export { FirestoreProvider };
 //# sourceMappingURL=firestore.js.map
