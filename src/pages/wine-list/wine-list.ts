@@ -44,7 +44,7 @@ export class WineListPage {
 
   addList(product) {
     this.afs.upsert('business/'+this.busId+'/winelist/'+product.id, product).then(res =>{
-      cosole.log(res);
+      console.log(res);
       this.presentToast('Wine added successfully');
     });
     this.afs.delete('business/'+this.busId+'/winelist/'+product.id);

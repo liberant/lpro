@@ -34,7 +34,7 @@ export class OrderPage {
 this.order$ = this.afs.doc$<Order>('orders/'+this.orderId);
     this.afs.doc$<Order>('orders/'+this.orderId).subscribe(data => {
       this.getData(data.rid, data.pid);
-=    });
+    });
 
   }
 
