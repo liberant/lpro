@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { WineListPage } from './../wine-list/wine-list';
 import { FirestoreProvider } from './../../providers/firestore/firestore';
 import { Product } from '../../models/product-model';
+import { Storage } from '@ionic/storage';
 
 /**
  * Generated class for the ProductsPage page.
@@ -18,19 +19,24 @@ import { Product } from '../../models/product-model';
   templateUrl: 'products.html',
 })
 export class ProductsPage {
+  public busType;
   public busId: string;
-  productsList: Observable<Product[]>;
+  public productsList: Observable<Product[]>;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public afs: FirestoreProvider, public modalCtrl: ModalController, public toastCtrl: ToastController) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public afs: FirestoreProvider, public modalCtrl: ModalController, public toastCtrl: ToastController, public storage: Storage) {
+  this.busType = this.storage.get('busType');
   }
 
   ionViewDidLoad() {
 this.afs.getBusId().then(res=>{
   this.busId = res;
 });
+if (this.busType === 'Producer'){
+  this.productsList = this.afs.col$<Product>('product', ref=> ref.where('prodId', '==', this.busId));
+}else {
 this.productsList = this.afs.col$<Product>('product');
   }
-
+  }
   detail(id: string) {
 this.navCtrl.push('ProductPage', { id: id });
   }

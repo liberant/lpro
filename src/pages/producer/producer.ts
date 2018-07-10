@@ -17,7 +17,7 @@ export class ProducerPage {
 
   dashboardRoot = 'DashboardPage';
   productsRoot = 'ProductsPage';
-  ordersRooot = 'OrdersPage';
+  ordersRoot = 'OrdersPage';
   deliveriesRoot = 'DeliveriesPage';
 
 

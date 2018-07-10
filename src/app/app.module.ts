@@ -3,6 +3,8 @@ import { NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { Pro } from '@ionic/pro';
 import { ErrorHandler, Injectable, Injector } from '@angular/core';
+import { NgPipesModule } from 'ngx-pipes';
+
 
 Pro.init('080aac60', {
   appVersion: '0.0.1',
@@ -59,6 +61,7 @@ export class LPErrorHandler implements ErrorHandler {
     AngularFireAuthModule,
     AngularFirestoreModule,
     AngularFireStorageModule,
+    NgPipesModule,
   ],
   bootstrap: [IonicApp],
   entryComponents: [

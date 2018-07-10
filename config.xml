@@ -89,4 +89,5 @@
         <variable name="UPDATE_METHOD" value="background" />
         <variable name="MAX_STORE" value="2" />
     </plugin>
+    <engine name="browser" spec="~5.0.3" />
 </widget>

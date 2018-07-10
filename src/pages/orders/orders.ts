@@ -6,6 +6,7 @@ import { FirestoreProvider } from './../../providers/firestore/firestore';
 import { AuthProvider} from "../../providers/auth/auth";
 import { Order } from '../../models/order-model';
 import {Product} from "../../models/product-model";
+import { GroupByPipe } from 'ngx-pipes';
 
 
 @IonicPage()
@@ -14,18 +15,28 @@ import {Product} from "../../models/product-model";
   templateUrl: 'orders.html',
 })
 export class OrdersPage {
+  public busType;
   public busId: string;
-  ordersList: Observable<Order[]>;
+  public ordersList: Observable<Order[]>;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public afs: FirestoreProvider, public modalCtrl: ModalController, public toastCtrl: ToastController, private auth: AuthProvider) {
-this.busId = this.auth.busId  }
+this.busId = this.auth.busId;
+this.busType = this.auth.busType; 
+console.log(this.busType);
+}
 
   ionViewDidLoad() {
 this.afs.getBusId().then(res=>{
   this.busId = res;
+  if (this.busType.busType === 'Retailer'){
   this.ordersList = this.afs.col$<Order>('orders', ref => {
       return ref.where('rid', '==', this.busId);
     });
+  } else {
+    this.ordersList = this.afs.col$<Order>('orders', ref => {
+      return ref.where('pid', '==', this.busId);
+    });
+  }
   });
   }
 

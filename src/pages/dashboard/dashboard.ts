@@ -30,7 +30,6 @@ public type: string;
      this.storage.get('uid').then(res => this.userId = res);
      this.storage.get('busId').then(res => this.busId = res);
      this.storage.get('type').then(res => this.type = res);
-
   }
 
 

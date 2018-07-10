@@ -55,7 +55,8 @@ export class LoginPage {
         await this.authProvider.loginUser(email, password);
         await this.authProvider.setIds();
         await loading.dismiss();
-        this.navCtrl.setRoot('AdminPage');
+        console.log(`${this.authProvider.user.busType}Page`);
+        this.navCtrl.setRoot(`${this.authProvider.user.busType}Page`);
       } catch (error) {
         await loading.dismiss();
         const alert: Alert = this.alertCtrl.create({

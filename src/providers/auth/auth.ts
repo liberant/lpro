@@ -26,11 +26,13 @@ public userRef: AngularFirestoreDocument<User>;
     private storage: Storage
   ) {
     afAuth.authState.subscribe(res => {
+      if(res.uid) {
         this.userId = res.uid;
         this.userRef = this.fireStore.doc<User>('user/' + res.uid);
         this.userRef.valueChanges().subscribe(res => {
           this.user = res;
-        })
+        });
+      }
     });
   }
 
@@ -56,7 +58,7 @@ public userRef: AngularFirestoreDocument<User>;
     this.busId = this.user.busId;
     await this.storage.set('type', this.user.busType);
     this.busType = this.user.busType;
-      console.log(this.user);
+      return (this.user);
   }
 
   async createAdminUser(

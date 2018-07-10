@@ -1,5 +1,5 @@
 <!--
-  Generated template for the WineListsPage page.
+  Generated template for the WineListPage page.
 
   See http://ionicframework.com/docs/components/#navigation for more info on
   Ionic pages and navigation.
@@ -7,12 +7,43 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>WineLists</ion-title>
+    <ion-title>Order</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
-
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <h2>Order</h2>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col col-8>Name</ion-col><ion-col col-2 >Qty</ion-col><ion-col></ion-col>
+    </ion-row>
+    <ion-row *ngFor="let product of productsList | async">
+      <ion-col col-8>
+        <ion-item>
+          <span (click)="detail(product.id)">{{ product.name }} {{ product.variety }}</span>
+          <ion-note item-end>{{product.cartonSize}} @ ${{product.unitCost}}</ion-note>
+        </ion-item>
+      </ion-col>
+      <ion-col col-2>
+        <ion-item>
+          <ion-input type="number" [(ngModel)]="product.qty" [ngModelOptions]="{standalone: true}" placeholder="0">{{product.qty}}
+          </ion-input>
+        </ion-item>
+      </ion-col>
+      <ion-col>
+        <ion-item>
+          <button ion-button icon-right icon-only (click)="placeOrder(product)">
+            <ion-icon small name="add"></ion-icon>
+          </button>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <button ion-button block (click)="order()">Order</button>
 </ion-content>

@@ -224,18 +224,18 @@ public  userId: string;
   getId() {
     return this.afs.createId();
   }
-/*
+
   async getBusId(): Promise<string> {
     const userProfile: firebase.firestore.DocumentSnapshot = await firebase
       .firestore()
       .doc(`user/${this.userId}`)
       .get();
-console.log(userProfile);
+console.log(userProfile.data().busId);
     return userProfile.data().busId;
   }
-  */
+  /*
  getBusId(): Promise<string> {
-  return this.storage.get('busId');
-}
+  return this.get('busId');
+}*/
 
 }

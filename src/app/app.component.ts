@@ -4,6 +4,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { AngularFireAuth } from 'angularfire2/auth';
+import { FirestoreProvider} from "../providers/firestore/firestore";
 
 import { HomePage } from '../pages/home/home';
 @Component({
@@ -16,10 +17,11 @@ export class LpApp {
   pages: Array<{title: string, component: any}>;
 
   constructor(public platform: Platform,
-              public statusBar: StatusBar, 
-              public splashScreen: SplashScreen, 
+              public statusBar: StatusBar,
+              public splashScreen: SplashScreen,
               public menu: MenuController,
-              afAuth: AngularFireAuth
+              afAuth: AngularFireAuth,
+              public afs: FirestoreProvider
             ) {
 
     this.initializeApp();
@@ -31,8 +33,9 @@ export class LpApp {
     ];
 
     const authListener = afAuth.authState.subscribe(user => { if (user) {
-      this.rootPage = 'AdminPage';
-      authListener.unsubscribe(); 
+     // let type = this.afs.get(`user/${user.uid}`, 'busType');
+    //  this.rootPage = `${type}Page`;
+      authListener.unsubscribe();
     } else {
       this.rootPage = 'LoginPage';
       authListener.unsubscribe(); }

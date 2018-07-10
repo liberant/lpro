@@ -40,11 +40,11 @@
   </ion-item>
   <ion-item>
     <ion-label>Shipped: {{order.shipped}}</ion-label>
-    <ion-toggle checked={{order.shipped}} (ionChange)="toggle('shipped', order.shipped)"></ion-toggle><ion-note item-end>{{order.shippedDate | date: 'dd/MM/yyy'}}</ion-note>
+    <ion-toggle item-start checked={{order.shipped}} (ionChange)="toggle('shipped', order.shipped)"></ion-toggle><ion-note item-end>{{order.shippedDate | date: 'dd/MM/yyy'}}</ion-note>
   </ion-item>
   <ion-item>
     <ion-label>Received: {{order.received}}</ion-label>
-    <ion-toggle checked={{order.received}} (ionChange)="toggle('received', order.received)"></ion-toggle><ion-note item-end>{{order.receivedDate | date: 'dd/MM/yyy'}}</ion-note>
+    <ion-toggle item-start checked={{order.received}} (ionChange)="toggle('received', order.received)"></ion-toggle><ion-note item-end>{{order.receivedDate | date: 'dd/MM/yyy'}}</ion-note>
   </ion-item>
 </ion-list>
 
