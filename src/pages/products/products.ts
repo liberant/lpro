@@ -44,7 +44,7 @@ this.navCtrl.push('ProductPage', { id: id });
     this.navCtrl.push('ProductPage');
   }
   openList(type){
-    let listModal = this.modalCtrl.create('WineListPage', {type: type});
+    let listModal = this.modalCtrl.create(`${type}ListPage`);
     listModal.present();
    //this.navCtrl.push('WineListPage', {type: type});
   }

@@ -17,7 +17,7 @@ export class RetailerPage {
 
   dashboardRoot = 'DashboardPage';
   productsRoot = 'ProductsPage';
-  wineListsRoot = 'WineListsPage';
+  wineListsRoot = 'WineListPage';
   ordersRoot = 'OrdersPage';
 
 

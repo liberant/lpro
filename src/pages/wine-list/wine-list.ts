@@ -3,6 +3,8 @@ import {IonicPage, NavController, NavParams, ViewController, ToastController} fr
 import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 import {Observable} from 'rxjs/Observable';
 import {FirestoreProvider} from '../../providers/firestore/firestore';
+import { AuthProvider } from './../../providers/auth/auth';
+import { Storage } from '@ionic/storage';
 import { OrdersProvider} from "../../providers/orders/orders";
 import {Product} from '../../models/product-model';
 
@@ -14,17 +16,16 @@ import {Product} from '../../models/product-model';
 export class WineListPage {
   public productsList: Observable<Product[]>;
   public busId: string;
-  public listType: string;
   public orderForm: FormGroup;
   //public prods: FormArray;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private afs: FirestoreProvider, public viewCtrl: ViewController, public toastCtrl: ToastController, public op: OrdersProvider, private fb: FormBuilder ) {
-    this.listType = navParams.get('type');
-    if (this.listType === 'winelist'){this.initForm();}
+  constructor(public navCtrl: NavController, public navParams: NavParams, private afs: FirestoreProvider, public viewCtrl: ViewController, public toastCtrl: ToastController, public op: OrdersProvider, private fb: FormBuilder, private storage: Storage, public auth: AuthProvider ) {
+   this.busId = this.auth.busId;
+    this.initForm();
   }
 
   ionViewDidLoad() {
-    console.log(this.listType);
+    console.log(this.busId);
     /*this.afs.getBusId().then(busId => {
       this.busId = busId;
       this.productsList = this.afs.col$<Product>('business/' + busId + '/' + this.listType)
@@ -33,12 +34,16 @@ export class WineListPage {
    this.getProducts();
   }
 
-  async getProducts(){
-    this.busId = await this.afs.getBusId();
-    this.productsList = await this.afs.col$<Product>(`business/${this.busId}/${this.listType}`);
-    if (this.listType === 'winelist'){
-      this.initProducts();
-      }
+  async getProducts() {
+    //this.busId = await this.afs.getBusId();
+    this.busId = await this.storage.get('busId');
+    console.log(this.busId);
+    this.productsList = await this.afs.col$<Product>(`business/${this.busId}/winelist`);
+    this.productsList.subscribe(res => {
+      console.log(res);
+      this.initProducts(res);
+
+    })
   }
 
   /*createItem(product: Product): FormArray {
@@ -63,24 +68,22 @@ export class WineListPage {
     this.orderForm = this.fb.group({
       rid: this.busId,
       total: [''],
-      prods: this.fb.array([ this.initProductControl(), ]),
+      prods: this.fb.array([]),
     });
   }
 
-  initProducts() {
-  this.productsList.subscribe((_products) => {
+  initProducts(_products) {
+  //this.productsList.subscribe(_products => {
     console.log(_products);
-    let chosenProducts = [];
     _products.forEach(product => {
       const control = <FormArray>this.orderForm.controls['prods'];
       control.push(
         this.fb.group({
         name: product.name,
-        qty: product.qty || 0,
+        qty: product.qty,
       })
       )
       });
-    });
   }
   initProductControl() {
     return this.fb.group({
@@ -98,19 +101,16 @@ export class WineListPage {
     this.viewCtrl.dismiss();
   }
 
-  async placeOrder(product: Product): Promise<any> {
+  /*async placeOrder(product: Product): Promise<any> {
     await this.op.placeOrder(product);
     this.presentToast(`${product.qty} bottles of ${product.name} ordered`);
-  }
+  }*/
+
+placeOrder() {
+  console.log(this.orderForm.value);
+}
 
 
-  addList(product) {
-    this.afs.upsert('business/'+this.busId+'/winelist/'+product.id, product).then(res =>{
-      console.log(res);
-      this.presentToast('Wine added successfully');
-    });
-    this.afs.delete('business/'+this.busId+'/winelist/'+product.id);
-  }
 
   contact(id){
     console.log(id);

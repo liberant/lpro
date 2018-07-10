@@ -9,6 +9,7 @@ import {
 } from 'angularfire2/firestore';
 import firebase from 'firebase/app';
 import { Storage } from '@ionic/storage';
+import {Observable} from 'rxjs/Observable';
 
 import { User } from '../../models/user-model';
 import { Business } from '../../models/business-model';
@@ -20,20 +21,23 @@ public busId: string;
 public busType: string;
 public user: User;
 public userRef: AngularFirestoreDocument<User>;
+public authUser: firebase.Observer;
   constructor(
     public afAuth: AngularFireAuth,
     public fireStore: AngularFirestore,
     private storage: Storage
   ) {
-    afAuth.authState.subscribe(res => {
+    this.authUser = afAuth.authState;
+    this.authUser.subscribe(res => {
       if(res.uid) {
         this.userId = res.uid;
-        this.userRef = this.fireStore.doc<User>('user/' + res.uid);
-        this.userRef.valueChanges().subscribe(res => {
+        this.userRef = this.fireStore.doc<User>('user/' + res.uid).valueChanges();
+        this.userRef.subscribe(res => {
           this.user = res;
         });
       }
     });
+    this.setIds();
   }
 
   loginUser(email: string, password: string): Promise<firebase.User> {
@@ -49,10 +53,11 @@ public userRef: AngularFirestoreDocument<User>;
     return this.afAuth.auth.signOut();
   }
   async setIds() {
-    //if (!this.user) { await this.userRef.valueChanges().subscribe(res => {
-    //  this.user = res;
-    //});
-  //}
+    if (!this.user) { await this.userRef.subscribe(res => {
+     this.user = res;
+     console.log('not in constructor')
+    });
+  }
     await this.storage.set('uid', this.userId);
     await this.storage.set('busId', this.user.busId);
     this.busId = this.user.busId;
