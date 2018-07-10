@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { Pro } from '@ionic/pro';
 import { ErrorHandler, Injectable, Injector } from '@angular/core';
-import { NgPipesModule } from 'ngx-pipes';
 
 
 Pro.init('080aac60', {
@@ -26,6 +25,8 @@ import { SettingsProvider } from '../providers/settings/settings';
 import { UsersProvider } from '../providers/users/users';
 import { FirestoreProvider } from '../providers/firestore/firestore';
 import { OrdersProvider } from '../providers/orders/orders';
+
+import { NgPipesModule } from 'ngx-pipes';
 
 @Injectable()
 export class LPErrorHandler implements ErrorHandler {
@@ -78,7 +79,7 @@ export class LPErrorHandler implements ErrorHandler {
     FirestoreProvider,
     IonicErrorHandler,
     [{ provide: ErrorHandler, useClass: LPErrorHandler }],
-    OrdersProvider
+    OrdersProvider,
   ]
 })
 

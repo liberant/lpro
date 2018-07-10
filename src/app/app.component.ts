@@ -33,12 +33,16 @@ export class LpApp {
     ];
 
     const authListener = afAuth.authState.subscribe(user => { if (user) {
-     // let type = this.afs.get(`user/${user.uid}`, 'busType');
-    //  this.rootPage = `${type}Page`;
+      console.log(user);
+       this.afs.get(`user/${user.uid}`, 'busType').then(type => {
+         this.rootPage = `${type}Page`;
+
+       })
       authListener.unsubscribe();
     } else {
       this.rootPage = 'LoginPage';
-      authListener.unsubscribe(); }
+      authListener.unsubscribe(); 
+    }
       });
   }
 

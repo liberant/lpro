@@ -6,21 +6,23 @@ import { FirestoreProvider } from './../../providers/firestore/firestore';
 import { AuthProvider} from "../../providers/auth/auth";
 import { Order } from '../../models/order-model';
 import {Product} from "../../models/product-model";
-import { GroupByPipe } from 'ngx-pipes';
+import { OrderByPipe } from 'ngx-pipes';
+//import { NgPipesModule } from 'ngx-pipes';
 
 
 @IonicPage()
 @Component({
   selector: 'page-orders',
   templateUrl: 'orders.html',
+  providers: [OrderByPipe],
 })
 export class OrdersPage {
   public busType;
   public busId: string;
   public ordersList: Observable<Order[]>;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public afs: FirestoreProvider, public modalCtrl: ModalController, public toastCtrl: ToastController, private auth: AuthProvider) {
-this.busId = this.auth.busId;
+  constructor(public navCtrl: NavController, public navParams: NavParams, public afs: FirestoreProvider, public modalCtrl: ModalController, public toastCtrl: ToastController, private auth: AuthProvider, private orderby: OrderByPipe) {
+//this.busId = this.auth.busId;
 this.busType = this.auth.busType; 
 console.log(this.busType);
 }
@@ -28,14 +30,19 @@ console.log(this.busType);
   ionViewDidLoad() {
 this.afs.getBusId().then(res=>{
   this.busId = res;
-  if (this.busType.busType === 'Retailer'){
-  this.ordersList = this.afs.col$<Order>('orders', ref => {
+  if (this.busType === 'Retailer'){
+  this.ordersList = this.orderby.transform(this.afs.col$<Order>('orders', ref => {
       return ref.where('rid', '==', this.busId);
-    });
-  } else {
-    this.ordersList = this.afs.col$<Order>('orders', ref => {
+    }), ['submitted', 'approved', 'shipped', 'received']
+  );
+  } else if (this.busType === 'Producer') {
+    this.ordersList = this.orderby.transform(this.afs.col$<Order>('orders', ref => {
       return ref.where('pid', '==', this.busId);
-    });
+    })
+  );
+  } else {
+    console.log('All Orders');
+    this.ordersList = this.afs.col$<Order>('orders');
   }
   });
   }

@@ -50,7 +50,7 @@ this.order$ = this.afs.doc$<Order>('orders/'+this.orderId);
 
   toggle(field: string, val: boolean) {
     let date = `${field}Date`;
-    return this.afs.change(`orders/${this.orderId}`, { [field]: !val }, date);
+    return this.afs.change(`orders/${this.orderId}`, { [field]: !val, status: `${field}` }, date);
   }
 
 }

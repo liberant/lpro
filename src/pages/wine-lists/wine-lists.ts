@@ -22,7 +22,7 @@ export class WineListsPage {
     this.afs.getBusId().then(res => {
       console.log(res);
       this.busId = res;
-      this.productsList = this.afs.colWithIds$<Product>('business/' + this.busId + '/winelist');
+      this.productsList = this.afs.colWithIds$<Product>(`business/${res}/winelist`);
       console.log(this.productsList);
     });
   }
@@ -37,7 +37,7 @@ export class WineListsPage {
 
   async placeOrder(product: Product): Promise<any> {
     await this.op.placeOrder(product);
-    this.presentToast(product.qty +  ' bottles of ' + product.name + ' ordered');
+    this.presentToast(`${product.qty} bottles of ${product.name} ordered`);
   }
 
 

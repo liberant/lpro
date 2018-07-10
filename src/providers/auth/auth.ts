@@ -49,10 +49,10 @@ public userRef: AngularFirestoreDocument<User>;
     return this.afAuth.auth.signOut();
   }
   async setIds() {
-    if (!this.user) { await this.userRef.valueChanges().subscribe(res => {
-      this.user = res;
-    });
-  }
+    //if (!this.user) { await this.userRef.valueChanges().subscribe(res => {
+    //  this.user = res;
+    //});
+  //}
     await this.storage.set('uid', this.userId);
     await this.storage.set('busId', this.user.busId);
     this.busId = this.user.busId;

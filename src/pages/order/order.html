@@ -35,7 +35,7 @@
 <ion-list>
     <ion-item>
       <ion-label>Approved: {{order.approved}}</ion-label>
-      <ion-toggle item-start checked={{order.approved}} (ionChange)="toggle('approved', order.approved)"></ion-toggle>
+      <ion-toggle item-start checked={{order.approved}} (ionChange)="op.progressOrder(order.id, 'approved', order.approved)"></ion-toggle>
       <ion-note item-end>{{order.approvedDate | date: 'dd/MM/yyy'}}</ion-note>
   </ion-item>
   <ion-item>

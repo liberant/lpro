@@ -23,7 +23,7 @@ export class FirestoreProvider {
 public  userId: string;
 
   constructor(public afs: AngularFirestore, public afAuth: AngularFireAuth, private storage: Storage) {
-    afAuth.authState.subscribe(user => {
+    const authListener = afAuth.authState.subscribe(user => {
       if (user) {
         this.userId = user.uid;
       }
@@ -226,9 +226,10 @@ public  userId: string;
   }
 
   async getBusId(): Promise<string> {
+    const userId = await this.userId;
     const userProfile: firebase.firestore.DocumentSnapshot = await firebase
       .firestore()
-      .doc(`user/${this.userId}`)
+      .doc(`user/${userId}`)
       .get();
 console.log(userProfile.data().busId);
     return userProfile.data().busId;

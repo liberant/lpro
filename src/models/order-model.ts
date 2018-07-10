@@ -1,14 +1,11 @@
-
+import { Product } from './product-model';
 export interface Order {
   id: string;
   pid: string;
   producer: string;
   rid: string;
   retailer: string;
-    prodId: string;
-    prodName: string;
-    qty: number;
-    price: number;
+  products: Array<Product[]>;
   total: number;
   orderDate: Date;
   approvedDate?: Date;
@@ -17,4 +14,5 @@ export interface Order {
   approved: boolean;
   shipped: boolean;
   received: boolean;
+  status: string;
 }

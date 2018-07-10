@@ -20,19 +20,19 @@ import { Storage } from '@ionic/storage';
 })
 export class ProductsPage {
   public busType;
-  public busId: string;
+  public busId;
   public productsList: Observable<Product[]>;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public afs: FirestoreProvider, public modalCtrl: ModalController, public toastCtrl: ToastController, public storage: Storage) {
   this.busType = this.storage.get('busType');
+  this.busId = this.storage.get('busId');
+
   }
 
   ionViewDidLoad() {
-this.afs.getBusId().then(res=>{
-  this.busId = res;
-});
+
 if (this.busType === 'Producer'){
-  this.productsList = this.afs.col$<Product>('product', ref=> ref.where('prodId', '==', this.busId));
+  this.productsList = this.afs.col$<Product>('product', ref=> ref.where('prodId', '===', this.busId));
 }else {
 this.productsList = this.afs.col$<Product>('product');
   }
