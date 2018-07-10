@@ -1,3 +1,4 @@
+import { NgPipesModule } from 'ngx-pipes';
 import { StatusBar } from '@ionic-native/status-bar';
 import { NavController } from 'ionic-angular';
 import { Injectable } from '@angular/core';
@@ -21,23 +22,21 @@ public busId: string;
 public busType: string;
 public user: User;
 public userRef: AngularFirestoreDocument<User>;
-public authUser: firebase.Observer;
   constructor(
     public afAuth: AngularFireAuth,
     public fireStore: AngularFirestore,
     private storage: Storage
   ) {
-    this.authUser = afAuth.authState;
-    this.authUser.subscribe(res => {
+    afAuth.authState.subscribe(res => {
       if(res.uid) {
         this.userId = res.uid;
-        this.userRef = this.fireStore.doc<User>('user/' + res.uid).valueChanges();
-        this.userRef.subscribe(res => {
-          this.user = res;
+        this.userRef = this.fireStore.doc<User>('user/' + res.uid);
+        this.userRef.valueChanges().subscribe(data => {
+          this.user = data;
         });
       }
     });
-    this.setIds();
+   // this.setIds();
   }
 
   loginUser(email: string, password: string): Promise<firebase.User> {
@@ -53,9 +52,9 @@ public authUser: firebase.Observer;
     return this.afAuth.auth.signOut();
   }
   async setIds() {
-    if (!this.user) { await this.userRef.subscribe(res => {
+    if (!this.user) { this.userRef.valueChanges().subscribe(res => {
      this.user = res;
-     console.log('not in constructor')
+     console.log('not in constructor', this.user)
     });
   }
     await this.storage.set('uid', this.userId);

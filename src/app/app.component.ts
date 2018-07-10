@@ -36,7 +36,6 @@ export class LpApp {
       console.log(user);
        this.afs.get(`user/${user.uid}`, 'busType').then(type => {
          this.rootPage = `${type}Page`;
-
        })
       authListener.unsubscribe();
     } else {

@@ -53,6 +53,8 @@ this.navCtrl.push('ProductPage', { id: id });
       this.presentToast('Wine added successfully');
     })
   }
+
+  
   presentToast(message) {
     let toast = this.toastCtrl.create({
       message: message,

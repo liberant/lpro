@@ -28,6 +28,7 @@ import { OrdersProvider } from '../providers/orders/orders';
 
 import { NgPipesModule } from 'ngx-pipes';
 
+
 @Injectable()
 export class LPErrorHandler implements ErrorHandler {
   ionicErrorHandler: IonicErrorHandler;
@@ -78,7 +79,6 @@ export class LPErrorHandler implements ErrorHandler {
     UsersProvider,
     FirestoreProvider,
     IonicErrorHandler,
-    [{ provide: ErrorHandler, useClass: LPErrorHandler }],
     OrdersProvider,
   ]
 })

@@ -15,10 +15,10 @@
 
 <ion-content padding>
 
-  <ion-item-group *ngFor="let group of ordersList | async | groupBy: 'status' | pairs">
+  <ion-item-group *ngFor="let group of ordersList | async | groupBy: 'status' | pairs ">
     <ion-item-divider color="light">{{group[0] | ucfirst}}</ion-item-divider>
 
-    <ion-item *ngFor="let order of group[1]">
+    <ion-item *ngFor="let order of group[1] | orderBy:'updatedAt'">
       <span (click)="detail(order.id)">{{ order.prodName }} {{ order.orderDate }}</span><ion-note>{{order.total}}</ion-note>
       <!--
       <button ion-button left (click)="receive(order)" color="light"><ion-icon name="clipboard"></ion-icon>Receive </button>
