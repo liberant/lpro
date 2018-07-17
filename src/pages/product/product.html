@@ -16,23 +16,23 @@
   <ion-content padding class="product-form-page" #productProfile>
 
       <form [formGroup]="productForm" (ngSubmit)="editProduct()">
-  
+
         <h3>Product Details</h3>
-  
+
 
         <ion-item>
           <ion-label stacked>Your Product Name</ion-label>
-          <ion-input formControlName="name" type="text" placeholder="Firstname">
+          <ion-input formControlName="name" type="text" placeholder="Product Name">
           </ion-input>
         </ion-item>
         <ion-item class="error-message" *ngIf="!productForm.controls.name.valid && !productForm.controls.name.pristine">
           <p>Please enter a valid name.</p>
         </ion-item>
 
-        <ion-item>
+        <ion-item *ngIf="!pid">
           <ion-label stacked>Producer</ion-label>
           <ion-select interface="popover"  formControlName="producer" [class.invalid]="!productForm.controls.producer.valid && !productForm.controls.producer.pristine">
-              <ion-option *ngFor="let producer of producerList | async" (ionSelect)="updprod(producer.id)">{{producer.name}}</ion-option>
+              <ion-option *ngFor="let producer of producerList | async" (ionSelect)="updateProductId(producer.id)">{{producer.name}}</ion-option>
           </ion-select>
       </ion-item>
 
@@ -57,17 +57,17 @@
               <ion-option *ngFor="let variety of varietyList | async">{{variety.name}}</ion-option>
           </ion-select>
       </ion-item>
-  
+
         <ion-item>
           <ion-label stacked>Carton Size</ion-label>
-          <ion-input formControlName="cartonSize" type="number" placeholder="Lastname">
+          <ion-input formControlName="cartonSize" type="number">
           </ion-input>
         </ion-item>
         <ion-item class="error-message" *ngIf="!productForm.controls.cartonSize.valid && !productForm.controls.cartonSize.pristine">
           <p>Please enter the amount in the carton</p>
         </ion-item>
-  
-  
+
+
         <ion-item>
           <ion-label stacked>Unit Cost</ion-label>
           <ion-input formControlName="unitCost" type="number" placeholder="">
@@ -77,8 +77,8 @@
           <p>Please enter a valid unit cost price.</p>
         </ion-item>
 
-  
+
         <button ion-button type="submit" [disabled]="!productForm.valid">Submit</button>
-  
+
       </form>
 </ion-content>

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Observable } from 'rxjs';
 import { UsersProvider } from '../../providers/users/users';
-import { FirestoreProvider } from './../../providers/firestore/firestore';
+import { FirestoreProvider } from '../../providers/firestore/firestore';
 import { User } from '../../models/user-model';
 
 /**

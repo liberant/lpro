@@ -6,25 +6,25 @@ import {
   ModalController,
   ToastController
 } from "ionic-angular";
+import { Storage } from "@ionic/storage";
 import { Observable } from "rxjs";
-import { WineListPage } from "./../wine-list/wine-list";
-import { FirestoreProvider } from "./../../providers/firestore/firestore";
+import { FirestoreProvider } from "../../providers/firestore/firestore";
 import { AuthProvider } from "../../providers/auth/auth";
 import { Order } from "../../models/order-model";
-import { Product } from "../../models/product-model";
-import { OrderByPipe } from "ngx-pipes";
+import { OrderByPipe, GroupByPipe } from "ngx-pipes";
 //import { NgPipesModule } from 'ngx-pipes';
 
 @IonicPage()
 @Component({
   selector: "page-orders",
   templateUrl: "orders.html",
-  providers: [OrderByPipe],
+  providers: [OrderByPipe, GroupByPipe],
 })
 export class OrdersPage {
   public busType;
   public busId: string;
   public ordersList: Observable<Order[]>;
+  public business: string;
 
   constructor(
     public navCtrl: NavController,
@@ -33,34 +33,51 @@ export class OrdersPage {
     public modalCtrl: ModalController,
     public toastCtrl: ToastController,
     private auth: AuthProvider,
-    private orderby: OrderByPipe
+    private storage: Storage,
+    private orderby: OrderByPipe,
+    private groupby: GroupByPipe,
   ) {
-    //this.busId = this.auth.busId;
+    this.busId = this.auth.busId;
     this.busType = this.auth.busType;
-    console.log(this.busType);
+  }
+
+  async getUser(){
+    this.busType = await this.storage.get('type');
+    this.busId = await this.storage.get('busId');
   }
 
   ionViewDidLoad() {
-    this.afs.getBusId().then(res => {
-      this.busId = res;
-      if (this.busType === "Retailer") {
-        this.ordersList = this.orderby.transform(
-          this.afs.col$<Order>("orders", ref => {
-            return ref.where("rid", "==", this.busId);
-          }),
-          ["submitted", "approved", "shipped", "received"]
-        );
-      } else if (this.busType === "Producer") {
-        this.ordersList = this.orderby.transform(
-          this.afs.col$<Order>("orders", ref => {
-            return ref.where("pid", "==", this.busId);
-          })
-        );
-      } else {
-        console.log("All Orders");
-        this.ordersList = this.afs.col$<Order>("orders");
-      }
-    });
+
+    this.getUser().then(res =>{
+    this.getOrders();
+  })
+}
+
+  async getOrders() {
+    if (this.busType === "Retailer") {
+      this.business = 'producer';
+      this.ordersList =   this.orderby.transform(
+        this.afs.col$<Order>("orders", ref => {
+          return ref.where("rid", "==", this.busId);
+        }),
+        ["submitted", "approved", "shipped", "received"]
+      );
+    } else if (this.busType === "Producer") {
+      this.business = 'retailer';
+
+      this.ordersList = this.orderby.transform(
+        this.afs.col$<Order>("orders", ref => {
+          return ref.where("pid", "==", this.busId);
+        }),
+        ["submitted", "approved", "shipped", "received"]
+      );
+    } else {
+      console.log("All Orders");
+      this.ordersList = this.orderby.transform(
+        this.afs.col$<Order>("orders"),
+        ["submitted", "approved", "shipped", "received"]
+      );
+    }
   }
 
   detail(id: string) {

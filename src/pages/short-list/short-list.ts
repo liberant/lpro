@@ -62,7 +62,7 @@ export class ShortListPage {
 
 
   async addList(product) {
-    let res = await this.afs.upsert(`business/${this.busId}/winelist/${product.id}`, product)
+    let res = await this.afs.upsert(`business/${this.busId}/winelist/${product.id}`, product);
       this.presentToast('Wine added successfully');
       console.log(res);
     this.afs.delete(`business/${this.busId}/shortlist/${product.id}`);

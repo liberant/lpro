@@ -11,7 +11,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Storage } from '@ionic/storage';
 import { EmailValidator } from '../../validators/email';
 import { AuthProvider } from '../../providers/auth/auth';
-import { HomePage } from '../home/home';
 
 @IonicPage()
 @Component({
@@ -52,8 +51,9 @@ export class LoginPage {
       const email: string = this.loginForm.value.email;
       const password: string = this.loginForm.value.password;
       try {
-        await this.authProvider.loginUser(email, password);
-        await this.authProvider.setIds();
+        const user = await this.authProvider.loginUser(email, password);
+        console.log(user);
+        await this.authProvider.setIds(user.uid);
         await loading.dismiss();
         console.log(`${this.authProvider.user.busType}Page`);
         this.navCtrl.setRoot(`${this.authProvider.user.busType}Page`);

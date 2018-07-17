@@ -14,8 +14,8 @@
 
 
 <ion-content padding>
-    <button ion-button item-end icon-only (click)="create()"><ion-icon small name="add-circle"></ion-icon></button>
-    <button ion-button block (click)="openList('Short')">Open Shortlist</button>
+    <button *ngIf="busType === 'Producer'" ion-button item-end icon-only (click)="create()"><ion-icon small name="add-circle"></ion-icon></button>
+    <button *ngIf="busType === 'Retailer'" ion-button block (click)="openList('Short')">Open Shortlist</button>
 
     <ion-list>
         <ion-list-header>

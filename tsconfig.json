@@ -6,12 +6,12 @@
     "experimentalDecorators": true,
     "lib": [
       "dom",
-      "es6"
+      "es6" // TODO research lib implications
     ],
     "module": "es6",
     "moduleResolution": "node",
     "sourceMap": true,
-    "target": "es6"
+    "target": "es6" // TODO confirm target implications
   },
   "include": [
     "src/**/*.ts"

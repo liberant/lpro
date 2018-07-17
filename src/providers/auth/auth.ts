@@ -1,6 +1,3 @@
-import { NgPipesModule } from 'ngx-pipes';
-import { StatusBar } from '@ionic-native/status-bar';
-import { NavController } from 'ionic-angular';
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from 'angularfire2/auth';
 import {
@@ -10,7 +7,6 @@ import {
 } from 'angularfire2/firestore';
 import firebase from 'firebase/app';
 import { Storage } from '@ionic/storage';
-import {Observable} from 'rxjs/Observable';
 
 import { User } from '../../models/user-model';
 import { Business } from '../../models/business-model';
@@ -27,16 +23,16 @@ public userRef: AngularFirestoreDocument<User>;
     public fireStore: AngularFirestore,
     private storage: Storage
   ) {
-    afAuth.authState.subscribe(res => {
-      if(res.uid) {
-        this.userId = res.uid;
-        this.userRef = this.fireStore.doc<User>('user/' + res.uid);
-        this.userRef.valueChanges().subscribe(data => {
-          this.user = data;
-        });
-      }
+    const authListener = afAuth.authState.subscribe(user => { if (user) {
+      console.log(user);
+      this.userId = user.uid;
+      this.userRef = this.fireStore.doc<User>('user/' + user.uid);
+      this.userRef.valueChanges().subscribe(data => {
+        this.user = data;
+      });
+      authListener.unsubscribe();
+    }
     });
-   // this.setIds();
   }
 
   loginUser(email: string, password: string): Promise<firebase.User> {
@@ -51,18 +47,18 @@ public userRef: AngularFirestoreDocument<User>;
     this.storage.clear();
     return this.afAuth.auth.signOut();
   }
-  async setIds() {
-    if (!this.user) { this.userRef.valueChanges().subscribe(res => {
+  async setIds(uid) {
+    const userProfile = await this.fireStore.doc<User>(`user/${uid}`).valueChanges().subscribe(res => {
      this.user = res;
      console.log('not in constructor', this.user)
     });
-  }
-    await this.storage.set('uid', this.userId);
+    await this.storage.set('uid', this.user.id);
     await this.storage.set('busId', this.user.busId);
     this.busId = this.user.busId;
     await this.storage.set('type', this.user.busType);
     this.busType = this.user.busType;
-      return (this.user);
+    userProfile.unsubscribe();
+    return (this.user);
   }
 
   async createAdminUser(
@@ -119,7 +115,6 @@ public userRef: AngularFirestoreDocument<User>;
   }
 
   async createRegularUser(email: string, busId: string): Promise<any> {
-    //const busId: string = await this.inventoryProvider.getbusId();
 
     const userCollection: AngularFirestoreCollection<
       any

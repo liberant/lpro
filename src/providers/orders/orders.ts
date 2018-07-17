@@ -1,9 +1,6 @@
-import { Producer } from './../../models/business-model';
-
 import { Injectable } from '@angular/core';
 import {FirestoreProvider} from '../firestore/firestore';
 import {Product} from '../../models/product-model';
-import { Order } from '../../models/order-model';
 
 @Injectable()
 
@@ -60,7 +57,7 @@ this.afs.update(`business/${rid}/winelist/${prod.id}`, {qty: null});
       shipped: false,
       received: false,
       status: 'submitted'
-    }
+    };
     this.afs.set('orders/'+oid, newOrder);
     order.products.forEach( product => {
       this.afs.update(`business/${order.rid}/winelist/${product.id}`, {qty: null, onOrder: product.qty});
@@ -77,23 +74,31 @@ async placeProducerOrder(prod, order, total) {
     retailer: retailer,
     pid: prod.pid,
     producer: prod.name,
-    products: order,
     total: total,
     orderDate: today,
     approved: false,
     shipped: false,
     received: false,
     status: 'submitted'
-  }
+  };
   this.afs.set('orders/'+oid, newOrder);
   order.forEach( product => {
-    this.afs.update(`business/${prod.rid}/winelist/${product.id}`, {qty: null, onOrder: product.qty});
+    this.afs.add(`orders/${oid}/products`, product);
+    this.afs.update(`business/${prod.rid}/winelist/${product.id}`, {qty: null, onOrder: product.onOrder + product.qty});
   });
 }
 
-  progressOrder(id: string, field: string, val: boolean) {
+  async progressOrder(id: string, field: string, val: boolean, rid?: string, products?: Product[]) {
     let date = `${field}Date`;
-    return this.afs.change(`orders/${id}`, { [field]: !val, status: `${field}` }, date);
+    this.afs.change(`orders/${id}`, { [field]: !val, status: `${field}` }, date);
+    if (field === 'received') {
+      products.forEach( product =>{
+        this.afs.get(`business/${rid}/winelist/${product.id}`, 'onOrder').then(res =>{
+          this.afs.update(`business/${rid}/winelist/${product.id}`, {onOrder: parseInt(res, 10) - product.qty});
+        })
+      })
+
+    }
   }
 
   /*change(ref: string, type: string, val: boolean) {

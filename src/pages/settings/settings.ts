@@ -1,11 +1,10 @@
 import { Component, HostListener } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 import { SettingsProvider } from '../../providers/settings/settings';
-import { FirestoreProvider } from './../../providers/firestore/firestore';
+import { FirestoreProvider } from '../../providers/firestore/firestore';
 
 import { Item } from '../../models/common-model';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 
 @IonicPage()

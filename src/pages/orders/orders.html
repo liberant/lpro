@@ -18,17 +18,23 @@
   <ion-item-group *ngFor="let group of ordersList | async | groupBy: 'status' | pairs ">
     <ion-item-divider color="light">{{group[0] | ucfirst}}</ion-item-divider>
 
-    <ion-item *ngFor="let order of group[1] | orderBy:'updatedAt'">
-      <span (click)="detail(order.id)">{{ order.prodName }} {{ order.orderDate }}</span><ion-note>{{order.total}}</ion-note>
+    <ion-item-group *ngFor="let orders of group[1] | groupBy: business | pairs">
+      <ion-item-divider>{{orders[0]}}</ion-item-divider>
+      <ion-item *ngFor="let order of orders[1] ">
+      <h3 (click)="detail(order.id)">{{ order.orderDate }}</h3>
+        <ion-list>
+          <ion-item *ngFor="let product of order.products">
+            {{product.name}}
+          </ion-item>
+        </ion-list>
+        {{order.total}}
       <!--
       <button ion-button left (click)="receive(order)" color="light"><ion-icon name="clipboard"></ion-icon>Receive </button>
       <button ion-button right (click)="accept(order)" color="light"><ion-icon name="clipboard"></ion-icon>Accept </button>
       <button ion-button right (click)="ship(order)" color="danger"><ion-icon name="trash"></ion-icon>Ship</button>
       -->
-    </ion-item>
-  </ion-item-group>
-  <ion-item-group>
-    
+      </ion-item>
+    </ion-item-group>
   </ion-item-group>
 
 </ion-content>

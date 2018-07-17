@@ -1,6 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
 import {
-  Alert,
   AlertController,
   IonicPage,
   Loading,
@@ -13,9 +12,6 @@ import {
   FormGroup,
   Validators
 } from '@angular/forms';
-import { EmailValidator } from '../../validators/email';
-import { Observable } from 'rxjs/Observable';
-import { map } from 'rxjs/operators';
 
 import { UsersProvider } from '../../providers/users/users';
 import { FirestoreProvider } from '../../providers/firestore/firestore';
@@ -63,9 +59,9 @@ export class UserPage {
        .subscribe(data =>{
          this.patchForm(data);
        });
-       console.log(this.user);   
-   } 
-   this.content.resize();    
+       console.log(this.user);
+   }
+   this.content.resize();
     }
 
 

@@ -1,10 +1,10 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ModalController, ToastController } from 'ionic-angular';
-import { Observable } from 'rxjs';
-import { WineListPage } from './../wine-list/wine-list';
-import { FirestoreProvider } from './../../providers/firestore/firestore';
-import { Product } from '../../models/product-model';
-import { Storage } from '@ionic/storage';
+import {Component} from '@angular/core';
+import {IonicPage, ModalController, NavController, NavParams, ToastController} from 'ionic-angular';
+import {Observable} from 'rxjs';
+import {FirestoreProvider} from '../../providers/firestore/firestore';
+import {AuthProvider} from "../../providers/auth/auth";
+import {Product} from '../../models/product-model';
+import {Storage} from '@ionic/storage';
 
 /**
  * Generated class for the ProductsPage page.
@@ -19,42 +19,57 @@ import { Storage } from '@ionic/storage';
   templateUrl: 'products.html',
 })
 export class ProductsPage {
-  public busType;
-  public busId;
+  public busType: string;
+  public busId: string;
   public productsList: Observable<Product[]>;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public afs: FirestoreProvider, public modalCtrl: ModalController, public toastCtrl: ToastController, public storage: Storage) {
-  this.busType = this.storage.get('busType');
-  this.busId = this.storage.get('busId');
-
+  constructor(public navCtrl: NavController, public navParams: NavParams, public afs: FirestoreProvider, public modalCtrl: ModalController, public toastCtrl: ToastController, public storage: Storage, public auth: AuthProvider) {
+this.getUser();
+  }
+  async getUser(){
+    this.busType = await this.storage.get('type');
+    this.busId = await this.storage.get('busId');
   }
 
   ionViewDidLoad() {
+    this.getUser().then(u =>
+    {
+      console.log(this.busType);
+      this.getProducts();
+    });
 
-if (this.busType === 'Producer'){
-  this.productsList = this.afs.col$<Product>('product', ref=> ref.where('prodId', '===', this.busId));
-}else {
-this.productsList = this.afs.col$<Product>('product');
   }
+
+  async getProducts(){
+    if (this.busType == "Producer") {
+      this.productsList = this.afs.col$<Product>('product', ref => ref.where('pid', '==', this.busId));
+    } else {
+      console.log('no type');
+      this.productsList = this.afs.col$<Product>('product');
+    }
   }
+
   detail(id: string) {
-this.navCtrl.push('ProductPage', { id: id });
+    this.navCtrl.push('ProductPage', {id: id});
   }
+
   create() {
-    this.navCtrl.push('ProductPage');
+    this.navCtrl.push('ProductPage', {pid: this.busId});
   }
-  openList(type){
+
+  openList(type) {
     let listModal = this.modalCtrl.create(`${type}ListPage`);
     listModal.present();
-   //this.navCtrl.push('WineListPage', {type: type});
+    //this.navCtrl.push('WineListPage', {type: type});
   }
-  addToList(type:string, product: Product) {
-    this.afs.upsert('business/'+this.busId+'/'+type+'/'+product.id, product).then(res =>{
+
+  addToList(type: string, product: Product) {
+    this.afs.upsert('business/' + this.busId + '/' + type + '/' + product.id, product).then(res => {
       this.presentToast('Wine added successfully');
     })
   }
 
-  
+
   presentToast(message) {
     let toast = this.toastCtrl.create({
       message: message,

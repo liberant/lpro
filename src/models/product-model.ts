@@ -12,4 +12,5 @@ export interface Product {
     unitCost?: number;
     active?: boolean;
     qty?: number;
+    onOrder?: number;
 }

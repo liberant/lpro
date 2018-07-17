@@ -16,9 +16,9 @@
   <ion-content padding class="user-form-page" #userProfile>
 
       <form [formGroup]="userForm" (ngSubmit)="editUser()">
-  
+
         <h3>User Details</h3>
-  
+
         <ion-item>
           <ion-label stacked>Your Contact Email address</ion-label>
           <ion-input formControlName="email" type="email" placeholder="Your email address">
@@ -27,7 +27,7 @@
         <ion-item class="error-message" *ngIf="!userForm.controls.email.valid && !userForm.controls.email.pristine">
           <p>Please enter a valid email address.</p>
         </ion-item>
-  
+
         <ion-item>
           <ion-label stacked>Password</ion-label>
           <ion-input formControlName="password" type="password" placeholder="Your password">
@@ -35,9 +35,9 @@
         </ion-item>
         <ion-item class="error-message" *ngIf="!userForm.controls.password.valid  && !userForm.controls.password.pristine">
           <p>Your password needs more than 6 characters.</p>
-        </ion-item>  
+        </ion-item>
         <h3>A few more details about you</h3>
-  
+
         <ion-item>
           <ion-label stacked>Your First Name</ion-label>
           <ion-input formControlName="firstName" type="text" placeholder="Firstname">
@@ -46,25 +46,25 @@
         <ion-item class="error-message" *ngIf="!userForm.controls.firstName.valid && !userForm.controls.firstName.pristine">
           <p>Please enter a valid name.</p>
         </ion-item>
-  
+
         <ion-item>
           <ion-label stacked>Your Last Name</ion-label>
-          <ion-input formControlName="lastName" type="text" placeholder="Lastname">
+          <ion-input formControlName="lastName" type="text" placeholder="LastName">
           </ion-input>
         </ion-item>
         <ion-item class="error-message" *ngIf="!userForm.controls.lastName.valid && !userForm.controls.lastName.pristine">
           <p>Please enter a valid name.</p>
         </ion-item>
-  
+
         <ion-item>
           <ion-label stacked>Business Name</ion-label>
-          <ion-input formControlName="busName" type="text" placeholder="Displayname">
+          <ion-input formControlName="busName" type="text" placeholder="DisplayName">
           </ion-input>
         </ion-item>
         <ion-item class="error-message" *ngIf="!userForm.controls.busName.valid && !userForm.controls.busName.pristine">
           <p>Please enter a valid name.</p>
         </ion-item>
-  
+
         <ion-item>
           <ion-label stacked>Phone Number</ion-label>
           <ion-input formControlName="phone" type="tel" placeholder="XXXX XXX XXX">
@@ -73,7 +73,7 @@
         <ion-item class="error-message" *ngIf="!userForm.controls.phone.valid && !userForm.controls.phone.pristine">
           <p>Please enter a valid phone number.</p>
         </ion-item>
-  
+
         <ion-item>
           <ion-label stacked>Business Type</ion-label>
           <ion-select interface="popover" formControlName="busType">
@@ -84,8 +84,8 @@
         <ion-item class="error-message" *ngIf="!userForm.controls.busType.valid">
           <p>You have to select a business type</p>
         </ion-item>
-  
+
         <button ion-button type="submit" [disabled]="!userForm.valid">Submit</button>
-  
+
       </form>
 </ion-content>

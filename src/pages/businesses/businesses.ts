@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Observable } from 'rxjs';
-import { FirestoreProvider } from './../../providers/firestore/firestore';
+import { FirestoreProvider } from '../../providers/firestore/firestore';
 import { Business } from '../../models/Business-model';
 
 /**
- * Generated class for the BusinesssPage page.
+ * Generated class for the BusinessesPage page.
  *
  * See https://ionicframework.com/docs/components/#navigation for more info on
  * Ionic pages and navigation.

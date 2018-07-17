@@ -9,10 +9,10 @@
     <ion-navbar>
       <ion-title>wine-list</ion-title>
     </ion-navbar>
-  
+
   </ion-header>
-  
-  
+
+
   <ion-content padding>
     <ion-grid>
       <ion-row>
@@ -27,16 +27,16 @@
           <ion-col col-2>Order</ion-col>
         </ion-row>
         <form [formGroup]="orderForm" (ngSubmit)="placeOrder()" *ngIf="orderForm">
-  
+
           <div formArrayName="prods">
               <ion-grid>
-  
+
             <ion-row *ngFor="let product of orderForm.controls['prods'].controls; let i=index" align-items-end>
               <div [formGroupName]="i">
-  
+
               <ion-col col-8 >
                 <ion-item>
-                  <ion-input type="text" formControlName="name" readonly></ion-input>
+                  <ion-input type="text" formControlName="name" [readonly]></ion-input>
                   <ion-note item-end></ion-note>
                 </ion-item>
               </ion-col>
@@ -46,7 +46,7 @@
                   </ion-input>
                 </ion-item>
               </ion-col>
-  
+
               <ion-col col-2>
                 <ion-item>
                   <button ion-button icon-right icon-only (click)="placeOrder(product)">
@@ -55,26 +55,26 @@
                 </ion-item>
               </ion-col>
   </div>
-  
+
             </ion-row>
           </ion-grid>
-  
+
           </div>
           <ion-row>
           <button ion-button block type="submit" (click)="closeModal()">Done</button>
-  
+
       </ion-row>
             </form>
       </div>
-  
-  
+
+
       <div *ngIf="listType=='shortlist'">
         <ion-row>
           <ion-col col-8>Name</ion-col>
           <ion-col col-2>Add</ion-col>
           <ion-col col-2>Contact</ion-col>
         </ion-row>
-  
+
         <ion-row *ngFor="let product of productsList | async; let i=index" align-items-end>
           <ion-col col-8>
             <ion-item>
@@ -89,9 +89,9 @@
               </button>
             </ion-item>
           </ion-col>
-  
+
           <ion-col col-2>
-  
+
             <ion-item>
               <button ion-button icon-right icon-only (click)="contact(product.pid)">
                 <ion-icon small name="phone"></ion-icon>
@@ -99,8 +99,8 @@
             </ion-item>
           </ion-col>
         </ion-row>
-  
+
       </div>
     </ion-grid>
-  
+
   </ion-content>

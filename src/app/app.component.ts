@@ -6,7 +6,6 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { FirestoreProvider} from "../providers/firestore/firestore";
 
-import { HomePage } from '../pages/home/home';
 @Component({
   templateUrl: 'app.html'
 })
@@ -36,11 +35,11 @@ export class LpApp {
       console.log(user);
        this.afs.get(`user/${user.uid}`, 'busType').then(type => {
          this.rootPage = `${type}Page`;
-       })
+       });
       authListener.unsubscribe();
     } else {
       this.rootPage = 'LoginPage';
-      authListener.unsubscribe(); 
+      authListener.unsubscribe();
     }
       });
   }

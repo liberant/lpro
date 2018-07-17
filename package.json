@@ -1,8 +1,8 @@
 {
   "name": "lpro",
   "version": "0.0.2",
-  "author": "Ionic Framework",
-  "homepage": "http://ionicframework.com/",
+  "author": "Liberant",
+  "homepage": "http://liberant.com.au/",
   "private": true,
   "scripts": {
     "clean": "ionic-app-scripts clean",

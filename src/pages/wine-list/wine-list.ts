@@ -1,5 +1,3 @@
-import { Order } from './../../models/order-model';
-import { Producer } from "./../../models/business-model";
 import { Component } from "@angular/core";
 import {
   IonicPage,
@@ -11,12 +9,11 @@ import {
 import { FormBuilder, FormGroup, FormArray } from "@angular/forms";
 import { Observable } from "rxjs/Observable";
 import { FirestoreProvider } from "../../providers/firestore/firestore";
-import { AuthProvider } from "./../../providers/auth/auth";
+import { AuthProvider } from "../../providers/auth/auth";
 import { Storage } from "@ionic/storage";
 import { OrdersProvider } from "../../providers/orders/orders";
 import { Product } from "../../models/product-model";
 import { GroupByPipe, PairsPipe } from 'ngx-pipes';
-import { forEach } from '@firebase/util/dist/esm/src/obj';
 
 
 @IonicPage()
@@ -64,9 +61,10 @@ export class WineListPage {
     this.productsList = await this.afs.col$<Product>(
       `business/${this.busId}/winelist`
     );
-    this.productsList.take(1),( res => {
+    this.productsList.subscribe(res => {
       this.initProducts(res);
     });
+
   }
 
   /*createItem(product: Product): FormArray {
@@ -103,7 +101,6 @@ export class WineListPage {
     //this.productsList.subscribe(_products => {
     //console.log(_products);
     _products.forEach(product => {
-      if(product.name != null) {
       control.push(
         this.fb.group({
           id: product.id,
@@ -113,10 +110,10 @@ export class WineListPage {
           cartonSize: product.cartonSize,
           unitCost: product.unitCost,
           price: product.cartonSize * product.unitCost,
-          qty: product.qty
+          qty: product.qty,
+          onOrder: product.onOrder,
         })
       );
-    }
     });
   }
   initProductControl() {
@@ -128,7 +125,8 @@ export class WineListPage {
       cartonSize: [""],
       unitCost: [""],
       price: [""],
-      qty: [""]
+      qty: [""],
+      onOrder: [''],
     });
   }
 
@@ -153,21 +151,20 @@ export class WineListPage {
     let producers = this.pairs.transform(this.groupBy.transform(prods, 'producer'));
     producers.forEach(prod => {
       console.log(prod);
-      let producer = { name: prod[0], pid: prod[1][0].pid, rid: this.orderForm.controls['rid'].value}
+      let producer = { name: prod[0], pid: prod[1][0].pid, rid: this.orderForm.controls['rid'].value};
       prod[1].forEach(p => {
       if (p.qty == null) {
         control.removeAt(p.key);
       }
       if (p.qty) {
-        products.push(p)
+        products.push(p);
         total = total + p.price;
         console.log(total);
       }
     });
-    let ptotal = ({ total: total });
-    this.op.placeProducerOrder(producer, products, ptotal);
+    this.op.placeProducerOrder(producer, products, total);
 
-  })
+  });
 
     //this.op.producerOrder()
 

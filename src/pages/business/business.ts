@@ -1,6 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
 import {
-  Alert,
   AlertController,
   IonicPage,
   Loading,
@@ -13,9 +12,6 @@ import {
   FormGroup,
   Validators
 } from '@angular/forms';
-import { EmailValidator } from '../../validators/email';
-import { Observable } from 'rxjs/Observable';
-import { map } from 'rxjs/operators';
 import { FirestoreProvider } from '../../providers/firestore/firestore';
 
 import { Business } from '../../models/business-model';
@@ -58,9 +54,9 @@ export class BusinessPage {
        .subscribe(data =>{
          this.patchForm(data);
        });
-       console.log(this.business);   
-   } 
-   this.content.resize();    
+       console.log(this.business);
+   }
+   this.content.resize();
     }
 
 
