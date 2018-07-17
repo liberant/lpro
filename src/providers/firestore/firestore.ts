@@ -11,35 +11,38 @@ import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/take';
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/switchMap';
+import { first } from 'rxjs/operators';
+
 
 import * as firebase from 'firebase/app';
-import { EAFNOSUPPORT } from 'constants';
 
 type CollectionPredicate<T>   = string |  AngularFirestoreCollection<T>;
 type DocPredicate<T>          = string |  AngularFirestoreDocument<T>;
 
 @Injectable()
 export class FirestoreProvider {
-public  userId: string;
+userId: string;
 
-  constructor(public afs: AngularFirestore, public afAuth: AngularFireAuth, private storage: Storage) {
-    const authListener = afAuth.authState.subscribe(user => {
-      if (user) {
-        this.userId = user.uid;
-      }
-    });
+constructor(public afs: AngularFirestore, public afAuth: AngularFireAuth, private storage: Storage) {
+
   }
+
+
+isLoggedIn() {
+  return this.afAuth.authState.pipe(first()).toPromise();
+}
+
 
   /// **************
   /// Get a Reference
   /// **************
 
-  col<T>(ref: CollectionPredicate<T>, queryFn?): AngularFirestoreCollection<T> {
-    return typeof ref === 'string' ? this.afs.collection<T>(ref, queryFn) : ref
+col<T>(ref: CollectionPredicate<T>, queryFn?): AngularFirestoreCollection<T> {
+    return typeof ref === 'string' ? this.afs.collection<T>(ref, queryFn) : ref;
   }
 
-  doc<T>(ref: DocPredicate<T>): AngularFirestoreDocument<T> {
-    return typeof ref === 'string' ? this.afs.doc<T>(ref) : ref
+doc<T>(ref: DocPredicate<T>): AngularFirestoreDocument<T> {
+    return typeof ref === 'string' ? this.afs.doc<T>(ref) : ref;
   }
 
 
@@ -49,22 +52,22 @@ public  userId: string;
   /// **************
 
 
-  doc$<T>(ref:  DocPredicate<T>): Observable<T> {
+doc$<T>(ref: DocPredicate<T>): Observable<T> {
     return this.doc(ref).snapshotChanges().map(doc => {
-      return doc.payload.data() as T
-    })
+      return doc.payload.data() as T;
+    });
   }
 
-  col$<T>(ref: CollectionPredicate<T>, queryFn?): Observable<T[]> {
+col$<T>(ref: CollectionPredicate<T>, queryFn?): Observable<T[]> {
     return this.col(ref, queryFn).snapshotChanges().map(docs => {
-      return docs.map(a => a.payload.doc.data()) as T[]
+      return docs.map(a => a.payload.doc.data()) as T[];
     });
   }
 
 
 
   /// with Ids
-  colWithIds$<T>(ref: CollectionPredicate<T>, queryFn?): Observable<any[]> {
+colWithIds$<T>(ref: CollectionPredicate<T>, queryFn?): Observable<any[]> {
     return this.col(ref, queryFn).snapshotChanges().map(actions => {
       return actions.map(a => {
         const data = a.payload.doc.data();
@@ -82,67 +85,67 @@ public  userId: string;
 
 
   /// Firebase Server Timestamp
-  get timestamp() {
-    return firebase.firestore.FieldValue.serverTimestamp()
+get timestamp() {
+    return firebase.firestore.FieldValue.serverTimestamp();
   }
 
-  get(ref, val): Promise<string> {
+get(ref, val): Promise<string> {
     return this.afs.doc(ref).ref.get().then(doc => {
       return  doc.get(val);
     });
   }
 
-  set<T>(ref: DocPredicate<T>, data: any) {
+set<T>(ref: DocPredicate<T>, data: any) {
     const timestamp = this.timestamp;
     return this.doc(ref).set({
       ...data,
       updatedAt: timestamp,
       createdAt: timestamp
-    })
+    });
   }
 
-  update<T>(ref: DocPredicate<T>, data: any) {
+update<T>(ref: DocPredicate<T>, data: any) {
     return this.doc(ref).update({
       ...data,
       updatedAt: this.timestamp
-    })
+    });
   }
 
 
-  delete<T>(ref: DocPredicate<T>) {
-    return this.doc(ref).delete()
+delete<T>(ref: DocPredicate<T>) {
+    return this.doc(ref).delete();
   }
 
-  add<T>(ref: CollectionPredicate<T>, data) {
+add<T>(ref: CollectionPredicate<T>, data) {
     const timestamp = this.timestamp;
     return this.col(ref).add({
       ...data,
       updatedAt: timestamp,
       createdAt: timestamp
-    })
+    });
   }
 
 
-  geopoint(lat: number, lng: number) {
-    return new firebase.firestore.GeoPoint(lat, lng)
+geopoint(lat: number, lng: number) {
+    return new firebase.firestore.GeoPoint(lat, lng);
   }
 
 
   /// If doc exists update, otherwise set
-  upsert<T>(ref: DocPredicate<T>, data: any) {
+upsert<T>(ref: DocPredicate<T>, data: any) {
     const doc = this.doc(ref).snapshotChanges().take(1).toPromise();
 
     return doc.then(snap => {
-      return snap.payload.exists ? this.update(ref, data) : this.set(ref, data)
-    })
+      return snap.payload.exists ? this.update(ref, data) : this.set(ref, data);
+    });
   }
 
-  change<T>(ref: DocPredicate<T>, data: any, type: string) {
+change<T>(ref: DocPredicate<T>, data: any, type: string) {
     console.log(data, type);
     return this.doc(ref).update({
       ...data,
       [type]: this.timestamp
-    })
+    });
   }
 
 
@@ -151,27 +154,27 @@ public  userId: string;
   /// **************
 
 
-  inspectDoc(ref: DocPredicate<any>): void {
+inspectDoc(ref: DocPredicate<any>): void {
     const tick = new Date().getTime();
     this.doc(ref).snapshotChanges()
         .take(1)
         .do(d => {
           const tock = new Date().getTime() - tick;
-          console.log(`Loaded Document in ${tock}ms`, d)
+          console.log(`Loaded Document in ${tock}ms`, d);
         })
-        .subscribe()
+        .subscribe();
   }
 
 
-  inspectCol(ref: CollectionPredicate<any>): void {
+inspectCol(ref: CollectionPredicate<any>): void {
     const tick = new Date().getTime();
     this.col(ref).snapshotChanges()
         .take(1)
         .do(c => {
           const tock = new Date().getTime() - tick;
-          console.log(`Loaded Collection in ${tock}ms`, c)
+          console.log(`Loaded Collection in ${tock}ms`, c);
         })
-        .subscribe()
+        .subscribe();
   }
 
 
@@ -181,21 +184,21 @@ public  userId: string;
   /// **************
 
   /// create a reference between two documents
-  connect(host: DocPredicate<any>, key: string, doc: DocPredicate<any>) {
-    return this.doc(host).update({ [key]: this.doc(doc).ref })
+connect(host: DocPredicate<any>, key: string, doc: DocPredicate<any>) {
+    return this.doc(host).update({ [key]: this.doc(doc).ref });
   }
 
 
   /// returns a documents references mapped to AngularFirestoreDocument
-  docWithRefs$<T>(ref: DocPredicate<T>) {
+docWithRefs$<T>(ref: DocPredicate<T>) {
     return this.doc$(ref).map(doc => {
       for (const k of Object.keys(doc)) {
         if (doc[k] instanceof firebase.firestore.DocumentReference) {
-          doc[k] = this.doc(doc[k].path)
+          doc[k] = this.doc(doc[k].path);
         }
       }
-      return doc
-    })
+      return doc;
+    });
   }
 
   /// **************
@@ -204,7 +207,7 @@ public  userId: string;
 
 
   /// Just an example, you will need to customize this method.
-  atomic() {
+atomic() {
     const batch = firebase.firestore().batch();
     /// add your operations here
 
@@ -217,21 +220,21 @@ public  userId: string;
     batch.update(userDoc, { timestamp: currentTime });
 
     /// commit operations
-    return batch.commit()
+    return batch.commit();
   }
 
 
-  getId() {
+getId() {
     return this.afs.createId();
   }
 
-  async getBusId(): Promise<string> {
-    const userId = await this.userId;
-    const userProfile: firebase.firestore.DocumentSnapshot = await firebase
+async getBusId(): Promise<string> {
+    const userId = await this.afAuth.authState.pipe(first()).toPromise();
+  const userProfile: firebase.firestore.DocumentSnapshot = await firebase
       .firestore()
       .doc(`user/${userId}`)
       .get();
-console.log(userProfile.data().busId);
+    console.log(userProfile.data().busId);
     return userProfile.data().busId;
   }
   /*

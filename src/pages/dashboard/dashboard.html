@@ -11,7 +11,7 @@
 
   </ion-navbar>
   <ion-buttons end>
-      <button ion-button icon-right icon-only (click)="auth.logoutUser();this.navCtrl.setRoot('LoginPage')">
+      <button ion-button icon-right icon-only (click)="this.auth.logoutUser();this.navCtrl.setRoot('LoginPage')">
         <ion-icon name="power"></ion-icon>
       </button>
     </ion-buttons>

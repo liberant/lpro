@@ -22,7 +22,7 @@
           <ion-row>
             <ion-col>
         <ion-card-title>
-          {{trader.name }}
+          {{trader?.name }}
       </ion-card-title>
               <h3>Placed: {{order.orderDate | date: 'dd/MM/yyyy'}}
               </h3>
@@ -31,11 +31,11 @@
               <ion-list>
                 <button ion-item>
                   <ion-icon name="call" item-start small></ion-icon>
-                  {{trader.phone }}
+                  {{trader?.phone }}
                 </button>
                 <button ion-item>
                   <ion-icon name="mail" item-start small></ion-icon>
-                  {{trader.email }}
+                  {{trader?.email }}
                 </button>
               </ion-list>
             </ion-col>
