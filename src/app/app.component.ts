@@ -6,7 +6,6 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { FirestoreProvider } from '../providers/firestore/firestore';
 import firebase from 'firebase/app';
-import 'firebase/auth';
 
 @Component({
   templateUrl: 'app.html'

@@ -4,7 +4,6 @@ import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { Pro } from '@ionic/pro';
 import { ErrorHandler, Injectable, Injector } from '@angular/core';
 
-
 Pro.init('080aac60', {
   appVersion: '0.0.1',
 });
@@ -27,7 +26,7 @@ import { FirestoreProvider } from '../providers/firestore/firestore';
 import { OrdersProvider } from '../providers/orders/orders';
 
 import { NgPipesModule } from 'ngx-pipes';
-
+import { DirectivesModule} from '../directives/directives.module';
 
 @Injectable()
 export class LPErrorHandler implements ErrorHandler {

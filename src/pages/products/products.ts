@@ -24,22 +24,20 @@ export class ProductsPage {
   productsList: Observable<Product[]>;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public afs: FirestoreProvider, public modalCtrl: ModalController, public toastCtrl: ToastController, public storage: Storage, public auth: AuthProvider) {
-    this.user = this.navParams.data;
   }
 
 
   ionViewDidLoad() {
+    this.user = this.afs.user.getValue();
     this.getProducts();
 
   }
 
   async getProducts() {
-    const tid = this.user.busType === 'Retailer' ? 'rid ' : 'pid';
-    this.productsList = this.user.busType === 'Admin' ? this.afs.col$<Product>(`product`) : this.afs.col$<Product>(`product`)
-
-  // : this.afs.col$<Product>(`product`, ref => {
-   //   ref.where(tid, '==', this.user.busId);
-   // });
+    const tid = this.user.busType === 'Retailer' ? 'rid' : 'pid';
+    this.productsList = this.user.busType !== 'Producer' ? this.afs.col$<Product>(`product`) : this.afs.col$<Product>(`product`, ref => {
+      ref.where (tid, '==', this.user.busId);
+    });
   }
 
   detail(id: string) {
