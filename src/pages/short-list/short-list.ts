@@ -1,9 +1,9 @@
-import {Component} from '@angular/core';
-import {IonicPage, NavController, NavParams, ViewController, ToastController} from 'ionic-angular';
-import {Observable} from 'rxjs/Observable';
-import {FirestoreProvider} from '../../providers/firestore/firestore';
-import {Product} from '../../models/product-model';
-import { User} from "../../models/user-model";
+import { Component } from '@angular/core';
+import { IonicPage, NavController, NavParams, ToastController, ViewController } from 'ionic-angular';
+import { Observable } from 'rxjs/Observable';
+import { FirestoreProvider } from '../../providers/firestore/firestore';
+import { Product } from '../../models/product-model';
+import { User } from '../../models/user-model';
 
 
 @IonicPage()
@@ -12,11 +12,11 @@ import { User} from "../../models/user-model";
   templateUrl: 'short-list.html',
 })
 export class ShortListPage {
-  public productsList: Observable<Product[]>;
-  public user: User;
+  productsList: Observable<Product[]>;
+  user: User;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private afs: FirestoreProvider, public viewCtrl: ViewController, public toastCtrl: ToastController) {
-    this.user = this.navParams.data;
+    this.user = this.afs.user.getValue();
   }
 
   ionViewDidLoad() {
@@ -32,7 +32,7 @@ export class ShortListPage {
 
 
   detail(id: string) {
-    this.navCtrl.push('ProductPage', {id: id});
+    this.navCtrl.push('ProductPage', { id });
   }
 
   closeModal() {
@@ -41,13 +41,13 @@ export class ShortListPage {
 
 
   async addList(product) {
-    let res = await this.afs.upsert(`business/${this.user.busId}/winelist/${product.id}`, product);
-      this.presentToast('Wine added successfully');
-      console.log(res);
+    const res = await this.afs.upsert(`business/${this.user.busId}/winelist/${product.id}`, product);
+    this.presentToast('Wine added successfully');
+    console.log(res);
     this.afs.delete(`business/${this.user.busId}/shortlist/${product.id}`);
   }
 
-  contact(id){
+  contact(id) {
     console.log(id);
   }
 

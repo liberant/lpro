@@ -21,7 +21,7 @@
     <ion-item-group *ngFor="let orders of group[1] | groupBy: business | pairs">
       <ion-item-divider>{{orders[0]}}</ion-item-divider>
       <ion-item *ngFor="let order of orders[1] ">
-      <h3 (click)="detail(order.id)">{{ order.orderDate }}</h3>
+      <p (click)="detail(order.id)">{{ order.orderDate }}</p>
         <ion-list>
           <ion-item *ngFor="let product of order.products">
             {{product.name}}

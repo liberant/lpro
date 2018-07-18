@@ -42,7 +42,7 @@ export class WineListPage {
     public groupBy: GroupByPipe,
     public pairs: PairsPipe,
   ) {
-    this.user = this.navParams.data;
+    this.user  = this.afs.user.getValue();
 
     this.initForm();
   }

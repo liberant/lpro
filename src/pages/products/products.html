@@ -26,7 +26,6 @@
         <h3 (click)="detail(product.id)">{{ product.name}}</h3>
         <button ion-button left (click)="addToList('shortlist', product)" color="light"><ion-icon name="clipboard"></ion-icon>Shortlist </button>
         <button ion-button right (click)="addToList('winelist', product)" color="danger"><ion-icon name="trash"></ion-icon>Winelist</button>
-        {{order.total}}
 
       </ion-item>
     </ion-item-group>

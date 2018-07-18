@@ -16,7 +16,7 @@ export class WineListsPage {
   productsList: Observable<Product[]>;
   user: User;
   constructor(public navCtrl: NavController, public navParams: NavParams, private afs: FirestoreProvider, public viewCtrl: ViewController, public toastCtrl: ToastController, public op: OrdersProvider) {
-    this.user = this.navParams.data;
+    this.user  = this.afs.user.getValue();
   }
 
   ionViewDidLoad() {
