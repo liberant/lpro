@@ -42,7 +42,8 @@ export class WineListPage {
     public groupBy: GroupByPipe,
     public pairs: PairsPipe,
   ) {
-    this.busId = this.auth.user.busId;
+    this.busId = this.navParams.get('user.busID');
+
     this.initForm();
   }
 

@@ -16,6 +16,7 @@ export class ShortListPage {
   public busId: string;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private afs: FirestoreProvider, public viewCtrl: ViewController, public toastCtrl: ToastController) {
+    this.busId = this.navParams.get('user.busId');
   }
 
   ionViewDidLoad() {
@@ -28,7 +29,6 @@ export class ShortListPage {
   }
 
   async getProducts(){
-    this.busId = await this.afs.getBusId();
     this.productsList = await this.afs.col$<Product>(`business/${this.busId}/shortlist`);
 
   }

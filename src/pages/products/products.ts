@@ -24,7 +24,7 @@ export class ProductsPage {
   public productsList: Observable<Product[]>;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public afs: FirestoreProvider, public modalCtrl: ModalController, public toastCtrl: ToastController, public storage: Storage, public auth: AuthProvider) {
-this.getUser();
+    this.busId = this.navParams.get('user.busId');
   }
   async getUser(){
     this.busType = await this.storage.get('type');

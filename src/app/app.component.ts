@@ -1,10 +1,12 @@
 import { Component, ViewChild } from '@angular/core';
-import { Platform, MenuController, Nav } from 'ionic-angular';
+import { MenuController, Nav, Platform } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { AngularFireAuth } from 'angularfire2/auth';
-import { FirestoreProvider} from "../providers/firestore/firestore";
+import { FirestoreProvider } from '../providers/firestore/firestore';
+import firebase from 'firebase/app';
+import 'firebase/auth';
 
 @Component({
   templateUrl: 'app.html'
@@ -12,8 +14,8 @@ import { FirestoreProvider} from "../providers/firestore/firestore";
 export class LpApp {
   @ViewChild(Nav) nav: Nav;
 
-  rootPage:any;
-  pages: Array<{title: string, component: any}>;
+  rootPage: any;
+  pages: {title: string, component: any}[];
 
   constructor(public platform: Platform,
               public statusBar: StatusBar,
@@ -26,22 +28,22 @@ export class LpApp {
     this.initializeApp();
 
     this.pages = [
-      { title: 'Admin', component: 'AdminPage'},
+      { title: 'Admin', component: 'AdminPage' },
       { title: 'Producers', component: 'ProducerPage' },
       { title: 'Retailers', component: 'RetailerPage' }
     ];
 
-    const authListener = afAuth.authState.subscribe(user => { if (user) {
-      console.log(user);
-       this.afs.get(`user/${user.uid}`, 'busType').then(type => {
-         this.rootPage = `${type}Page`;
-       });
-      authListener.unsubscribe();
-    } else {
-      this.rootPage = 'LoginPage';
-      authListener.unsubscribe();
-    }
-      });
+    const unsubscribe = firebase.auth().onAuthStateChanged(async auth => {
+      if (!auth) {
+        this.rootPage = 'LoginPage';
+      } else {
+        console.log(auth);
+        this.afs.getUser(auth.uid);
+        const type = await this.afs.get(`user/${auth.uid}`, 'busType')
+        this.rootPage = `${type}Page`;
+      }
+      unsubscribe();
+    });
   }
 
   initializeApp() {
