@@ -6,15 +6,17 @@ import { AngularFirestore,
 } from 'angularfire2/firestore';
 import { Storage } from '@ionic/storage';
 import { Observable } from 'rxjs/Observable';
+import { AuthProvider } from '../auth/auth';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/take';
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/switchMap';
-import { first } from 'rxjs/operators';
+import { first, switchMap, take, tap } from 'rxjs/operators';
 
 
 import * as firebase from 'firebase/app';
+import { User } from '../../models/user-model';
 
 type CollectionPredicate<T>   = string |  AngularFirestoreCollection<T>;
 type DocPredicate<T>          = string |  AngularFirestoreDocument<T>;
@@ -23,7 +25,8 @@ type DocPredicate<T>          = string |  AngularFirestoreDocument<T>;
 export class FirestoreProvider {
 userId: string;
 
-constructor(public afs: AngularFirestore, public afAuth: AngularFireAuth, private storage: Storage) {
+constructor(public afs: AngularFirestore, public afAuth: AngularFireAuth, public auth: AuthProvider, private storage: Storage) {
+  console.log('FirestoreProvider');
 
   }
 
@@ -76,6 +79,7 @@ colWithIds$<T>(ref: CollectionPredicate<T>, queryFn?): Observable<any[]> {
       });
     });
   }
+
 
 
 
@@ -227,19 +231,11 @@ atomic() {
 getId() {
     return this.afs.createId();
   }
-
-async getBusId(): Promise<string> {
-    const userId = await this.afAuth.authState.pipe(first()).toPromise();
-  const userProfile: firebase.firestore.DocumentSnapshot = await firebase
-      .firestore()
-      .doc(`user/${userId}`)
-      .get();
-    console.log(userProfile.data().busId);
-    return userProfile.data().busId;
-  }
-  /*
- getBusId(): Promise<string> {
-  return this.get('busId');
-}*/
-
+/*
+userData() {
+  const auth = await this.isLoggedIn();
+    const user = await this.doc$(`user/${auth.uid}`).pipe(first());
+    console.log(user);
+    return user;
+} */
 }

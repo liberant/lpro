@@ -15,26 +15,72 @@
 
 <ion-content padding>
 
-  <ion-item-group *ngFor="let group of ordersList | async | groupBy: 'status' | pairs ">
+  <ion-list *ngFor="let status of statusList | orderBy: 'order'">
+  <ion-item-group *ngFor="let group of ordersList | async | filterBy: ['status']: status.val | groupBy: ['status'] | pairs">
+
     <ion-item-divider color="light">{{group[0] | ucfirst}}</ion-item-divider>
 
     <ion-item-group *ngFor="let orders of group[1] | groupBy: business | pairs">
       <ion-item-divider>{{orders[0]}}</ion-item-divider>
-      <ion-item *ngFor="let order of orders[1] ">
-      <h3 (click)="detail(order.id)">{{ order.orderDate }}</h3>
-        <ion-list>
-          <ion-item *ngFor="let product of order.products">
+      <ion-card *ngFor="let order of orders[1] | orderBy: 'orderDate'">
+      <ion-card-header (click)="showProducts(order.id)">{{ order.orderDate | date: 'dd/MM/yy HH:mm' }}  <ion-note>{{order.total}}</ion-note>
+      </ion-card-header>
+        <ion-card-content>
+        <ion-list *ngIf="order.id == visOrder">
+          <ion-list-header> Products</ion-list-header>
+          <ion-item *ngFor="let product of prodList | async">
             {{product.name}}
           </ion-item>
         </ion-list>
-        {{order.total}}
+          <ion-grid [ngSwitch]="order.status">
+            <ion-row *ngSwitchCase="'submitted'">
+              <ion-col>
+                <ion-item *ngIf="busType === 'Producer'">
+                  <ion-label>Approve Order</ion-label>
+                  <ion-toggle item-start checked={{order.approved}} (ionChange)="op.approveOrder(order.id)"></ion-toggle>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+            <ion-row *ngSwitchCase="'approved'">
+              <ion-col>
+                <ion-item *ngIf="busType === 'Producer'">
+                  <ion-label>Ship Order</ion-label>
+                  <ion-toggle item-start checked={{order.shipped}} (ionChange)="op.progressOrder(order.id, 'shipped', order.shipped)"></ion-toggle>
+                </ion-item>
+                <ion-item>
+                  Approved: {{order.approvedDate | date: 'dd/MM/yyy'}}
+                </ion-item>
+              </ion-col>
+            </ion-row>
+              <ion-row  *ngSwitchCase="'shipped'">
+                <ion-col>
+                  Shipped: {{order.shippedDate | date: 'dd/MM/yyy'}}
+                </ion-col>
+              <ion-col>
+                <ion-item *ngIf="busType === 'Retailer'">
+                  <ion-label>Receive Order</ion-label>
+                  <ion-toggle item-start checked={{order.received}} (ionChange)="op.progressOrder(order.id, 'received', order.received, order.rid, order.products)"></ion-toggle>
+                </ion-item>
+              </ion-col>
+              </ion-row>
+              <ion-row *ngSwitchCase="'received'">
+              <ion-col>
+                {{order.receivedDate | date: 'dd/MM/yyy'}}
+              </ion-col>
+
+              </ion-row>
+          </ion-grid>
+
+
+
+        </ion-card-content>
       <!--
       <button ion-button left (click)="receive(order)" color="light"><ion-icon name="clipboard"></ion-icon>Receive </button>
       <button ion-button right (click)="accept(order)" color="light"><ion-icon name="clipboard"></ion-icon>Accept </button>
       <button ion-button right (click)="ship(order)" color="danger"><ion-icon name="trash"></ion-icon>Ship</button>
       -->
-      </ion-item>
+      </ion-card>
     </ion-item-group>
   </ion-item-group>
-
+  </ion-list>
 </ion-content>

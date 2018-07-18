@@ -5,31 +5,38 @@ import {
   AngularFirestoreCollection,
   AngularFirestoreDocument
 } from 'angularfire2/firestore';
-import { FirestoreProvider } from '../firestore/firestore';
 import firebase from 'firebase/app';
 import { Storage } from '@ionic/storage';
 
 import { User } from '../../models/user-model';
 import { Business } from '../../models/business-model';
-import { first } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { first, startWith, switchMap, tap } from 'rxjs/operators';
 
 
 @Injectable()
 export class AuthProvider {
-userId: string;
-busId: string;
-busType: string;
+user$: Observable<User>;
 user: User;
-userRef: AngularFirestoreDocument<User>;
 constructor(
     public afAuth: AngularFireAuth,
-    public fireStore: AngularFirestore,
+    public afs: AngularFirestore,
     private storage: Storage,
-    public afs: FirestoreProvider
   ) {
-  }
+  console.log('AuthProvider');
+}
 
-loginUser(email: string, password: string): Promise<firebase.User> {
+getUser() {
+  this.user$ = this.afAuth.authState.pipe(
+    switchMap(user => {
+      if (user) {
+        return this.afs.doc<User>(`users/${user.uid}`).valueChanges();
+      }
+      return this.user$;
+  }));
+}
+
+async loginUser(email: string, password: string): Promise<firebase.User> {
     return this.afAuth.auth.signInWithEmailAndPassword(email, password);
   }
 
@@ -41,11 +48,10 @@ async logoutUser(): Promise<void> {
     await this.storage.clear();
     return this.afAuth.auth.signOut();
   }
-curUser(uid) {
-    return this.afs.doc$<User>(`user/${uid}`).pipe(first()).toPromise();
-  }
 
 
+
+/*
 async setIds(uid) {
     this.user = await this.curUser(uid);
     await this.storage.set('uid', this.user.id);
@@ -124,5 +130,6 @@ async createRegularUser(email: string, busId: string): Promise<any> {
 
     return userCollection.add(regularUser);
   }
+  */
 
 }

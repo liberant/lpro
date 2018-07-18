@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
+import {ReactiveFormsModule} from '@angular/forms';
 import { Pro } from '@ionic/pro';
 import { ErrorHandler, Injectable, Injector } from '@angular/core';
 
@@ -64,6 +65,7 @@ export class LPErrorHandler implements ErrorHandler {
     AngularFirestoreModule,
     AngularFireStorageModule,
     NgPipesModule,
+    ReactiveFormsModule,
   ],
   bootstrap: [IonicApp],
   entryComponents: [
