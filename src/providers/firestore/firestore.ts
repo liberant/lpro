@@ -26,21 +26,25 @@ export class FirestoreProvider {
   user: BehaviorSubject<User> = new BehaviorSubject<User>(null);
 
   constructor(public afs: AngularFirestore, public afAuth: AngularFireAuth, private storage: Storage) {
-afAuth.auth.onAuthStateChanged(auth => {
-  if (auth) {
-    this.getUser(auth.uid);
-  } else {
-    this.user.next(null);
-  }
-});
+    afAuth.auth.onAuthStateChanged(auth => {
+      if (auth) {
+        this.getUser(auth.uid);
+      } else {
+        this.user.next(null);
+      }
+    });
   }
 
-  getUser(id) {
+  getUser(id): void {
     const user = this.doc$<User>(`user/${id}`).first();
     user.subscribe(data => {
       console.log(data);
       this.updateUser(data);
     });
+  }
+
+  getUserVal(val): string {
+    return this.user.getValue()[val];
   }
 
 
@@ -98,6 +102,9 @@ afAuth.auth.onAuthStateChanged(auth => {
     });
   }
 
+  getDoc<T>(ref: DocPredicate<T>): Promise<T> {
+    return this.doc$<T>(`${ref}`).pipe(first()).toPromise();
+  }
 
   /// **************
   /// Write Data
@@ -246,9 +253,4 @@ afAuth.auth.onAuthStateChanged(auth => {
   getId() {
     return this.afs.createId();
   }
-
-  getBusId(): string {
-    return this.user.getValue().busId;
-  }
-
 }

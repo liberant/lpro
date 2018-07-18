@@ -36,7 +36,7 @@ export class LPErrorHandler implements ErrorHandler {
   constructor(injector: Injector) {
     try {
       this.ionicErrorHandler = injector.get(IonicErrorHandler);
-    } catch(e) {
+    } catch (e) {
       // Unable to get the IonicErrorHandler provider, ensure
       // IonicErrorHandler has been added to the providers list below
     }

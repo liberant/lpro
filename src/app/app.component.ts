@@ -39,7 +39,7 @@ export class LpApp {
       } else {
         console.log(auth);
         this.afs.getUser(auth.uid);
-        const type = await this.afs.get(`user/${auth.uid}`, 'busType')
+        const type = await this.afs.get(`user/${auth.uid}`, 'busType');
         this.rootPage = `${type}Page`;
       }
       unsubscribe();

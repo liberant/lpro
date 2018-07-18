@@ -14,10 +14,10 @@
 
 
 <ion-content padding>
-    <button *ngIf="busType === 'Producer'" ion-button item-end icon-only (click)="create()"><ion-icon small name="add-circle"></ion-icon></button>
-    <button *ngIf="busType === 'Retailer'" ion-button block (click)="openList('Short')">Open Shortlist</button>
+    <button *ngIf="user.busType  == 'Producer'" ion-button item-end icon-only (click)="create()"><ion-icon small name="add-circle"></ion-icon></button>
+    <button *ngIf="user.busType == 'Retailer'" ion-button block (click)="openList('Short')">Open Shortlist</button>
 
-    <ion-list>
+    <ion-list *ngIf="productsList">
         <ion-list-header>
           <h3>Products</h3>
         </ion-list-header>

@@ -7,6 +7,7 @@ import { Storage } from '@ionic/storage';
 
 import { Business } from '../../models/business-model';
 import { Order } from '../../models/order-model';
+import { User} from "../../models/user-model";
 import { Observable } from 'rxjs';
 import { Product } from '../../models/product-model';
 import { first } from 'rxjs/operators';
@@ -20,10 +21,10 @@ import { first } from 'rxjs/operators';
 export class OrderPage {
   retailer: Business;
   producer: Business;
-  trader: Business;
+  trader: Observable<Business>;
   order$: Observable<Order>;
   products$: Observable<Product[]>;
-  busId: string;
+  user: User;
   tid: string;
   orderId: string;
   busType: string;
@@ -35,19 +36,7 @@ export class OrderPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController, public op: OrdersProvider, public afs: FirestoreProvider, private auth: AuthProvider, private storage: Storage) {
     this.orderId = navParams.get('id');
-  }
-
-  async getUser() {
-    this.busType = await this.storage.get('type');
-    this.busId = await this.storage.get('busId');
-    console.log(this.busType);
-    return this.busType;
-  }
-
-  async getTrader(tid: string): Promise<Business> {
-    console.log(tid);
-    const trader = this.afs.doc$<Business>(`business/${tid}`);
-      return trader.pipe(first()).toPromise();
+    this.user = this.navParams.get('user');
   }
 
   ionViewDidLoad() {
@@ -56,14 +45,8 @@ export class OrderPage {
   }
 
   async getData(): Promise<void> {
-
-    await this.getUser();
-    let tid: string;
-    if (this.busType == 'Producer') { tid = await this.afs.get(`orders/${this.orderId}`, 'rid');
-      } else { tid = await this.afs.get(`orders/${this.orderId}`, 'pid'); }
-    this.trader = await this.getTrader(tid);
+    this.trader = this.afs.doc$<Business>(`business/${(this.user.busType === 'Retailer') ? this.order$.valueOf()['pid'] : this.order$.valueOf()['rid]']}`);
     this.products$ = this.afs.col$(`orders/${this.orderId}/products`);
-
   }
 
   toggle(field: string, val: boolean) {

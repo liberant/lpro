@@ -24,6 +24,7 @@ export class RetailerPage {
   userParams = {};
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public afs: FirestoreProvider) {
+    this.afs.load();
     this.userParams = this.afs.user.getValue();
   }
 }
