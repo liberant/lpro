@@ -1,9 +1,10 @@
-import {Component} from '@angular/core';
-import {IonicPage, NavController, NavParams, ViewController, ToastController} from 'ionic-angular';
-import {Observable} from 'rxjs/Observable';
-import {FirestoreProvider} from '../../providers/firestore/firestore';
-import { OrdersProvider} from "../../providers/orders/orders";
-import {Product} from '../../models/product-model';
+import { Component } from '@angular/core';
+import { IonicPage, NavController, NavParams, ToastController, ViewController } from 'ionic-angular';
+import { Observable } from 'rxjs/Observable';
+import { FirestoreProvider } from '../../providers/firestore/firestore';
+import { OrdersProvider } from '../../providers/orders/orders';
+import { Product } from '../../models/product-model';
+import { User } from '../../models/user-model';
 
 
 @IonicPage()
@@ -12,23 +13,19 @@ import {Product} from '../../models/product-model';
   templateUrl: 'wine-lists.html',
 })
 export class WineListsPage {
-  public productsList: Observable<Product[]>;
-  public busId: string;
-
-  constructor(public navCtrl: NavController, public navParams: NavParams, private afs: FirestoreProvider, public viewCtrl: ViewController, public toastCtrl: ToastController, public op: OrdersProvider ) {
+  productsList: Observable<Product[]>;
+  user: User;
+  constructor(public navCtrl: NavController, public navParams: NavParams, private afs: FirestoreProvider, public viewCtrl: ViewController, public toastCtrl: ToastController, public op: OrdersProvider) {
+    this.user  = this.afs.user.getValue();
   }
 
   ionViewDidLoad() {
-    this.afs.getBusId().then(res => {
-      console.log(res);
-      this.busId = res;
-      this.productsList = this.afs.colWithIds$<Product>(`business/${res}/winelist`);
+      this.productsList = this.afs.colWithIds$<Product>(`business/${this.user.busId}/winelist`);
       console.log(this.productsList);
-    });
   }
 
   detail(id: string) {
-    this.navCtrl.push('ProductPage', {id: id});
+    this.navCtrl.push('ProductPage', { id });
   }
 
   order() {
@@ -42,20 +39,20 @@ export class WineListsPage {
 
 
   addList(product) {
-    this.afs.upsert('business/'+this.busId+'/winelist/'+product.id, product).then(res =>{
+    this.afs.upsert(`business/${this.user.busId}/winelist/${product.id}`, product).then(res => {
       console.log(res);
       this.presentToast('Wine added successfully');
     });
-    this.afs.delete('business/'+this.busId+'/winelist/'+product.id);
+    this.afs.delete(`business/${this.user.busId}/winelist/${product.id}`);
   }
 
-  contact(id){
+  contact(id) {
     console.log(id);
   }
 
   presentToast(message) {
-    let toast = this.toastCtrl.create({
-      message: message,
+    const toast = this.toastCtrl.create({
+      message,
       duration: 3000,
       position: 'top'
     });

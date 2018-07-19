@@ -1,6 +1,6 @@
 <ion-tabs>
-    <ion-tab [root]="dashboardRoot" tabTitle="Dashboard" tabIcon="information-circle"></ion-tab>
-    <ion-tab [root]="productsRoot" tabTitle="Products" tabIcon="information-circle"></ion-tab>
-    <ion-tab [root]="ordersRoot" tabTitle="Orders" tabIcon="information-circle"></ion-tab>
-    <ion-tab [root]="deliveriesRoot" tabTitle="Deliveries" tabIcon="information-circle"></ion-tab>
+    <ion-tab [root]="dashboardRoot" [rootParams]="userParams" tabTitle="Dashboard" tabIcon="information-circle"></ion-tab>
+    <ion-tab [root]="productsRoot" [rootParams]="userParams" tabTitle="Products" tabIcon="information-circle"></ion-tab>
+    <ion-tab [root]="ordersRoot" [rootParams]="userParams" tabTitle="Orders" tabIcon="information-circle"></ion-tab>
+    <ion-tab [root]="deliveriesRoot" [rootParams]="userParams" tabTitle="Deliveries" tabIcon="information-circle"></ion-tab>
 </ion-tabs>

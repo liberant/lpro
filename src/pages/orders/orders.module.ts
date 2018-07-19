@@ -3,6 +3,7 @@ import { IonicPageModule } from 'ionic-angular';
 import { OrdersPage } from './orders';
 import { NgPipesModule } from 'ngx-pipes';
 
+
 @NgModule({
   declarations: [
     OrdersPage,

@@ -5,7 +5,6 @@ import {ReactiveFormsModule} from '@angular/forms';
 import { Pro } from '@ionic/pro';
 import { ErrorHandler, Injectable, Injector } from '@angular/core';
 
-
 Pro.init('080aac60', {
   appVersion: '0.0.1',
 });
@@ -28,7 +27,7 @@ import { FirestoreProvider } from '../providers/firestore/firestore';
 import { OrdersProvider } from '../providers/orders/orders';
 
 import { NgPipesModule } from 'ngx-pipes';
-
+import { DirectivesModule} from '../directives/directives.module';
 
 @Injectable()
 export class LPErrorHandler implements ErrorHandler {
@@ -37,7 +36,7 @@ export class LPErrorHandler implements ErrorHandler {
   constructor(injector: Injector) {
     try {
       this.ionicErrorHandler = injector.get(IonicErrorHandler);
-    } catch(e) {
+    } catch (e) {
       // Unable to get the IonicErrorHandler provider, ensure
       // IonicErrorHandler has been added to the providers list below
     }

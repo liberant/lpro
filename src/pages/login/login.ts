@@ -1,11 +1,18 @@
 import { Component } from '@angular/core';
 import {
-  Alert, AlertController, IonicPage, Loading, LoadingController, NavController } from 'ionic-angular';
+  Alert,
+  AlertController,
+  IonicPage,
+  Loading,
+  LoadingController,
+  NavController
+} from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Storage } from '@ionic/storage';
 import { EmailValidator } from '../../validators/email';
 import { AuthProvider } from '../../providers/auth/auth';
 import { FirestoreProvider} from "../../providers/firestore/firestore";
+import { User } from '../../models/user-model';
 
 @IonicPage()
 @Component({
@@ -38,7 +45,7 @@ export class LoginPage {
     this.navCtrl.push('PasswordResetPage');
   }
 
-  async loginUser(): Promise<any> {
+  async loginUser(): Promise<void> {
     if (!this.loginForm.valid) {
       console.log('Form not ready');
     } else {
@@ -51,9 +58,12 @@ export class LoginPage {
         console.log(auth);
         const busType = await this.afs.get(`user/${auth.uid}`,'busType');
         console.log(busType);
+        const auth = await this.authProvider.loginUser(email, password);
+        const user = await this.authProvider.curUser(auth.uid);
         await loading.dismiss();
         console.log(`${busType}Page`);
         this.navCtrl.setRoot(`${busType}Page`);
+        this.navCtrl.setRoot(`${user.busType}Page`);
       } catch (error) {
         await loading.dismiss();
         const alert: Alert = this.alertCtrl.create({

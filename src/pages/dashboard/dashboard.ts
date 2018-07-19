@@ -21,16 +21,15 @@ import { User } from '../../models/user-model';
 })
 export class DashboardPage {
 
-user$: Observable<User>;
-userId: string;
-busId: string;
-type: string;
-constructor(public navCtrl: NavController, public navParams: NavParams, public auth: AuthProvider, public afs: FirestoreProvider) {
+  public user;
+  public fireUser;
+
+  constructor(public navCtrl: NavController, public navParams: NavParams, private storage: Storage, public auth: AuthProvider, public afs: FirestoreProvider) {
+    this.user = this.navParams.data;
   }
 
-ionViewDidLoad() {
-    this.user$ = this.auth.getUser();
-}
-
-
+  ionViewDidLoad() {
+    console.log(this.user);
+    this.fireUser = this.afs.user.getValue();
+  }
 }

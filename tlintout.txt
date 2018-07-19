@@ -1,0 +1,35 @@
+
+ERROR: src/app/app.component.ts[9, 1]: import with explicit side-effect
+ERROR: src/app/app.component.ts[42, 71]: Missing semicolon
+ERROR: src/app/app.module.ts[5, 1]: Multiple imports from '@angular/core' can be combined into one.
+ERROR: src/app/app.module.ts[39, 12]: missing whitespace
+ERROR: src/app/credentials.ts[2, 13]: " should be '
+ERROR: src/app/credentials.ts[3, 17]: " should be '
+ERROR: src/app/credentials.ts[4, 18]: " should be '
+ERROR: src/app/credentials.ts[5, 16]: " should be '
+ERROR: src/app/credentials.ts[6, 20]: " should be '
+ERROR: src/app/credentials.ts[7, 24]: " should be '
+ERROR: src/components/components.module.ts[4, 1]: 2 space indentation expected
+ERROR: src/components/components.module.ts[5, 1]: 2 space indentation expected
+ERROR: src/components/components.module.ts[6, 1]: 2 space indentation expected
+ERROR: src/models/business-model.ts[19, 13]: Array type using 'Array<T>' is forbidden. Use 'T[]' instead.
+ERROR: src/models/business-model.ts[25, 2]: file should end with a newline
+ERROR: src/models/common-model.ts[15, 16]: Properties should be separated by semicolons
+ERROR: src/models/common-model.ts[16, 17]: Properties should be separated by semicolons
+ERROR: src/models/common-model.ts[17, 18]: Properties should be separated by semicolons
+ERROR: src/models/lists-model.ts[6, 1]: members are not aligned
+ERROR: src/models/lists-model.ts[7, 2]: file should end with a newline
+ERROR: src/models/order-model.ts[8, 13]: Array type using 'Array<T>' is forbidden. Use 'T[]' instead.
+ERROR: src/models/user-model.ts[13, 2]: file should end with a newline
+ERROR: src/pipes/pipes.module.ts[7, 1]: 2 space indentation expected
+ERROR: src/pipes/pipes.module.ts[8, 5]: elements are not aligned
+ERROR: src/pipes/pipes.module.ts[9, 5]: elements are not aligned
+ERROR: src/pipes/pipes.module.ts[10, 1]: 2 space indentation expected
+ERROR: src/pipes/pipes.module.ts[11, 1]: 2 space indentation expected
+ERROR: src/pipes/pipes.module.ts[12, 5]: elements are not aligned
+ERROR: src/pipes/pipes.module.ts[13, 5]: elements are not aligned
+ERROR: src/validators/phone.ts[5, 33]: Whitespace within parentheses is not allowed
+ERROR: src/validators/phone.ts[10, 2]: file should end with a newline
+ERROR: src/validators/url.ts[4, 114]: Whitespace within parentheses is not allowed
+ERROR: src/validators/url.ts[8, 2]: file should end with a newline
+

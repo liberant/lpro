@@ -14,18 +14,21 @@
 
 
 <ion-content padding>
-    <button *ngIf="busType === 'Producer'" ion-button item-end icon-only (click)="create()"><ion-icon small name="add-circle"></ion-icon></button>
-    <button *ngIf="busType === 'Retailer'" ion-button block (click)="openList('Short')">Open Shortlist</button>
+    <button *ngIf="user.busType  == 'Producer'" ion-button item-end icon-only (click)="create()"><ion-icon small name="add-circle"></ion-icon></button>
+    <button *ngIf="user.busType == 'Retailer'" ion-button block (click)="openList('Short')">Open Shortlist</button>
 
-    <ion-list>
-        <ion-list-header>
-          <h3>Products</h3>
-        </ion-list-header>
-        <ion-item *ngFor="let product of productsList | async">
-              <h3 (click)="detail(product.id)">{{ product.name }} {{ product.variety }}</h3>
-              <button ion-button left (click)="addToList('shortlist', product)" color="light"><ion-icon name="clipboard"></ion-icon>Shortlist </button>
-                <button ion-button right (click)="addToList('winelist', product)" color="danger"><ion-icon name="trash"></ion-icon>Winelist</button>
-        </ion-item>
-      </ion-list>
+  <ion-item-group *ngFor="let group of productsList | async | groupBy: 'variety' | pairs ">
+    <ion-item-divider color="light">{{group[0] | ucfirst}}</ion-item-divider>
+
+    <ion-item-group *ngFor="let products of group[1] | groupBy: business | pairs">
+      <ion-item-divider>{{products[0]}}</ion-item-divider>
+      <ion-item *ngFor="let product of products[1] ">
+        <h3 (click)="detail(product.id)">{{ product.name}}</h3>
+        <button ion-button left (click)="addToList('shortlist', product)" color="light"><ion-icon name="clipboard"></ion-icon>Shortlist </button>
+        <button ion-button right (click)="addToList('winelist', product)" color="danger"><ion-icon name="trash"></ion-icon>Winelist</button>
+
+      </ion-item>
+    </ion-item-group>
+  </ion-item-group>
 
 </ion-content>

@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import {
   IonicPage,
-  ModalController,
   NavController,
   NavParams,
   ToastController
@@ -10,11 +9,11 @@ import { Storage } from '@ionic/storage';
 import { Observable } from 'rxjs';
 import { FirestoreProvider } from '../../providers/firestore/firestore';
 import { AuthProvider } from '../../providers/auth/auth';
-import {OrdersProvider} from "../../providers/orders/orders";
+import { OrdersProvider } from "../../providers/orders/orders";
 import { Order } from '../../models/order-model';
 import { Product} from "../../models/product-model";
 import { GroupByPipe, OrderByPipe } from 'ngx-pipes';
-// import { NgPipesModule } from 'ngx-pipes';
+
 
 @IonicPage()
 @Component({
@@ -44,6 +43,7 @@ export class OrdersPage {
     this.busId = this.auth.busId;
     this.busType = this.auth.busType;
     this.statusList = [{ order: 1, val: 'Submitted' }, { order: 2, val: 'Approved' }, { order: 3, val: 'Shipped' }, { order: 4, val: 'Received' }];
+    this.user = this.afs.user.getValue();
   }
 
   async getUser() {
@@ -53,27 +53,17 @@ export class OrdersPage {
 
   ionViewDidLoad() {
 
-    this.getUser().then(res => {
     this.getOrders();
-  });
 }
 
   async getOrders() {
-    if (this.busType === 'Retailer') {
-      this.business = 'producer';
+if (this.user.busType === 'Admin') {
+  this.ordersList = this.afs.col$<Order>('orders');
+} else {
+  console.log(this.user);
       this.ordersList = this.afs.col$<Order>('orders', ref => {
-          return ref.where('rid', '==', this.busId);
-        }),
-      console.log(this.ordersList);
-    } else if (this.busType === 'Producer') {
-      this.business = 'retailer';
-
-      this.ordersList = this.afs.col$<Order>('orders', ref => {
-          return ref.where('pid', '==', this.busId);
+          return ref.where((this.user.busType === 'Retailer') ? 'rid' : 'pid', '==', this.user.busId);
         });
-    } else {
-      console.log('All Orders');
-      this.ordersList = this.afs.col$<Order>('orders');
     }
   }
 

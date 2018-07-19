@@ -1,57 +1,63 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import {
   AlertController,
+  Content,
   IonicPage,
-  Loading,
-  LoadingController,
-  NavController,
-  NavParams, Content
+  NavController, NavParams
 } from 'ionic-angular';
 import {
   FormBuilder,
   FormGroup,
-  Validators
+  Validators,
 } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
+
 import { FirestoreProvider } from '../../providers/firestore/firestore';
+
 
 import { Item } from '../../models/common-model';
 import { Producer } from '../../models/business-model';
 import { Product } from '../../models/product-model';
+import { User } from '../../models/user-model';
 
 @IonicPage()
 @Component({
   selector: 'page-product',
   templateUrl: 'product.html',
 })
-export class ProductPage {
+export class ProductPage implements OnInit {
   @ViewChild('productProfile') content: Content;
 
-  public id: string;
+  id: string;
+  pid: string;
+  user: User;
+  path: string;
   product: Product;
   productForm: FormGroup;
-  public loading: Loading;
+  state: string;
   producerList: Observable<Producer[]>;
   regionList: Observable<Item[]>;
   varietyList: Observable<Item[]>;
-  public pid: string;
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    public loadingCtrl: LoadingController,
     public alertCtrl: AlertController,
     public fb: FormBuilder,
     public afs: FirestoreProvider
   ) {
-    this.id = navParams.get('id');
-    this.pid = navParams.get('pid');
+    this.user = this.afs.user.getValue();
+    this.id = this.navParams.get('id');
+
+  }
+
+  ngOnInit() {
     this.productForm = this.fb.group({
       id: [''],
       pid: [''],
       name: ['', Validators.compose([Validators.required])],
       producer: ['', Validators.compose([Validators.required])],
-           // photoURL: [''],
+      // photoURL: [''],
       brand: [''],
       vintage: ['', Validators.compose([Validators.required])],
       region: ['', Validators.compose([Validators.required])],
@@ -62,28 +68,20 @@ export class ProductPage {
   }
 
   ionViewDidLoad() {
-    if(this.pid){
-      this.afs.get(`business/${this.pid}`, 'name').then(res => {
-        this.productForm.patchValue({pid: this.pid, producer: res});
-      });
+    if (this.id) {this.afs.getDoc<Product>(`product/${this.id}`).then(data =>{
+      this.patchForm(data);
+      this.product = data;
+    });
+      console.log(this.product);
+    } else {
+      this.id = this.afs.getId();
+      this.productForm.patchValue({id: this.id});
     }
-    if (this.id) {
-      this.afs.doc$<Product>('product/' + this.id) //.valueChanges()
-       .subscribe(data =>{
-         this.patchForm(data);
-       });
-       console.log(this.product);
-   } else {
-     this.id = this.afs.getId();
-     this.productForm.patchValue({id: this.id});
-   }
-   this.content.resize();
-   this.producerList = this.afs.colWithIds$<Producer>('business', ref => ref.where('type', '==', 'Producer'));
-   this.regionList = this.afs.col$<Item>('region');
-   this.varietyList = this.afs.col$<Item>('variety')
-
+    this.content.resize();
+    this.producerList = this.afs.colWithIds$<Producer>('business', ref => ref.where('type', '==', 'Producer'));
+    this.regionList = this.afs.col$<Item>('region');
+    this.varietyList = this.afs.col$<Item>('variety');
     }
-
 
   patchForm(product?: Product) {
     this.productForm.patchValue({
@@ -91,7 +89,7 @@ export class ProductPage {
       pid: product.pid,
       name: product.name,
       producer: product.producer,
-           // photoURL: product.photoURL,
+      // photoURL: product.photoURL,
       vintage: product.vintage,
       region: product.region,
       variety: product.variety,
@@ -99,15 +97,15 @@ export class ProductPage {
       unitCost: product.unitCost
     });
   }
-  updateProductId(pid) {
-this.productForm.patchValue({pid: pid});
+
+  updateProducerId(pid) {
+    this.productForm.patchValue({pid});
   }
 
-  editProduct() {
+  submit() {
     console.log(this.productForm.value);
-    this.afs.upsert('product/'+this.id, this.productForm.value);
+    this.afs.upsert(`product/${this.id}`, this.productForm.value);
     this.navCtrl.pop();
   }
-
 
 }

@@ -1,3 +1,4 @@
+import { Component } from '@angular/core';
 import { AuthProvider } from '../../providers/auth/auth';
 import { Component } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
@@ -14,6 +15,17 @@ import {
 import { Storage } from '@ionic/storage';
 import { OrdersProvider } from '../../providers/orders/orders';
 import { Product } from '../../models/product-model';
+  ViewController,
+  ToastController
+} from 'ionic-angular';
+import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
+import { Observable } from 'rxjs/Observable';
+import { FirestoreProvider } from '../../providers/firestore/firestore';
+import { AuthProvider } from '../../providers/auth/auth';
+import { Storage } from '@ionic/storage';
+import { OrdersProvider } from '../../providers/orders/orders';
+import { Product } from '../../models/product-model';
+import { User} from '../../models/user-model';
 import { GroupByPipe, PairsPipe } from 'ngx-pipes';
 import { debounceTime, map, take, tap } from 'rxjs/operators';
 
@@ -25,12 +37,9 @@ import { debounceTime, map, take, tap } from 'rxjs/operators';
   providers: [GroupByPipe, PairsPipe],
 })
 export class WineListPage {
-  productsList: Observable<Product[]>;
-  busId: string;
-  orderForm: FormGroup;
-  // public prods: FormArray;
-  // Firestore Document
-
+  public productsList: Observable<Product[]>;
+  public user: User;
+  public orderForm: FormGroup;
 
   constructor(
     public navCtrl: NavController,
@@ -45,19 +54,29 @@ export class WineListPage {
     public groupBy: GroupByPipe,
     public pairs: PairsPipe,
   ) {
-   this.busId = this.auth.user.busId;
-  }
+    this.user  = this.afs.user.getValue();
 
-  ionViewWillEnter() {
     this.initForm();
     this.preloadData();
   }
 
+  ionViewDidLoad() {
+
+    this.getProducts();
   get prodForms() {
     return this.orderForm.get('prods') as FormArray;
   }
 
   addProd(product) {
+  async getProducts() {
+    this.productsList = await this.afs.col$<Product>(
+      `business/${this.user.busId}/winelist`
+    );
+    this.productsList.subscribe(res => {
+      this.initProducts(res);
+    });
+
+  }
 
     const prod = this.fb.group({
       id: product.id,
@@ -69,6 +88,31 @@ export class WineListPage {
       price: product.cartonSize * product.unitCost,
       qty: product.qty,
       onOrder: product.onOrder,
+
+  initForm() {
+    this.orderForm = this.fb.group({
+      rid: this.user.busId,
+      total: [''],
+      prods: this.fb.array([])
+    });
+  }
+
+  initProducts(_products: Array<Product>) {
+    const control = <FormArray>this.orderForm.controls['prods'];
+    _products.forEach(product => {
+      control.push(
+        this.fb.group({
+          id: product.id,
+          name: product.name,
+          producer: product.producer,
+          pid: product.pid,
+          cartonSize: product.cartonSize,
+          unitCost: product.unitCost,
+          price: product.cartonSize * product.unitCost,
+          qty: product.qty,
+          onOrder: product.onOrder,
+        })
+      );
     });
     this.prodForms.push(prod);
   }
@@ -94,10 +138,23 @@ export class WineListPage {
       rid: this.busId,
       total: [''],
       prods: this.fb.array([])
+  initProductControl() {
+    return this.fb.group({
+      id: [''],
+      name: [''],
+      producer: [''],
+      pid: [''],
+      cartonSize: [''],
+      unitCost: [''],
+      price: [''],
+      qty: [''],
+      onOrder: [''],
     });
   }
 
   detail(id: string) {
+    this.navCtrl.push('ProductPage', { id: id });
+  }
   this.navCtrl.push('ProductPage', { id });
 }
 
@@ -116,6 +173,15 @@ export class WineListPage {
     console.log(prod);
     const producer = { name: prod[0], pid: prod[1][0].pid, rid: this.orderForm.controls['rid'].value };
     prod[1].forEach(p => {
+    const control = <FormArray>this.orderForm.controls['prods'];
+    let products = [];
+    let total: number = 0;
+    let prods = this.orderForm.controls['prods'].value;
+    let producers = this.pairs.transform(this.groupBy.transform(prods, 'producer'));
+    producers.forEach(prod => {
+      console.log(prod);
+      let producer = { name: prod[0], pid: prod[1][0].pid, rid: this.orderForm.controls['rid'].value};
+      prod[1].forEach(p => {
       if (p.qty == null) {
         control.removeAt(p.key);
       }
@@ -132,21 +198,27 @@ export class WineListPage {
   this.initForm();
   this.getProducts();
 }
+    this.initForm();
+    this.getProducts();
+  }
 
   contact(id) {
-  console.log(id);
-}
+    console.log(id);
+  }
 
   presentToast(message) {
-  const toast = this.toastCtrl.create({
-    message,
-    duration: 3000,
-    position: 'top'
-  });
+    let toast = this.toastCtrl.create({
+      message: message,
+      duration: 3000,
+      position: 'top'
+    });
 
   toast.onDidDismiss(() => {
     console.log('Dismissed toast');
   });
+    toast.onDidDismiss(() => {
+      console.log('Dismissed toast');
+    });
 
   toast.present();
 }

@@ -18,13 +18,13 @@ import { first, startWith, switchMap, tap } from 'rxjs/operators';
 export class AuthProvider {
 user$: Observable<User>;
 user: User;
+userRef: AngularFirestoreDocument<User>;
 constructor(
     public afAuth: AngularFireAuth,
     public afs: AngularFirestore,
     private storage: Storage,
   ) {
-  console.log('AuthProvider');
-}
+  }
 
 getUser() {
   this.user$ = this.afAuth.authState.pipe(
@@ -48,88 +48,8 @@ async logoutUser(): Promise<void> {
     await this.storage.clear();
     return this.afAuth.auth.signOut();
   }
-
-
-
-/*
-async setIds(uid) {
-    this.user = await this.curUser(uid);
-    await this.storage.set('uid', this.user.id);
-    await this.storage.set('busId', this.user.busId);
-    this.busId = this.user.busId;
-    await this.storage.set('type', this.user.busType);
-    this.busType = this.user.busType;
-    return (this.user);
+curUser(uid): Promise<User> {
+  return this.afs.doc$<User>(`user/${uid}`).pipe(first()).toPromise();
   }
-
-async createAdminUser(
-    password: string,
-    firstName: string,
-    lastName: string,
-    email: string,
-    phone: string,
-    busType: string,
-    busName: string,
-    photoURL: string
-  ): Promise<firebase.User> {
-    try {
-      const adminUserCredential: firebase.auth.UserCredential = await this.afAuth.auth
-        .createUserWithEmailAndPassword(
-          email,
-          password
-        );
-      const userProfileDocument: AngularFirestoreDocument<
-        User
-        > = this.fireStore.doc(`user/${adminUserCredential.user.uid}`);
-
-      const busId: string = this.fireStore.createId();
-
-      await userProfileDocument.set({
-        id: adminUserCredential.user.uid,
-        firstName,
-        lastName,
-        email,
-        phone,
-        busId,
-        busType,
-        busName,
-        photoURL,
-        admin: true,
-        active: true
-      });
-
-      const busProfile: AngularFirestoreDocument<
-        Business
-        > = this.fireStore.doc(`business/${busId}`);
-
-      await busProfile.set({
-        id: busId,
-        adminId: adminUserCredential.user.uid,
-        type: busType,
-        name: busName
-      });
-
-      return adminUserCredential.user;
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-async createRegularUser(email: string, busId: string): Promise<any> {
-
-    const userCollection: AngularFirestoreCollection<
-      any
-      > = this.fireStore.collection(`busProfile/${busId}/busMemberList`);
-    const id: string = this.fireStore.createId();
-
-    const regularUser = {
-      id,
-      email,
-      busId
-    };
-
-    return userCollection.add(regularUser);
-  }
-  */
 
 }

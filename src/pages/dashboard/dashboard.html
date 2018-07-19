@@ -19,11 +19,26 @@
 
 
 <ion-content padding>
-
-
-  <h3>User ID: {{(user$)?.id | async}}</h3>
-  <h3>Bus Id: {{(user$)?.busId | async }}</h3>
-  <h3>Type: {{(user$)?.type | async }}</h3>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <div *ngIf="user">
+          <h3>Coming from the NavParams</h3>
+          <h4>User ID: {{user.id}}</h4>
+          <h4>Bus Id: {{user.busId}}</h4>
+          <h4>Type: {{user.busType}}</h4>
+        </div>
+      </ion-col>
+      <ion-col>
+        <div *ngIf="fireUser">
+          <h3>Coming from the AFS provider</h3>
+          <h4>User ID: {{fireUser.id}}</h4>
+          <h4>Bus Id: {{fireUser.busId}}</h4>
+          <h4>Type: {{fireUser.busType}}</h4>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 
   {{user | json}}
 
