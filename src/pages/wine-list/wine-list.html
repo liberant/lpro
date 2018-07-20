@@ -14,9 +14,10 @@
 
 
 <ion-content padding>
-  <ion-grid>
-    <form [formGroup]="orderForm" (ngSubmit)="placeOrder(orderForm.value)" *ngIf="orderForm">
 
+    <form [formGroup]="orderForm" (ngSubmit)="placeOrder(orderForm.value)" *ngIf="orderForm">
+      <div formArrayName="prods">
+        <ion-grid>
       <ion-row>
         <ion-col>
           <h2>Wine List</h2>
@@ -28,7 +29,7 @@
         <ion-col col-2>Order</ion-col>
       </ion-row>
       <ion-row>
-        <div formArrayName="prods">
+
           <ion-grid *ngFor="let product of orderForm.controls['prods'].controls; let i=index">
             <div [formGroupName]="i">
               <ion-row align-items-end>
@@ -55,15 +56,17 @@
               </ion-row>
             </div>
           </ion-grid>
-        </div>
       </ion-row>
 
       <ion-row>
         <button ion-button block type="submit">Done</button>
 
       </ion-row>
+      </ion-grid>
+      </div>
+
     </form>
 
-  </ion-grid>
+
 
 </ion-content>

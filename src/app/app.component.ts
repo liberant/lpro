@@ -2,8 +2,6 @@ import { Component, ViewChild } from '@angular/core';
 import { MenuController, Nav, Platform } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
-
-// import { AngularFireAuth } from 'angularfire2/auth';
 import { AuthProvider } from '../providers/auth/auth';
 import { FirestoreProvider } from '../providers/firestore/firestore';
 import firebase from 'firebase/app';
@@ -21,7 +19,6 @@ export class LpApp {
               public statusBar: StatusBar,
               public splashScreen: SplashScreen,
               public menu: MenuController,
-             // afAuth: AngularFireAuth,
               public auth: AuthProvider,
               public afs: FirestoreProvider
             ) {
@@ -34,7 +31,7 @@ export class LpApp {
       { title: 'Retailers', component: 'RetailerPage' }
     ];
 
-    const authstate = firebase.auth().onAuthStateChanged((user) => {
+    firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         console.log('app: ', user);
         this.afs.get(`user/${user.uid}`, 'busType'). then(type => {

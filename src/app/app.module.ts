@@ -65,7 +65,7 @@ export class LPErrorHandler implements ErrorHandler {
     NgPipesModule,
   ],
   bootstrap: [IonicApp],
-  entryComponents: [
+    entryComponents: [
     LpApp,
     HomePage
   ],

@@ -37,7 +37,7 @@ export class OrdersPage {
     private orderby: OrderByPipe,
     private groupby: GroupByPipe,
   ) {
-    this.user = this.afs.user.getValue();
+    this.user = this.auth.user$.getValue();
   }
 
 

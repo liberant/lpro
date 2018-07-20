@@ -1,8 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { Storage } from '@ionic/storage';
 import { AuthProvider } from '../../providers/auth/auth';
-import { FirestoreProvider} from "../../providers/firestore/firestore";
 import { User } from '../../models/user-model';
 
 /**
@@ -19,15 +17,13 @@ import { User } from '../../models/user-model';
 })
 export class DashboardPage {
 
-  public user;
-  public fireUser;
+  // public user: User;
+  public fireUser: User;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private storage: Storage, public auth: AuthProvider, public afs: FirestoreProvider) {
-    this.user = this.navParams.data;
+  constructor(public navCtrl: NavController, public navParams: NavParams, public auth: AuthProvider) {
   }
 
   ionViewDidLoad() {
-    console.log(this.user);
     this.fireUser = this.auth.user$.getValue();
   }
 }

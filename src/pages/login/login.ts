@@ -1,10 +1,8 @@
 import { Component } from '@angular/core';
 import { Alert, AlertController, IonicPage, Loading, LoadingController, NavController } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Storage } from '@ionic/storage';
 import { EmailValidator } from '../../validators/email';
 import { AuthProvider } from '../../providers/auth/auth';
-import { User } from '../../models/user-model';
 
 @IonicPage()
 @Component({
@@ -20,7 +18,6 @@ export class LoginPage {
     public alertCtrl: AlertController,
     public authProvider: AuthProvider,
     private formBuilder: FormBuilder,
-    private storage: Storage
   ) {
     this.loginForm = formBuilder.group({
       email: ['', Validators.compose([Validators.required, EmailValidator.isValid])],

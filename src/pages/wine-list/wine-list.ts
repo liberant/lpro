@@ -15,6 +15,7 @@ import { OrdersProvider } from '../../providers/orders/orders';
 import { Product } from '../../models/product-model';
 import { User} from '../../models/user-model';
 import { GroupByPipe, PairsPipe } from 'ngx-pipes';
+import { first } from 'rxjs/operator/first';
 
 
 @IonicPage()
@@ -42,7 +43,7 @@ export class WineListPage {
     public groupBy: GroupByPipe,
     public pairs: PairsPipe,
   ) {
-    this.user  = this.afs.user.getValue();
+    this.user = this.auth.user$.getValue();
 
     this.initForm();
   }
@@ -52,13 +53,14 @@ export class WineListPage {
     this.getProducts();
   }
 
-  async getProducts() {
-    this.productsList = await this.afs.col$<Product>(
+  getProducts() {
+    this.productsList = this.afs.col$<Product>(
       `business/${this.user.busId}/winelist`
     );
-    this.productsList.subscribe(res => {
+    this.productsList.pipe(first()) (res => {
       this.initProducts(res);
     });
+    this.productsList.
 
   }
 
@@ -72,23 +74,28 @@ export class WineListPage {
   }
 
   initProducts(_products: Array<Product>) {
-    const control = <FormArray>this.orderForm.controls['prods'];
     _products.forEach(product => {
-      control.push(
-        this.fb.group({
-          id: product.id,
-          name: product.name,
-          producer: product.producer,
-          pid: product.pid,
-          cartonSize: product.cartonSize,
-          unitCost: product.unitCost,
-          price: product.cartonSize * product.unitCost,
-          qty: product.qty,
-          onOrder: product.onOrder,
-        })
-      );
+      this.addControl(product);
     });
   }
+
+  addControl(product){
+    const control = <FormArray>this.orderForm.controls['prods'];
+    control.push(
+      this.fb.group({
+        id: product.id,
+        name: product.name,
+        producer: product.producer,
+        pid: product.pid,
+        cartonSize: product.cartonSize,
+        unitCost: product.unitCost,
+        price: product.cartonSize * product.unitCost,
+        qty: product.qty,
+        onOrder: product.onOrder,
+      })
+    );
+  }
+
   initProductControl() {
     return this.fb.group({
       id: [''],
@@ -124,12 +131,12 @@ export class WineListPage {
     let producers = this.pairs.transform(this.groupBy.transform(prods, 'producer'));
     producers.forEach(prod => {
       console.log(prod);
-      let producer = { name: prod[0], pid: prod[1][0].pid, rid: this.orderForm.controls['rid'].value};
+      const producer = { name: prod[0], pid: prod[1][0].pid, rid: this.orderForm.controls['rid'].value};
       prod[1].forEach(p => {
-      if (p.qty == null) {
-        control.removeAt(p.key);
-      }
-      if (p.qty) {
+     // if (p.qty == null) {
+       // control.removeAt(p.key);
+    //  }
+      if (p.qty > 0) {
         products.push(p);
         total = total + p.price;
         console.log(total);
@@ -139,8 +146,8 @@ export class WineListPage {
 
   });
 
-    this.initForm();
-    this.getProducts();
+    // this.initForm();
+    // this.getProducts();
   }
 
   contact(id) {

@@ -36,7 +36,7 @@ export class OrderPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController, public op: OrdersProvider, public afs: FirestoreProvider, private auth: AuthProvider, private storage: Storage) {
     this.orderId = navParams.get('id');
-    this.user = this.afs.user.getValue();
+    this.user = this.auth.user$.getValue();
   }
 
   ionViewDidLoad() {

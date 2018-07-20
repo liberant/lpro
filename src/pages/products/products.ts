@@ -24,11 +24,11 @@ export class ProductsPage {
   productsList: Observable<Product[]>;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public afs: FirestoreProvider, public modalCtrl: ModalController, public toastCtrl: ToastController, public storage: Storage, public auth: AuthProvider) {
+    this.user = this.auth.user$.getValue();
   }
 
 
   ionViewDidLoad() {
-    this.user = this.afs.user.getValue();
     this.getProducts();
 
   }

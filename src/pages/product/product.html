@@ -12,10 +12,9 @@
 
 </ion-header>
 
-
   <ion-content padding class="product-form-page" #productProfile>
 
-    <form fireForm [formGroup]="productForm"path="path" (stateChange)="changeHandler($event)" [readsOnly]="busType === 'Retailer'">
+    <form fireForm [formGroup]="productForm" path="path" (stateChange)="changeHandler($event)" *ngIf="user && productForm">
 
       <h3>Product Details</h3>
 
@@ -30,7 +29,7 @@
 
       <ion-item *ngIf="!pid">
         <ion-label stacked>Producer</ion-label>
-        <ion-select interface="popover"  formControlName="producer" [readOnly]="busType == !'Admin'" [class.invalid]="!productForm.controls.producer.valid && !productForm.controls.producer.pristine">
+        <ion-select interface="popover"  formControlName="producer" [disabled]="user.busType == !'Admin'" [class.invalid]="!productForm.controls.producer.valid && !productForm.controls.producer.pristine">
           <ion-option *ngFor="let producer of producerList | async" (ionSelect)="updateProducerId(producer.id)">{{producer.name}}</ion-option>
         </ion-select>
       </ion-item>

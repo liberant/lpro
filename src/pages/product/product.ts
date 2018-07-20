@@ -13,7 +13,7 @@ import {
 import { Observable } from 'rxjs/Observable';
 
 import { FirestoreProvider } from '../../providers/firestore/firestore';
-
+import { AuthProvider } from '../../providers/auth/auth';
 
 import { Item } from '../../models/common-model';
 import { Producer } from '../../models/business-model';
@@ -25,7 +25,7 @@ import { User } from '../../models/user-model';
   selector: 'page-product',
   templateUrl: 'product.html',
 })
-export class ProductPage implements OnInit {
+export class ProductPage {
   @ViewChild('productProfile') content: Content;
 
   id: string;
@@ -44,43 +44,45 @@ export class ProductPage implements OnInit {
     public navParams: NavParams,
     public alertCtrl: AlertController,
     public fb: FormBuilder,
-    public afs: FirestoreProvider
+    public afs: FirestoreProvider,
+    public auth: AuthProvider,
   ) {
-    this.user = this.afs.user.getValue();
+    this.user = this.auth.user$.getValue();
     this.id = this.navParams.get('id');
 
   }
 
-  ngOnInit() {
-    this.productForm = this.fb.group({
-      id: [''],
-      pid: [''],
-      name: ['', Validators.compose([Validators.required])],
-      producer: ['', Validators.compose([Validators.required])],
-      // photoURL: [''],
-      brand: [''],
-      vintage: ['', Validators.compose([Validators.required])],
-      region: ['', Validators.compose([Validators.required])],
-      variety: ['', Validators.compose([Validators.required])],
-      cartonSize: ['', Validators.compose([Validators.required])],
-      unitCost: ['', Validators.compose([Validators.required])],
-    });
-  }
-
   ionViewDidLoad() {
-    if (this.id) {this.afs.getDoc<Product>(`product/${this.id}`).then(data =>{
+    this.initForm();
+    if (this.id) {this.afs.getDoc<Product>(`product/${this.id}`).then(data => {
       this.patchForm(data);
       this.product = data;
     });
-      console.log(this.product);
+                  console.log(this.product);
     } else {
       this.id = this.afs.getId();
-      this.productForm.patchValue({id: this.id});
+      this.productForm.patchValue({ id: this.id });
     }
     this.content.resize();
     this.producerList = this.afs.colWithIds$<Producer>('business', ref => ref.where('type', '==', 'Producer'));
     this.regionList = this.afs.col$<Item>('region');
     this.varietyList = this.afs.col$<Item>('variety');
+    if (this.user.busType === 'Retailer') { this.productForm.disable(); }
+    }
+
+  initForm() {
+      this.productForm = this.fb.group({
+        id: [ '' ],
+        pid: [ '' ],
+        name: [ '', Validators.compose([ Validators.required ]) ],
+        producer: [ '', Validators.compose([ Validators.required ]) ], // photoURL: [''],
+        brand: [ '' ],
+        vintage: [ '', Validators.compose([ Validators.required ]) ],
+        region: [ '', Validators.compose([ Validators.required ]) ],
+        variety: [ '', Validators.compose([ Validators.required ]) ],
+        cartonSize: [ '', Validators.compose([ Validators.required ]) ],
+        unitCost: [ '', Validators.compose([ Validators.required ]) ],
+      });
     }
 
   patchForm(product?: Product) {
@@ -99,7 +101,7 @@ export class ProductPage implements OnInit {
   }
 
   updateProducerId(pid) {
-    this.productForm.patchValue({pid});
+    this.productForm.patchValue({ pid });
   }
 
   submit() {

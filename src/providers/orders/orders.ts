@@ -1,14 +1,25 @@
 import { Injectable } from '@angular/core';
 import {FirestoreProvider} from '../firestore/firestore';
 import {Product} from '../../models/product-model';
+import { BehaviorSubject } from 'rxjs';
+import { Business } from '../../models/business-model';
+import { WineList } from '../../models/lists-model';
+
 
 @Injectable()
 
 export class OrdersProvider {
+  wineList: BehaviorSubject<Product[]> = new BehaviorSubject<Product[]>(null);
+  shortList: BehaviorSubject<WineList> = new BehaviorSubject<WineList>(null);
+
+
 
   constructor(public afs: FirestoreProvider) {
     console.log('Hello OrdersProvider Provider');
+
   }
+
+
 
   async placeOrder(order) {
     console.log(order);

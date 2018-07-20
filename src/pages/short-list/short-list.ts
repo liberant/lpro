@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { FirestoreProvider } from '../../providers/firestore/firestore';
 import { Product } from '../../models/product-model';
 import { User } from '../../models/user-model';
+import { AuthProvider } from '../../providers/auth/auth';
 
 
 @IonicPage()
@@ -15,8 +16,8 @@ export class ShortListPage {
   productsList: Observable<Product[]>;
   user: User;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private afs: FirestoreProvider, public viewCtrl: ViewController, public toastCtrl: ToastController) {
-    this.user = this.afs.user.getValue();
+  constructor(public navCtrl: NavController, public navParams: NavParams, private afs: FirestoreProvider, public viewCtrl: ViewController, public toastCtrl: ToastController, public auth: AuthProvider) {
+    this.user = this.auth.user$.getValue();
   }
 
   ionViewDidLoad() {
