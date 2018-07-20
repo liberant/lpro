@@ -12,38 +12,55 @@ import { Storage } from '@ionic/storage';
 import { User } from '../../models/user-model';
 import { Business } from '../../models/business-model';
 import { first } from 'rxjs/operators';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 
 @Injectable()
 export class AuthProvider {
-userId: string;
-busId: string;
-busType: string;
-user: User;
-userRef: AngularFirestoreDocument<User>;
-constructor(
+  private auth: Observable<firebase.User>;
+  user$: BehaviorSubject<User> = new BehaviorSubject<User>(null);
+  business: BehaviorSubject<Business> = new BehaviorSubject<Business>(null);
+
+  constructor(
     public afAuth: AngularFireAuth,
-    public fireStore: AngularFirestore,
+    public afs: AngularFirestore,
     private storage: Storage,
-    public afs: FirestoreProvider
   ) {
+   this.auth = this.afAuth.authState;
+   console.log('authstate: ', this.auth);
+   this.auth.subscribe((user) => {
+      if (user) {
+        console.log(user);
+        this.afs.doc<User>(`user/${user.uid}`).valueChanges().first().subscribe(data => {
+          console.log('auth: ', data);
+          this.user$.next(data);
+        });
+      }
+    });
   }
 
-loginUser(email: string, password: string): Promise<firebase.User> {
-    return this.afAuth.auth.signInWithEmailAndPassword(email, password);
+  getUserVal(val): Promise<string> {
+    return this.user$.getValue()[val];
   }
 
-resetPassword(email: string): Promise<void> {
+  async loginUser(email: string, password: string): Promise<firebase.User> {
+    const auth = await this.afAuth.auth.signInWithEmailAndPassword(email, password);
+    if (auth.user) {
+     await this.afs.doc<User>(`user/${auth.user.uid}`).valueChanges().first().subscribe(data => {
+        console.log('auth: ', data);
+        this.user$.next(data);
+      });
+    }
+    return auth;
+  }
+
+  resetPassword(email: string): Promise<void> {
     return this.afAuth.auth.sendPasswordResetEmail(email);
   }
 
-async logoutUser(): Promise<void> {
-    await this.storage.clear();
+  logoutUser(): Promise<void> {
+    this.storage.clear();
     return this.afAuth.auth.signOut();
-  }
-curUser(uid): Promise<User> {
-  console.log(uid);
-  return this.afs.doc$<User>(`user/${uid}`).pipe(first()).toPromise();
   }
 
 }

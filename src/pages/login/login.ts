@@ -1,12 +1,5 @@
 import { Component } from '@angular/core';
-import {
-  Alert,
-  AlertController,
-  IonicPage,
-  Loading,
-  LoadingController,
-  NavController
-} from 'ionic-angular';
+import { Alert, AlertController, IonicPage, Loading, LoadingController, NavController } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Storage } from '@ionic/storage';
 import { EmailValidator } from '../../validators/email';
@@ -47,17 +40,16 @@ export class LoginPage {
     if (!this.loginForm.valid) {
       console.log('Form not ready');
     } else {
-      const loading: Loading = this.loadingCtrl.create();
+      const loading: Loading = this.loadingCtrl.create({
+        dismissOnPageChange: true,
+      });
       loading.present();
       const email: string = this.loginForm.value.email;
       const password: string = this.loginForm.value.password;
       try {
-        const auth = await this.authProvider.loginUser(email, password);
-        const user = await this.authProvider.curUser(auth.uid);
-        await loading.dismiss();
-        this.navCtrl.setRoot(`${user.busType}Page`);
+        await this.authProvider.loginUser(email, password);
       } catch (error) {
-        await loading.dismiss();
+        loading.dismiss();
         const alert: Alert = this.alertCtrl.create({
           message: error.message,
           buttons: [{ text: 'Ok', role: 'cancel' }]

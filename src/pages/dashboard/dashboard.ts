@@ -28,6 +28,6 @@ export class DashboardPage {
 
   ionViewDidLoad() {
     console.log(this.user);
-    this.fireUser = this.afs.user.getValue();
+    this.fireUser = this.auth.user$.getValue();
   }
 }

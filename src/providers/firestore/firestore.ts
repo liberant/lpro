@@ -23,7 +23,7 @@ type DocPredicate<T> = string | AngularFirestoreDocument<T>;
 
 @Injectable()
 export class FirestoreProvider {
-  user: BehaviorSubject<User> = new BehaviorSubject<User>(null    );
+  user: BehaviorSubject<User> = new BehaviorSubject<User>(null);
 
   constructor(public afs: AngularFirestore, public afAuth: AngularFireAuth, private storage: Storage) {
     this.load();
