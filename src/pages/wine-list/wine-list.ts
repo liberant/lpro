@@ -39,20 +39,26 @@ export class WineListPage {
     this.op.load(this.user.busId);
     if(this.business) {
       console.log(this.business);
-      this.formModel = this.dfs.fromJSON([ { businessName: this.business.name, rid: this.business.id, total: 0 } ]);
-      this.formGroup = this.dfs.createFormGroup(this.formModel);
+
     }
-    this.productsList = this.afs.col<any>(`business/${this.user.busId}/winelist`).valueChanges();
+    this.productsList = this.afs.col<Product>(`business/${this.user.busId}/winelist`).valueChanges();
     this.productsList.subscribe(data => {
-      this.arrayModel = this.dfs.findById('products', this.formModel) as DynamicFormArrayModel;
+      this.arrayModel = this.dfs.insertFormArrayGroup([{id: data.id}], this.formModel) as DynamicFormArrayModel;
       this.arrayControl = this.dfs.createFormArray(this.arrayModel);
     });
     console.log(this.productsList);
-    this.arrayControl = this.formGroup.controls['products'] as FormArray;
-    this.arrayModel = this.dfs.findById('products', this.formModel) as DynamicFormArrayModel;
+
 
   }
 
+initForm() {
+
+  this.arrayControl = this.formGroup.controls[ 'products' ] as FormArray;
+  this.arrayModel = this.dfs.findById(, this.formModel) as DynamicFormArrayModel;
+
+  this.formModel = this.dfs.fromJSON([ { businessName: this.business.name, rid: this.business.id, total: 0 } ]);
+  this.formGroup = this.dfs.createFormGroup(this.formModel);
+}
   insert(context: DynamicFormArrayModel, index: number) {
     this.dfs.insertFormArrayGroup(index, this.arrayControl, context);
   }
