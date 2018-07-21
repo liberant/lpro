@@ -154,8 +154,8 @@ export class FirestoreProvider {
 
   /// If doc exists update, otherwise set
   upsert<T>(ref: DocPredicate<T>, data: any) {
+    console.log(ref, data);
     const doc = this.doc(ref).snapshotChanges().take(1).toPromise();
-
     return doc.then(snap => {
       return snap.payload.exists ? this.update(ref, data) : this.set(ref, data);
     });

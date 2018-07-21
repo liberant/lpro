@@ -24,11 +24,12 @@ export class ProductsPage {
   productsList: Observable<Product[]>;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public afs: FirestoreProvider, public modalCtrl: ModalController, public toastCtrl: ToastController, public storage: Storage, public auth: AuthProvider) {
-    this.user = this.auth.user$.getValue();
+    this.user = this.auth.user$.value;
   }
 
 
   ionViewDidLoad() {
+    console.log(this.user);
     this.getProducts();
 
   }
@@ -49,14 +50,18 @@ export class ProductsPage {
   }
 
   openList(type) {
-    const listModal = this.modalCtrl.create(`${type}ListPage`);
+    const listModal = this.modalCtrl.create('ListPage', { type });
     listModal.present();
   }
 
-  addToList(type: string, product: Product) {
-    const addProd = this.afs.upsert(`business/${this.user.busId}/${type}/${product.id}`, product).then(res => {
-      this.presentToast(`${res} added successfully`);
+  async addToList(toList: string, product: Product) {
+    console.log(toList, product, this.user);
+    const msg =   this.afs.upsert(`business/${this.user.busId}/${toList}/${product.id}`, product).then(async res => {
+      await this.afs.upsert(`business/${product.pid}/interested/${this.user.busId}`, { id: this.user.busId, name: this.user.busName });
+      await this.afs.upsert(`business/${product.pid}/interested/${this.user.busId}/${toList}/${product.id}`, { name: product.name, user: `${this.user.firstName} ${this.user.lastName}` });
     });
+    this.presentToast(`${product.name} added successfully to ${toList}`);
+    console.log(msg);
   }
 
 

@@ -13,4 +13,5 @@ export interface Product {
     active?: boolean;
     qty?: number;
     onOrder?: number;
+    subtotal?: number;
 }

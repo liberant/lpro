@@ -21,18 +21,12 @@ export class AuthProvider {
   user$: BehaviorSubject<User> = new BehaviorSubject<User>(null);
   business: BehaviorSubject<Business> = new BehaviorSubject<Business>(null);
 
-  constructor(
-    public afAuth: AngularFireAuth,
-    public afs: AngularFirestore,
-    private storage: Storage,
-  ) {
+  constructor(public afAuth: AngularFireAuth, public afs: AngularFirestore, private storage: Storage, ) {
    this.auth = this.afAuth.authState;
    console.log('authstate: ', this.auth);
    this.auth.subscribe((user) => {
       if (user) {
-        console.log(user);
         this.afs.doc<User>(`user/${user.uid}`).valueChanges().first().subscribe(data => {
-          console.log('auth: ', data);
           this.user$.next(data);
         });
       }
@@ -43,15 +37,17 @@ export class AuthProvider {
     return this.user$.getValue()[val];
   }
 
-  async loginUser(email: string, password: string): Promise<firebase.User> {
-    const auth = await this.afAuth.auth.signInWithEmailAndPassword(email, password);
+  loginUser(email: string, password: string): Promise<firebase.User> {
+   return this.afAuth.auth.signInWithEmailAndPassword(email, password);
+   /*
     if (auth.user) {
-     await this.afs.doc<User>(`user/${auth.user.uid}`).valueChanges().first().subscribe(data => {
-        console.log('auth: ', data);
-        this.user$.next(data);
+     await this.afs.doc<User>(`user/${auth.user.uid}`).valueChanges().first().subscribe(async data => {
+       await this.storage.set('user', data).then(res => { console.log('storage: ', res);})
+       await this.user$.next(data);
       });
     }
     return auth;
+    */
   }
 
   resetPassword(email: string): Promise<void> {

@@ -2,6 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { MenuController, Nav, Platform } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
+import { Storage } from '@ionic/storage';
 import { AuthProvider } from '../providers/auth/auth';
 import { FirestoreProvider } from '../providers/firestore/firestore';
 import firebase from 'firebase/app';
@@ -20,7 +21,8 @@ export class LpApp {
               public splashScreen: SplashScreen,
               public menu: MenuController,
               public auth: AuthProvider,
-              public afs: FirestoreProvider
+              public afs: FirestoreProvider,
+              public storage: Storage,
             ) {
 
     this.initializeApp();
@@ -33,9 +35,7 @@ export class LpApp {
 
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
-        console.log('app: ', user);
-        this.afs.get(`user/${user.uid}`, 'busType'). then(type => {
-            console.log(type);
+        this.afs.get(`user/${user.uid}`, 'busType').then(type => {
             this.rootPage = `${type}Page`;
           });
       } else {
@@ -48,8 +48,10 @@ export class LpApp {
 
   initializeApp() {
     this.platform.ready().then(() => {
-      // Okay, so the platform is ready and our plugins are available.
-      // Here you can do any higher level native things you might need.
+ this.storage.get('user').then((user) => {
+   console.log('storage: ' , user)
+   this.auth.user$.next(user);
+ });
       this.statusBar.styleDefault();
       this.splashScreen.hide();
     });
