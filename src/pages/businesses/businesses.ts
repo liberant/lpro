@@ -24,11 +24,11 @@ export class BusinessesPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad BusinessPage');
-this.businessesList = this.fs.col$<Business>('business');
+    this.businessesList = this.fs.col$<Business>('business');
   }
 
   detail(id: string) {
-this.navCtrl.push('BusinessPage', { id: id });
+this.navCtrl.push('BusinessPage', { id });
   }
   create() {
     this.navCtrl.push('BusinessPage');

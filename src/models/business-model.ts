@@ -16,7 +16,7 @@ export interface Business {
 }
 export interface Producer extends Business {
     region: string;
-    brands: Array<string>;
+    brands: string[];
     productList: Product[];
 }
 export interface Retailer extends Business {

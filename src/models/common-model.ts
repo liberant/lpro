@@ -12,7 +12,7 @@ export interface Region {
     name: string;
 }
 export interface Item {
-    id?: string,
-    name: string,
-    type?: string,
+    id?: string;
+    name: string;
+    type?: string;
     }

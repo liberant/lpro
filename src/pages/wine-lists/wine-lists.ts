@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ToastController, ViewController } from 'ionic-angular';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { FirestoreProvider } from '../../providers/firestore/firestore';
 import { AuthProvider } from '../../providers/auth/auth';
 import { OrdersProvider } from '../../providers/orders/orders';

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ToastController, ViewController } from 'ionic-angular';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { FirestoreProvider } from '../../providers/firestore/firestore';
 import { Product } from '../../models/product-model';
 import { User } from '../../models/user-model';
@@ -26,7 +26,7 @@ export class ShortListPage {
   }
 
   async getProducts() {
-    this.productsList = await this.afs.col$<Product>(`business/${this.user.busId}/shortlist`);
+    this.productsList = this.afs.col$<Product>(`business/${this.user.busId}/shortlist`);
 
   }
 

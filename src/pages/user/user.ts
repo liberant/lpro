@@ -1,11 +1,11 @@
 import { Component, ViewChild } from '@angular/core';
 import {
   AlertController,
+  Content,
   IonicPage,
   Loading,
   LoadingController,
-  NavController,
-  NavParams, Content
+  NavController, NavParams
 } from 'ionic-angular';
 import {
   FormBuilder,
@@ -29,7 +29,7 @@ export class UserPage {
   uid: string;
   user: User;
   userForm: FormGroup;
-  public loading: Loading;
+  loading: Loading;
 
   constructor(
     public navCtrl: NavController,
@@ -43,7 +43,7 @@ export class UserPage {
     this.uid = navParams.get('uid');
     this.userForm = this.fb.group({
       email: ['', Validators.compose([Validators.required])],
-      password:['', Validators.compose([Validators.minLength(6)])],
+      password: ['', Validators.compose([Validators.minLength(6)])],
       firstName: ['', Validators.compose([Validators.required])],
       lastName: ['', Validators.compose([Validators.required])],
       phone: [''],
@@ -55,13 +55,13 @@ export class UserPage {
 
   ionViewDidLoad() {
     if (this.uid) {
-      this.fs.doc$<User>('user/' + this.uid) //.valueChanges()
-       .subscribe(data =>{
+      this.fs.doc$<User>('user/' + this.uid) // .valueChanges()
+       .subscribe(data => {
          this.patchForm(data);
        });
-       console.log(this.user);
+      console.log(this.user);
    }
-   this.content.resize();
+    this.content.resize();
     }
 
 

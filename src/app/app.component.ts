@@ -14,44 +14,38 @@ export class LpApp {
   @ViewChild(Nav) nav: Nav;
 
   rootPage: any;
-  pages: {title: string, component: any}[];
+  pages: { title: string, component: string }[];
 
-  constructor(public platform: Platform,
-              public statusBar: StatusBar,
-              public splashScreen: SplashScreen,
-              public menu: MenuController,
-              public auth: AuthProvider,
-              public afs: FirestoreProvider,
-              public storage: Storage,
-            ) {
+  afs: FirestoreProvider;
 
+  constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, public menu: MenuController, public auth: AuthProvider, afs: FirestoreProvider, public storage: Storage) {
+    this.afs = afs;
     this.initializeApp();
 
-    this.pages = [
-      { title: 'Admin', component: 'AdminPage' },
-      { title: 'Producers', component: 'ProducerPage' },
-      { title: 'Retailers', component: 'RetailerPage' }
-    ];
+    this.pages = [ { title: 'Admin', component: 'AdminPage' }, {
+      title: 'Producers',
+      component: 'ProducerPage'
+    },             { title: 'Retailers', component: 'RetailerPage' } ];
 
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         this.afs.get(`user/${user.uid}`, 'busType').then(type => {
-            this.rootPage = `${type}Page`;
-          });
+          this.rootPage = `${type}Page`;
+        });
       } else {
         this.rootPage = 'LoginPage';
       }
     }, () => {
       this.rootPage = 'LoginPage';
-      });
+    });
   }
 
   initializeApp() {
     this.platform.ready().then(() => {
- this.storage.get('user').then((user) => {
-   console.log('storage: ' , user)
-   this.auth.user$.next(user);
- });
+      this.storage.get('user').then((user) => {
+        console.log('storage: ', user);
+        this.auth.user$.next(user);
+      });
       this.statusBar.styleDefault();
       this.splashScreen.hide();
     });

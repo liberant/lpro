@@ -4,12 +4,12 @@ import { GroupPipe } from './group/group';
 import { ValuesPipe } from './values/values';
 
 @NgModule({
-	declarations: [OderPipe,
-    GroupPipe,
-    ValuesPipe],
-	imports: [],
-	exports: [OderPipe,
-    GroupPipe,
-    ValuesPipe]
+  declarations: [OderPipe,
+                 GroupPipe,
+                 ValuesPipe],
+  imports: [],
+  exports: [OderPipe,
+            GroupPipe,
+            ValuesPipe]
 })
 export class PipesModule {}

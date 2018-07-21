@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import {IonicPage, NavController, NavParams} from 'ionic-angular';
-import {FirestoreProvider} from '../../providers/firestore/firestore';
+import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { FirestoreProvider } from '../../providers/firestore/firestore';
 
 /**
  * Generated class for the ProducerPage tabs.
@@ -21,10 +21,7 @@ export class ProducerPage {
   ordersRoot = 'OrdersPage';
   deliveriesRoot = 'DeliveriesPage';
 
-  userParams = {};
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public afs: FirestoreProvider) {
-    this.afs.load();
-    this.userParams = this.afs.user.getValue();
   }
 }

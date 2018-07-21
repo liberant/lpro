@@ -1,11 +1,10 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { ErrorHandler, Injectable, Injector, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { Pro } from '@ionic/pro';
-import { ErrorHandler, Injectable, Injector } from '@angular/core';
 
 Pro.init('080aac60', {
-  appVersion: '0.0.1',
+  appVersion: '0.0.2',
 });
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
@@ -26,7 +25,6 @@ import { FirestoreProvider } from '../providers/firestore/firestore';
 import { OrdersProvider } from '../providers/orders/orders';
 
 import { NgPipesModule } from 'ngx-pipes';
-import { DirectivesModule} from '../directives/directives.module';
 
 @Injectable()
 export class LPErrorHandler implements ErrorHandler {
@@ -63,21 +61,22 @@ export class LPErrorHandler implements ErrorHandler {
     AngularFirestoreModule,
     AngularFireStorageModule,
     NgPipesModule,
+
   ],
   bootstrap: [IonicApp],
-    entryComponents: [
+  entryComponents: [
     LpApp,
     HomePage
   ],
   providers: [
     StatusBar,
     SplashScreen,
-    {provide: ErrorHandler, useClass: IonicErrorHandler},
+    { provide: ErrorHandler, useClass: IonicErrorHandler },
     AuthProvider,
     SettingsProvider,
     UsersProvider,
     FirestoreProvider,
-    IonicErrorHandler,
+    // IonicErrorHandler,
     OrdersProvider,
   ]
 })

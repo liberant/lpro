@@ -5,40 +5,44 @@
   Ionic pages and navigation.
 -->
 <ion-header>
-
   <ion-navbar>
     <ion-title>Dashboard</ion-title>
-
   </ion-navbar>
   <ion-buttons end>
-      <button ion-button icon-right icon-only (click)="this.auth.logoutUser()">
-        <ion-icon name="power"></ion-icon>
-      </button>
-    </ion-buttons>
+    <button ion-button icon-right icon-only (click)="this.auth.logoutUser()">
+      <ion-icon name="power"></ion-icon>
+    </button>
+  </ion-buttons>
 </ion-header>
 
 
 <ion-content padding>
   <ion-grid>
     <ion-row>
-      <ion-col>
-        <div *ngIf="fireUser">
-          <h3>Imported as User Object</h3>
-          <h4>User ID: {{fireUser.id}}</h4>
-          <h4>Bus Id: {{fireUser.busId}}</h4>
-          <h4>Type: {{fireUser.busType}}</h4>
-        </div>
+      <ion-col *ngIf="fireUser">
+        <ion-list>
+          <ion-list-header>Imported as User Object</ion-list-header>
+          <ion-item>User ID: {{fireUser.id}}</ion-item>
+          <ion-item>Bus Id: {{fireUser.busId}}</ion-item>
+          <ion-item>Type: {{fireUser.busType}}</ion-item>
+        </ion-list>
       </ion-col>
-      <ion-col>
-        <div *ngIf="auth.user$ | async as user">
-          <h3>Read direct from auth</h3>
-          <h4>User ID: {{user.id}}</h4>
-          <h4>Bus Id: {{user.busId}}</h4>
-          <h4>Type: {{user.busType}}</h4>
-        </div>
+      <ion-col *ngIf="auth.user$ | async as user">
+        <ion-list>
+          <ion-list-header>Read direct from auth</ion-list-header>
+          <ion-item>User ID: {{user.id}}</ion-item>
+          <ion-item>Bus Id: {{user.busId}}</ion-item>
+          <ion-item>Type: {{user.busType}}</ion-item>
+        </ion-list>
+      </ion-col>
+      <ion-col *ngIf="auth.business$ | async as business">
+        <ion-list>
+          <ion-list-header>Read direct from auth</ion-list-header>
+          <ion-item>Business ID: {{business.id}}</ion-item>
+          <ion-item>Business Name: {{business.name}}</ion-item>
+          <ion-item>Type: {{business.type}}</ion-item>
+        </ion-list>
       </ion-col>
     </ion-row>
   </ion-grid>
-
-
 </ion-content>

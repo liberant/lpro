@@ -10,7 +10,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 import { FirestoreProvider } from '../../providers/firestore/firestore';
 import { AuthProvider } from '../../providers/auth/auth';

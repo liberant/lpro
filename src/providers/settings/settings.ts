@@ -21,21 +21,21 @@ export class SettingsProvider {
         this.userId = user.uid;
       }
     });
-  } 
-
-  get(path): AngularFirestoreCollection<Item> {
-    return this.afs.collection(`${path}`)
   }
 
-  add(path: string, data){
-		this.afs.collection(`${path}`).add(data)
-	}
+  get(path): AngularFirestoreCollection<Item> {
+    return this.afs.collection(`${path}`);
+  }
 
-	update(path:string, id, data) {
-		this.afs.doc(`${path}/${id}`).update(data);
-	}
+  add(path: string, data) {
+    this.afs.collection(`${path}`).add(data);
+  }
 
-	delete(path:string, id: string) {
-		this.afs.doc(`${path}/${id}`).delete();
-	}
+  update(path: string, id, data) {
+    this.afs.doc(`${path}/${id}`).update(data);
+  }
+
+  delete(path: string, id: string) {
+    this.afs.doc(`${path}/${id}`).delete();
+  }
 }

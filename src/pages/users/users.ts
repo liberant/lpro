@@ -25,11 +25,11 @@ export class UsersPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad UsersPage');
-this.usersList = this.fs.col$<User>('user');
+    this.usersList = this.fs.col$<User>('user');
   }
 
   detail(uid: string) {
-this.navCtrl.push('UserPage', { uid: uid });
+this.navCtrl.push('UserPage', { uid });
   }
   create() {
     this.navCtrl.push('UserPage');

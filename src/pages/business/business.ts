@@ -1,11 +1,11 @@
 import { Component, ViewChild } from '@angular/core';
 import {
   AlertController,
+  Content,
   IonicPage,
   Loading,
   LoadingController,
-  NavController,
-  NavParams, Content
+  NavController, NavParams
 } from 'ionic-angular';
 import {
   FormBuilder,
@@ -27,7 +27,7 @@ export class BusinessPage {
   id: string;
   business: Business;
   businessForm: FormGroup;
-  public loading: Loading;
+  loading: Loading;
 
   constructor(
     public navCtrl: NavController,
@@ -50,13 +50,13 @@ export class BusinessPage {
 
   ionViewDidLoad() {
     if (this.id) {
-      this.fs.doc$<Business>('business/' + this.id) //.valueChanges()
-       .subscribe(data =>{
+      this.fs.doc$<Business>('business/' + this.id) // .valueChanges()
+       .subscribe(data => {
          this.patchForm(data);
        });
-       console.log(this.business);
+      console.log(this.business);
    }
-   this.content.resize();
+    this.content.resize();
     }
 
 
@@ -73,7 +73,7 @@ export class BusinessPage {
 
   editBusiness() {
     console.log(this.businessForm.value);
-    this.fs.upsert('business/'+this.id, this.businessForm.value)
+    this.fs.upsert('business/' + this.id, this.businessForm.value);
 
   }
 

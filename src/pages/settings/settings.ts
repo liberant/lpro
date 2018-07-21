@@ -1,5 +1,5 @@
 import { Component, HostListener } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
+import { AlertController, IonicPage, NavController, NavParams } from 'ionic-angular';
 import { SettingsProvider } from '../../providers/settings/settings';
 import { FirestoreProvider } from '../../providers/firestore/firestore';
 
@@ -18,45 +18,45 @@ varietyList: Observable<Item[]>;
 variety: string;
 region: string;
 focused: string;
-  show: {
+show: {
     variety: boolean;
     region: boolean;
   };
-  constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController, public sp: SettingsProvider, public fs: FirestoreProvider) {
-    this.show = {variety: true, region: true }
+constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController, public sp: SettingsProvider, public fs: FirestoreProvider) {
+    this.show = { variety: true, region: true };
   }
-  @HostListener('window:keyup', ['$event'])
+@HostListener('window:keyup', ['$event'])
   keyEvent(event: KeyboardEvent): void {
     console.log(event);
     if (event.keyCode === 13 && this[this.focused] != null) {
 
-      this.add(this.focused)
+      this.add(this.focused);
     }
     event.stopPropagation();
 
   }
 
-  ionViewDidLoad() {
+ionViewDidLoad() {
     console.log('ionViewDidLoad SettingsPage');
     this.regionList = this.fs.colWithIds$<Item>('region');
 
-    this.varietyList = this.fs.colWithIds$<Item>('variety')
+    this.varietyList = this.fs.colWithIds$<Item>('variety');
 
  }
 
 
-  toggleShow(prop) {
+toggleShow(prop) {
     this.show[prop] = !this.show[prop];
       }
 
-      public onFocus(target: string) {
+onFocus(target: string) {
         this.focused = target;
-        console.log(this.focused)
+        console.log(this.focused);
       }
 
-      edit(type, item) {
+edit(type, item) {
         this.focused = type;
-        let prompt = this.alertCtrl.create({
+        const prompt = this.alertCtrl.create({
           title: 'Edit ' + type,
           inputs: [
             {
@@ -75,7 +75,7 @@ focused: string;
               text: 'Save',
               handler: data => {
                 console.log(data);
-                this.fs.update(type+'/'+item.id, data);
+                this.fs.update(type + '/' + item.id, data);
               },
             },
           ],
@@ -84,14 +84,14 @@ focused: string;
       }
 
 
-      add(type) {
+add(type) {
         this.fs.add(type, { name: this[type] });
         this[type] = null;
       }
 
-      rem(type, id) {
+rem(type, id) {
 
-        let prompt = this.alertCtrl.create({
+        const prompt = this.alertCtrl.create({
           title: 'Confirm Deletion',
           message: 'Do you really want to delete this ' + type + '?',
           buttons: [
@@ -105,7 +105,7 @@ focused: string;
             {
               text: 'Yes',
               handler: () => {
-                this.fs.delete(type+'/'+id);
+                this.fs.delete(type + '/' + id);
               }
             }
           ]

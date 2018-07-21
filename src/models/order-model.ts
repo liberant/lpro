@@ -5,7 +5,7 @@ export interface Order {
   producer: string;
   rid: string;
   retailer: string;
-  products: Array<Product>;
+  products: Product[];
   total: number;
   orderDate: Date;
   approvedDate?: Date;

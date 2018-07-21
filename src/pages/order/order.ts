@@ -7,7 +7,7 @@ import { Storage } from '@ionic/storage';
 
 import { Business } from '../../models/business-model';
 import { Order } from '../../models/order-model';
-import { User} from "../../models/user-model";
+import { User } from '../../models/user-model';
 import { Observable } from 'rxjs';
 import { Product } from '../../models/product-model';
 import { first } from 'rxjs/operators';

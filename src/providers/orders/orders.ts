@@ -13,8 +13,6 @@ export class OrdersProvider {
   wineList: BehaviorSubject<Product[]> = new BehaviorSubject<Product[]>([]);
   shortList: BehaviorSubject<Product[]> = new BehaviorSubject<Product[]>(null);
 
-
-
   constructor(public afs: FirestoreProvider) {
     console.log('Hello OrdersProvider Provider');
   }
@@ -35,7 +33,7 @@ this.afs.col$<Product>(`business/${bid}/shortlist`)
 
   async placeOrder(order) {
     console.log(order);
-    const oid = await this.afs.getId();
+    const oid = this.afs.getId();
     const retailer = await this.afs.get(`business/${order.rid}`, 'name');
     const today = new Date();
     const newOrder = {
@@ -59,7 +57,7 @@ this.afs.col$<Product>(`business/${bid}/shortlist`)
 }
   async placeProducerOrder(order) {
   console.log(order);
-  const oid = await this.afs.getId();
+  const oid = this.afs.getId();
   const retailer = await this.afs.get(`business/${order.rid}`, 'name');
   const today = new Date();
   order[1].forEach(product => {

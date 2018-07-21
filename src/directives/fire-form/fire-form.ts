@@ -36,7 +36,7 @@ export class FireFormDirective implements OnInit, OnDestroy {
   }
 
   ionViewWillEnter() {
-    if(this.path) {
+    if (this.path) {
       this.preloadData();
     }
   }
@@ -113,7 +113,7 @@ export class FireFormDirective implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if(this.formSub) {
+    if (this.formSub) {
       this.formSub.unsubscribe();
     }
   }

@@ -1,104 +1,62 @@
-import { Storage } from '@ionic/storage';
 import { Component } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
-import { Observable } from 'rxjs/Observable';
+import { IonicPage, NavController, NavParams, ToastController, ViewController } from 'ionic-angular';
+import { Observable } from 'rxjs';
 import { FirestoreProvider } from '../../providers/firestore/firestore';
 import { AuthProvider } from '../../providers/auth/auth';
-import { IonicPage, NavController, NavParams, ToastController, ViewController } from 'ionic-angular';
 import { OrdersProvider } from '../../providers/orders/orders';
+import { DynamicFormArrayModel, DynamicFormControlModel, DynamicFormService } from '@ng-dynamic-forms/core';
+import { FormArray, FormGroup } from '@angular/forms';
+
 import { Product } from '../../models/product-model';
 import { User } from '../../models/user-model';
-import { GroupByPipe, PairsPipe } from 'ngx-pipes';
-import { first } from 'rxjs/operator/first';
-import { take, tap } from 'rxjs/operators';
+import { Business } from '../../models/business-model';
+import { WineList } from '../../models/lists-model';
+import { OrderForm } from '../../models/order-form-model';
 
 
-@IonicPage() @Component({
-  selector: 'page-wine-list', templateUrl: 'wine-list.html', providers: [ GroupByPipe, PairsPipe ],
-
+@IonicPage()
+@Component({
+  selector: 'page-wine-list',
+  templateUrl: 'wine-list.html',
 })
 export class WineListPage {
-  productsList: Product[];
   user: User;
-  orderForm: FormGroup;
+  business: Business;
+  productsList: Observable<Product[]>;
+  listType: string;
+  formModel: DynamicFormControlModel[] = OrderForm;
+  formGroup: FormGroup;
+  arrayModel: DynamicFormArrayModel;
+  arrayControl: FormArray;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private afs: FirestoreProvider, public viewCtrl: ViewController, public toastCtrl: ToastController, public op: OrdersProvider, private fb: FormBuilder, private storage: Storage, public auth: AuthProvider, public groupBy: GroupByPipe, public pairs: PairsPipe) {
-    this.user = this.auth.user$.getValue();
-    this.op.load(this.user.busId);
-  }
-
-  ionViewWillEnter() {
-    this.initForm();
-    this.getProducts();
+  constructor(public navCtrl: NavController, public navParams: NavParams, private afs: FirestoreProvider, public auth: AuthProvider, public viewCtrl: ViewController, public toastCtrl: ToastController, public op: OrdersProvider, public dfs: DynamicFormService) {
+    this.user = this.auth.user$.value;
+    this.business = this.auth.business$.value;
   }
 
   ionViewDidLoad() {
-
-  }
-
-  private updTotal() {
-    const control = this.orderForm.controls['prods'] as FormArray;
-    let total = 0;
-    for (const i in control) {
-      console.log(control[i]);
-      if (control[i].qty >= 1) {
-        const subtotal: number = control[i].qty * control[i].unitCost;
-        control.at(i).patchValue({ subtotal, options: { onlySelf: true, emitEvent: false } });
-        total += subtotal;
-        this.orderForm.patchValue({ total });
-      }
+    console.log(this.user);
+    this.op.load(this.user.busId);
+    if(this.business) {
+      console.log(this.business);
+      this.formModel = this.dfs.fromJSON([ { businessName: this.business.name, rid: this.business.id, total: 0 } ]);
+      this.formGroup = this.dfs.createFormGroup(this.formModel);
     }
-  }
-
-  initForm() {
-    this.orderForm = this.fb.group({
-      rid: this.user.busId, total: 0, prods: this.fb.array([]),
+    this.productsList = this.afs.col<any>(`business/${this.user.busId}/winelist`).valueChanges();
+    this.productsList.subscribe(data => {
+      this.arrayModel = this.dfs.findById('products', this.formModel) as DynamicFormArrayModel;
+      this.arrayControl = this.dfs.createFormArray(this.arrayModel);
     });
+    console.log(this.productsList);
+    this.arrayControl = this.formGroup.controls['products'] as FormArray;
+    this.arrayModel = this.dfs.findById('products', this.formModel) as DynamicFormArrayModel;
+
   }
 
-  async getProducts() {
-    this.afs.col$(`business/${this.user.busId}/winelist`).pipe(tap(doc => {
-      if (doc) {
-        this.addControl(doc);
-      }
-    }), take(1)).subscribe();
-    const qtyChanges = this.orderForm.controls[ 'prods' ].valueChanges;
-    qtyChanges.subscribe(prods => {
-      this.updTotal();
-      console.log('qtyChanges: ', prods);
-    });
+  insert(context: DynamicFormArrayModel, index: number) {
+    this.dfs.insertFormArrayGroup(index, this.arrayControl, context);
   }
 
-  addControl(product) {
-    const control = this.orderForm.controls[ 'prods' ] as FormArray;
-    control.push(this.fb.group({
-      id: product.id,
-      name: product.name,
-      producer: product.producer,
-      pid: product.pid,
-      cartonSize: product.cartonSize,
-      unitCost: product.unitCost,
-      price: product.cartonSize * product.unitCost,
-      qty: product.qty,
-      onOrder: product.onOrder,
-      subtotal: [ 0 ],
-    }));
-  }
-
-  initProductControl() {
-    return this.fb.group({
-      id: [ '' ],
-      name: [ '' ],
-      producer: [ '' ],
-      pid: [ '' ],
-      cartonSize: [0],
-      unitCost: [0],
-      price: [0],
-      qty: [0],
-      onOrder: [0],
-      subtotal: [0],
-    });
-  }
 
   detail(id: string) {
     this.navCtrl.push('ProductPage', { id });
@@ -108,6 +66,20 @@ export class WineListPage {
     this.viewCtrl.dismiss();
   }
 
+  async placeOrder(product: Product): Promise<any> {
+    await this.op.placeOrder(product);
+    this.presentToast(`${product.qty} bottles of ${product.name} ordered`);
+  }
+
+
+  addList(product: Product, toList: string, from?: string) {
+    this.afs.upsert(`business/${this.user.busId}/${toList}/${product.id}`, product).then(res => {
+      console.log(res);
+      this.presentToast('Wine added successfully');
+    });
+    (from != null) ? this.afs.delete(`business/${this.user.busId}/${from}/${product.id}`) : this.afs.upsert(`business/${product.pid}/interested/${this.user.busId}`, [{ name: this.user.busName, list: toList }]);
+    this.afs.upsert(`business/${product.pid}/interested/${this.user.busId}/${toList}/${product.id}`, { name: product.name, user: `${this.user.firstName} ${this.user.lastName}` });
+  }
 
   contact(id) {
     console.log(id);
@@ -115,7 +87,9 @@ export class WineListPage {
 
   presentToast(message) {
     const toast = this.toastCtrl.create({
-      message, duration: 3000, position: 'top'
+      message,
+      duration: 3000,
+      position: 'top'
     });
 
     toast.onDidDismiss(() => {
@@ -124,4 +98,6 @@ export class WineListPage {
 
     toast.present();
   }
+
+
 }

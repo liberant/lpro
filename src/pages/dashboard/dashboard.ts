@@ -18,12 +18,12 @@ import { User } from '../../models/user-model';
 export class DashboardPage {
 
   // public user: User;
-  public fireUser: User;
+  fireUser: User;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public auth: AuthProvider) {
   }
 
-  ionViewDidLoad() {
+  ionViewDidEnter() {
     this.fireUser = this.auth.user$.getValue();
   }
 }
