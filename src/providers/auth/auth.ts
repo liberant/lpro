@@ -28,11 +28,11 @@ export class AuthProvider {
       }
     });
   }
+  n
 
   async getUserVal(val): Promise<string> {
     return this.user$.getValue()[ val ];
   }
-
   async loginUser(email: string, password: string): Promise<firebase.User> {
     const auth = await this.afAuth.auth.signInWithEmailAndPassword(email, password);
     if (auth.user) {

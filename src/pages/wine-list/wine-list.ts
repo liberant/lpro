@@ -41,30 +41,13 @@ export class WineListPage {
     this.viewCtrl.dismiss();
   }
 
-  async saveQty(id: string, qty: number): Promise<void> {
-    this.afs.update<Product>(`business/${this.business.id}/winelist/${id}`, { qty })
-    this.presentToast(`${qty} bottles were added to yor cart`);
-  }
-
-  presentToast(message) {
-    const toast = this.toastCtrl.create({
-      message, duration: 3000, position: 'top'
-    });
-
-    toast.onDidDismiss(() => {
-      console.log('Dismissed toast');
-    });
-
-    toast.present();
+  saveQty(id: string, qty) {
+    qty = parseFloat(qty);
+    this.afs.update<Product>(`business/${this.business.id}/winelist/${id}`, { qty });
+    this.op.presentToast(`${qty} bottles were added to yor cart`);
   }
 
   showuser() {
     return this.showUser = !this.showUser;
   }
-
-
-  convertToNumber(qty, i) {
-    console.log(qty, i);
-  }
-
 }

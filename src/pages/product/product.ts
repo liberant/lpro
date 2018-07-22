@@ -28,7 +28,7 @@ export class ProductPage {
   regionList: Observable<Item[]>;
   varietyList: Observable<Item[]>;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController, public fb: FormBuilder, public afs: FirestoreProvider, public auth: AuthProvider,) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController, public fb: FormBuilder, public afs: FirestoreProvider, public auth: AuthProvider, ) {
     this.user = this.auth.user$.getValue();
     this.id = this.navParams.get('pid');
 
@@ -45,7 +45,7 @@ export class ProductPage {
       this.id = this.afs.getId();
       this.productForm.patchValue({ id: this.id });
     }
-    switch (this.auth.user$.getValue().busType) {
+    switch (this.auth.user$.value.busType) {
       case 'Producer':
         this.regionList = this.afs.col$<Item>('region');
         this.varietyList = this.afs.col$<Item>('variety');
@@ -63,8 +63,7 @@ export class ProductPage {
         this.varietyList = this.afs.col$<Item>('variety');
         break;
         default:
-        console.log(this.auth.user$.getValue().busType)
-
+        console.log(this.auth.user$.getValue().busType);
     }
   }
   initForm() {
@@ -111,7 +110,7 @@ export class ProductPage {
     console.log(this.productForm.value);
     this.afs.upsert(`product/${this.id}`, this.productForm.value);
     this.navCtrl.pop();
-  }X
+  }X;
   convertToNumber(event) {
     console.log(event);
   }

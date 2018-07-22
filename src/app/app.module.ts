@@ -49,7 +49,7 @@ export class LPErrorHandler implements ErrorHandler {
 
 @NgModule({
   declarations: [ LpApp, HomePage, ],
-  imports: [ BrowserModule, IonicModule.forRoot(LpApp), IonicStorageModule.forRoot(), AngularFireModule.initializeApp(firebaseConfig), AngularFireAuthModule, AngularFirestoreModule, AngularFireStorageModule, NgPipesModule,
+  imports: [ BrowserModule, IonicModule.forRoot(LpApp), IonicStorageModule.forRoot(), AngularFireModule.initializeApp(firebaseConfig), AngularFireAuthModule, AngularFirestoreModule.enablePersistence(), AngularFireStorageModule, NgPipesModule,
 
   ],
   bootstrap: [ IonicApp ],

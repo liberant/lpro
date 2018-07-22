@@ -2,9 +2,9 @@ import { Component, ViewChild } from '@angular/core';
 import { MenuController, Nav, Platform } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
-import { Storage } from '@ionic/storage';
 import { AuthProvider } from '../providers/auth/auth';
 import { FirestoreProvider } from '../providers/firestore/firestore';
+import { Storage } from '@ionic/storage';
 import firebase from 'firebase/app';
 
 @Component({
@@ -29,19 +29,22 @@ export class LpApp {
       ];
 
     firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        const type = this.auth.user$.value.busType;
-        this.rootPage = `${type}Page`;
-      } else {
+      if (!user) {
         this.rootPage = 'LoginPage';
+      } else {
+        this.auth.getUserVal('busType').then( type => {
+          this.rootPage = `${type}Page`;
+        });
       }
     });
   }
   initializeApp() {
     this.platform.ready().then(() => {
+      this.storage.ready().then(() => {
       this.storage.get('user').then((user) => {
         console.log('storage: ', user);
         this.auth.user$.next(user);
+        });
       });
       this.statusBar.styleDefault();
       this.splashScreen.hide();
