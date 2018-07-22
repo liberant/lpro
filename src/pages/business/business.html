@@ -13,62 +13,66 @@
 </ion-header>
 
 
-  <ion-content padding class="business-form-page" #businessProfile>
+<ion-content padding class="business-form-page" #businessProfile>
 
-      <form [formGroup]="businessForm" (ngSubmit)="editBusiness()">
+  <form [formGroup]="businessForm" (ngSubmit)="editBusiness()">
 
-        <h3>Business Details</h3>
-
-
-        <ion-item>
-          <ion-label stacked>Your Business Name</ion-label>
-          <ion-input formControlName="name" type="text" placeholder="Business Name">
-          </ion-input>
-        </ion-item>
-        <ion-item class="error-message" *ngIf="!businessForm.controls[name].valid && !businessForm.controls['name'].pristine">
-          <p>Please enter a valid name.</p>
-        </ion-item>
-
-        <ion-item>
-          <ion-label stacked>Your Website</ion-label>
-          <ion-input formControlName="website" type="text" placeholder="www.yoursite.com">
-          </ion-input>
-        </ion-item>
-        <ion-item class="error-message" *ngIf="!businessForm.controls[website].valid && !businessForm.controls['website'].pristine">
-          <p>Please enter a valid name.</p>
-        </ion-item>
+    <h3>Business Details</h3>
 
 
-        <ion-item>
-          <ion-label stacked>Phone Number</ion-label>
-          <ion-input formControlName="phone" type="tel" placeholder="00 0000 0000">
-          </ion-input>
-        </ion-item>
-        <ion-item class="error-message" *ngIf="!businessForm.controls['phone'].valid && !businessForm.controls['phone'].pristine">
-          <p>Please enter a valid phone number.</p>
-        </ion-item>
+    <ion-item>
+      <ion-label stacked>Your Business Name</ion-label>
+      <ion-input formControlName="name" type="text" placeholder="Business Name">
+      </ion-input>
+    </ion-item>
+    <ion-item class="error-message"
+              *ngIf="!businessForm.controls[name].valid && !businessForm.controls['name'].pristine">
+      <p>Please enter a valid name.</p>
+    </ion-item>
 
-        <ion-item>
-          <ion-label stacked>Your Contact Email address</ion-label>
-          <ion-input formControlName="email" type="email" placeholder="Your email address">
-          </ion-input>
-        </ion-item>
-        <ion-item class="error-message" *ngIf="!businessForm.controls['email'].valid && !businessForm.controls['email'].pristine">
-          <p>Please enter a valid email address.</p>
-        </ion-item>
+    <ion-item>
+      <ion-label stacked>Your Website</ion-label>
+      <ion-input formControlName="website" type="text" placeholder="www.yoursite.com">
+      </ion-input>
+    </ion-item>
+    <ion-item class="error-message"
+              *ngIf="!businessForm.controls[website].valid && !businessForm.controls['website'].pristine">
+      <p>Please enter a valid name.</p>
+    </ion-item>
 
-        <ion-item>
-          <ion-label stacked>Business Type</ion-label>
-          <ion-select interface="popover" [formControlName]="type">
-            <ion-option value="retailer">Retailer</ion-option>
-            <ion-option value="producer">Producer</ion-option>
-          </ion-select>
-        </ion-item>
-        <ion-item class="error-message" *ngIf="!businessForm.controls['type'].valid">
-          <p>You have to select a business type</p>
-        </ion-item>
 
-        <button ion-button type="submit" [disabled]="!businessForm.valid">Submit</button>
+    <ion-item>
+      <ion-label stacked>Phone Number</ion-label>
+      <ion-input formControlName="phone" type="tel" placeholder="00 0000 0000">
+      </ion-input>
+    </ion-item>
+    <ion-item class="error-message"
+              *ngIf="!businessForm.controls['phone'].valid && !businessForm.controls['phone'].pristine">
+      <p>Please enter a valid phone number.</p>
+    </ion-item>
 
-      </form>
+    <ion-item>
+      <ion-label stacked>Your Contact Email address</ion-label>
+      <ion-input formControlName="email" type="email" placeholder="Your email address">
+      </ion-input>
+    </ion-item>
+    <ion-item class="error-message"
+              *ngIf="!businessForm.controls['email'].valid && !businessForm.controls['email'].pristine">
+      <p>Please enter a valid email address.</p>
+    </ion-item>
+
+    <ion-item>
+      <ion-label stacked>Business Type</ion-label>
+      <ion-select interface="popover" [formControlName]="type">
+        <ion-option value="retailer">Retailer</ion-option>
+        <ion-option value="producer">Producer</ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item class="error-message" *ngIf="!businessForm.controls['type'].valid">
+      <p>You have to select a business type</p>
+    </ion-item>
+
+    <button ion-button type="submit" [disabled]="!businessForm.valid">Submit</button>
+
+  </form>
 </ion-content>

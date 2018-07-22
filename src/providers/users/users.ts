@@ -1,26 +1,19 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from 'angularfire2/auth';
 
-import {
-  AngularFirestore,
-  AngularFirestoreCollection,
-  AngularFirestoreDocument
-  } from 'angularfire2/firestore';
+import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from 'angularfire2/firestore';
 import { User } from '../../models/user-model';
 
 @Injectable()
 export class UsersProvider {
   userId: string;
+
   constructor(private afAuth: AngularFireAuth, private afs: AngularFirestore) {
-    afAuth.authState.subscribe(user => {
-      if (user) {
-        this.userId = user.uid;
-      }
-    });
+
   }
 
   getList(path): AngularFirestoreCollection<User> {
-return this.afs.collection(`${path}`);
+    return this.afs.collection(`${path}`);
   }
 
   get(path): AngularFirestoreDocument<User> {

@@ -4,24 +4,17 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { EmailValidator } from '../../validators/email';
 import { AuthProvider } from '../../providers/auth/auth';
 
-@IonicPage()
-@Component({
-  selector: 'page-login',
-  templateUrl: 'login.html',
+@IonicPage() @Component({
+  selector: 'page-login', templateUrl: 'login.html',
 })
 export class LoginPage {
 
   loginForm: FormGroup;
-  constructor(
-    public navCtrl: NavController,
-    public loadingCtrl: LoadingController,
-    public alertCtrl: AlertController,
-    public authProvider: AuthProvider,
-    private formBuilder: FormBuilder,
-  ) {
+
+  constructor(public navCtrl: NavController, public loadingCtrl: LoadingController, public alertCtrl: AlertController, public authProvider: AuthProvider, private formBuilder: FormBuilder,) {
     this.loginForm = formBuilder.group({
-      email: ['', Validators.compose([Validators.required, EmailValidator.isValid])],
-      password: ['', Validators.compose([Validators.required, Validators.minLength(6)])]
+      email: [ '', Validators.compose([ Validators.required, EmailValidator.isValid ]) ],
+      password: [ '', Validators.compose([ Validators.required, Validators.minLength(6) ]) ]
     });
   }
 
@@ -48,8 +41,7 @@ export class LoginPage {
       } catch (error) {
         loading.dismiss();
         const alert: Alert = this.alertCtrl.create({
-          message: error.message,
-          buttons: [{ text: 'Ok', role: 'cancel' }]
+          message: error.message, buttons: [ { text: 'Ok', role: 'cancel' } ]
         });
         alert.present();
       }

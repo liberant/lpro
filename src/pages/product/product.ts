@@ -1,15 +1,6 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import {
-  AlertController,
-  Content,
-  IonicPage,
-  NavController, NavParams
-} from 'ionic-angular';
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+import { Component, ViewChild } from '@angular/core';
+import { AlertController, Content, IonicPage, NavController, NavParams } from 'ionic-angular';
+import { FormBuilder, FormGroup, Validators, } from '@angular/forms';
 import { Observable } from 'rxjs';
 
 import { FirestoreProvider } from '../../providers/firestore/firestore';
@@ -20,10 +11,8 @@ import { Producer } from '../../models/business-model';
 import { Product } from '../../models/product-model';
 import { User } from '../../models/user-model';
 
-@IonicPage()
-@Component({
-  selector: 'page-product',
-  templateUrl: 'product.html',
+@IonicPage() @Component({
+  selector: 'page-product', templateUrl: 'product.html',
 })
 export class ProductPage {
   @ViewChild('productProfile') content: Content;
@@ -39,37 +28,45 @@ export class ProductPage {
   regionList: Observable<Item[]>;
   varietyList: Observable<Item[]>;
 
-  constructor(
-    public navCtrl: NavController,
-    public navParams: NavParams,
-    public alertCtrl: AlertController,
-    public fb: FormBuilder,
-    public afs: FirestoreProvider,
-    public auth: AuthProvider,
-  ) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController, public fb: FormBuilder, public afs: FirestoreProvider, public auth: AuthProvider,) {
     this.user = this.auth.user$.getValue();
-    this.id = this.navParams.get('id');
+    this.id = this.navParams.get('pid');
 
   }
 
-  ionViewDidLoad() {
+  ionVieWilldLoad() {
     this.initForm();
-    if (this.id) {this.afs.getDoc<Product>(`product/${this.id}`).then(data => {
-      this.patchForm(data);
-      this.product = data;
-    });
-                  console.log(this.product);
+    if (this.id) {
+      this.afs.getDoc<Product>(`product/${this.id}`).then(data => {
+        this.patchForm(data);
+        this.product = data;
+      });
     } else {
       this.id = this.afs.getId();
       this.productForm.patchValue({ id: this.id });
     }
-    this.content.resize();
-    this.producerList = this.afs.colWithIds$<Producer>('business', ref => ref.where('type', '==', 'Producer'));
-    this.regionList = this.afs.col$<Item>('region');
-    this.varietyList = this.afs.col$<Item>('variety');
-    if (this.user.busType === 'Retailer') { this.productForm.disable(); }
-    }
+    switch (this.auth.user$.getValue().busType) {
+      case 'Producer':
+        this.regionList = this.afs.col$<Item>('region');
+        this.varietyList = this.afs.col$<Item>('variety');
+        this.productForm.patchValue({ pid: this.user.busId, producer: this.user.busName });
+        this.productForm.controls[ 'producer' ].disabled;
+        break;
 
+      case 'Retailer':
+        this.productForm.disable();
+        break;
+
+      case 'Admin':
+        this.producerList = this.afs.colWithIds$<Producer>('business', ref => ref.where('type', '==', 'Producer'));
+        this.regionList = this.afs.col$<Item>('region');
+        this.varietyList = this.afs.col$<Item>('variety');
+        break;
+        default:
+        console.log(this.auth.user$.getValue().busType)
+
+    }
+  }
   initForm() {
       this.productForm = this.fb.group({
         id: [ '' ],
@@ -80,8 +77,9 @@ export class ProductPage {
         vintage: [ '', Validators.compose([ Validators.required ]) ],
         region: [ '', Validators.compose([ Validators.required ]) ],
         variety: [ '', Validators.compose([ Validators.required ]) ],
-        cartonSize: [ '', Validators.compose([ Validators.required ]) ],
-        unitCost: [ '', Validators.compose([ Validators.required ]) ],
+        cartonSize: [ 0, Validators.compose([ Validators.required ]) ],
+        unitCost: [ 0, Validators.compose([ Validators.required ]) ],
+        price: [0],
       });
     }
 
@@ -90,13 +88,13 @@ export class ProductPage {
       id: product.id,
       pid: product.pid,
       name: product.name,
-      producer: product.producer,
-      // photoURL: product.photoURL,
+      producer: product.producer, // photoURL: product.photoURL,
       vintage: product.vintage,
       region: product.region,
       variety: product.variety,
       cartonSize: product.cartonSize,
-      unitCost: product.unitCost
+      unitCost: product.unitCost,
+      price: product.price,
     });
   }
 
@@ -104,10 +102,18 @@ export class ProductPage {
     this.productForm.patchValue({ pid });
   }
 
+  calculatePrice() {
+    const price = this.productForm.value['cartonSize'] + this.productForm.value['unitCost'];
+    this.productForm.patchValue({ price });
+  }
+
   submit() {
     console.log(this.productForm.value);
     this.afs.upsert(`product/${this.id}`, this.productForm.value);
     this.navCtrl.pop();
+  }X
+  convertToNumber(event) {
+    console.log(event);
   }
 
 }

@@ -1,8 +1,8 @@
 import { Directive, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AngularFirestoreDocument } from 'angularfire2/firestore';
 import { FirestoreProvider } from '../../providers/firestore/firestore';
-import { FormControl, FormGroup } from '@angular/forms';
-import { debounceTime, map, take, tap } from 'rxjs/operators';
+import { FormGroup } from '@angular/forms';
+import { debounceTime, take, tap } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 
 @Directive({
@@ -13,23 +13,25 @@ export class FireFormDirective implements OnInit, OnDestroy {
   // Inputs
   @Input() path: string;
   @Input() formGroup: FormGroup;
-
-  // Internal state
-  private _state: 'loading' | 'synced' | 'modified' | 'error';
-
   // Outputs
   @Output() stateChange = new EventEmitter<string>();
   @Output() formError = new EventEmitter<string>();
-
   // Firestore Document
   private docRef: AngularFirestoreDocument<any>;
-
   // Subscriptions
   private formSub: Subscription;
 
   constructor(private afs: FirestoreProvider) {
   }
 
+  // Internal state
+  private _state: 'loading' | 'synced' | 'modified' | 'error';
+
+  // Setter for state changes
+  set state(val) {
+    this._state = val;
+    this.stateChange.emit(val);
+  }
 
   ngOnInit() {
     this.autoSave();
@@ -47,43 +49,33 @@ export class FireFormDirective implements OnInit, OnDestroy {
     this.docRef = this.getDocRef(this.path);
     this.docRef
       .valueChanges()
-      .pipe(
-        tap(doc => {
-          if (doc) {
-            this.formGroup.patchValue(doc);
-            this.formGroup.markAsPristine();
-            this.state = 'synced';
-          }
-        }),
-        take(1)
-      )
+      .pipe(tap(doc => {
+        if (doc) {
+          this.formGroup.patchValue(doc);
+          this.formGroup.markAsPristine();
+          this.state = 'synced';
+        }
+      }), take(1))
       .subscribe();
   }
-
 
   // Autosaves form changes
   autoSave() {
     this.formSub = this.formGroup.valueChanges
-      .pipe(
-        tap(change => {
-          this.state = 'modified';
-        }),
-        debounceTime(2000),
-        tap(change => {
-          if (this.formGroup.valid && this._state === 'modified') {
-            this.setDoc();
-          }
-        })
-      )
+      .pipe(tap(change => {
+        this.state = 'modified';
+      }), debounceTime(2000), tap(change => {
+        if (this.formGroup.valid && this._state === 'modified') {
+          this.setDoc();
+        }
+      }))
       .subscribe();
   }
 
   // Intercept form submissions to perform the document write
-  @HostListener('ngSubmit', ['$event'])
-  onSubmit(e) {
+  @HostListener('ngSubmit', [ '$event' ]) onSubmit(e) {
     this.setDoc();
   }
-
 
   // Determines if path is a collection or document
   getDocRef(path: string): any {
@@ -104,12 +96,6 @@ export class FireFormDirective implements OnInit, OnDestroy {
       this.formError.emit(err.message);
       this.state = 'error';
     }
-  }
-
-  // Setter for state changes
-  set state(val) {
-    this._state = val;
-    this.stateChange.emit(val);
   }
 
   ngOnDestroy() {

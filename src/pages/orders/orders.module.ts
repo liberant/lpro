@@ -5,12 +5,7 @@ import { NgPipesModule } from 'ngx-pipes';
 
 
 @NgModule({
-  declarations: [
-    OrdersPage,
-  ],
-  imports: [
-    NgPipesModule,
-    IonicPageModule.forChild(OrdersPage),
-  ],
+  declarations: [ OrdersPage, ], imports: [ NgPipesModule, IonicPageModule.forChild(OrdersPage), ],
 })
-export class OrdersPageModule {}
+export class OrdersPageModule {
+}

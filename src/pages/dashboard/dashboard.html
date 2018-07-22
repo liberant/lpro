@@ -19,14 +19,6 @@
 <ion-content padding>
   <ion-grid>
     <ion-row>
-      <ion-col *ngIf="fireUser">
-        <ion-list>
-          <ion-list-header>Imported as User Object</ion-list-header>
-          <ion-item>User ID: {{fireUser.id}}</ion-item>
-          <ion-item>Bus Id: {{fireUser.busId}}</ion-item>
-          <ion-item>Type: {{fireUser.busType}}</ion-item>
-        </ion-list>
-      </ion-col>
       <ion-col *ngIf="auth.user$ | async as user">
         <ion-list>
           <ion-list-header>Read direct from auth</ion-list-header>

@@ -10,13 +10,10 @@ import { Order } from '../../models/order-model';
 import { User } from '../../models/user-model';
 import { Observable } from 'rxjs';
 import { Product } from '../../models/product-model';
-import { first } from 'rxjs/operators';
 
 
-@IonicPage()
-@Component({
-  selector: 'page-order',
-  templateUrl: 'order.html',
+@IonicPage() @Component({
+  selector: 'page-order', templateUrl: 'order.html',
 })
 export class OrderPage {
   retailer: Business;
@@ -30,8 +27,7 @@ export class OrderPage {
   busType: string;
   focused: string;
   show: {
-    variety: boolean;
-    region: boolean;
+    variety: boolean; region: boolean;
   };
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController, public op: OrdersProvider, public afs: FirestoreProvider, private auth: AuthProvider, private storage: Storage) {
@@ -45,13 +41,13 @@ export class OrderPage {
   }
 
   async getData(): Promise<void> {
-    this.trader = this.afs.doc$<Business>(`business/${(this.user.busType === 'Retailer') ? this.order$.valueOf()['pid'] : this.order$.valueOf()['rid]']}`);
+    this.trader = this.afs.doc$<Business>(`business/${(this.user.busType === 'Retailer') ? this.order$.valueOf()[ 'pid' ] : this.order$.valueOf()[ 'rid]' ]}`);
     this.products$ = this.afs.col$(`orders/${this.orderId}/products`);
   }
 
   toggle(field: string, val: boolean) {
     const date = `${field}Date`;
-    return this.afs.change(`orders/${this.orderId}`, { [field]: !val, status: `${field}` }, date);
+    return this.afs.change(`orders/${this.orderId}`, { [ field ]: !val, status: `${field}` }, date);
   }
 
   prep(order) {

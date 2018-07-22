@@ -1,10 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from 'angularfire2/auth';
-import {
-  AngularFirestore,
-  AngularFirestoreCollection,
-  AngularFirestoreDocument,
-} from 'angularfire2/firestore';
+import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument, } from 'angularfire2/firestore';
 import { Storage } from '@ionic/storage';
 import { Observable } from 'rxjs';
 import { first, map, take, tap } from 'rxjs/operators';
@@ -23,18 +19,23 @@ export class FirestoreProvider {
   /// Get a Reference
   /// **************
 
-  col<T>(ref: CollectionPredicate<T>, queryFn?): AngularFirestoreCollection<T> {
-    return typeof ref === 'string' ? this.afs.collection<T>(ref, queryFn) : ref;
+  /// Firebase Server Timestamp
+  get timestamp() {
+    return firebase.firestore.FieldValue.serverTimestamp();
   }
 
-  doc<T>(ref: DocPredicate<T>): AngularFirestoreDocument<T> {
-    return typeof ref === 'string' ? this.afs.doc<T>(ref) : ref;
+  col<T>(ref: CollectionPredicate<T>, queryFn?): AngularFirestoreCollection<T> {
+    return typeof ref === 'string' ? this.afs.collection<T>(ref, queryFn) : ref;
   }
 
 
   /// **************
   /// Get Data
   /// **************
+
+  doc<T>(ref: DocPredicate<T>): AngularFirestoreDocument<T> {
+    return typeof ref === 'string' ? this.afs.doc<T>(ref) : ref;
+  }
 
 // Observables
   doc$<T>(ref: DocPredicate<T>): Observable<T> {
@@ -51,31 +52,24 @@ export class FirestoreProvider {
 
   /// with Ids
   colWithIds$<T>(ref: CollectionPredicate<T>, queryFn?): Observable<any[]> {
-    return this.col(ref, queryFn).stateChanges().pipe(map(actions =>
-      actions.map(a => {
-        const id = a.payload.doc.id;
-        const data = a.payload.doc.data() as any;
-        return { id, ...data };
-      }))
-    );
-}
+    return this.col(ref, queryFn).stateChanges().pipe(map(actions => actions.map(a => {
+      const id = a.payload.doc.id;
+      const data = a.payload.doc.data() as any;
+      return { id, ...data };
+    })));
+  }
+
   // Promise
   getDoc<T>(ref: DocPredicate<T>): Promise<T> {
     return this.doc$<T>(`${ref}`).pipe(first()).toPromise();
-  }
-
-  getCol<T>(ref: CollectionPredicate<T>): Promise<T[]> {
-    return this.col$<T>(`${ref}`).pipe(first()).toPromise();
   }
 
   /// **************
   /// Write Data
   /// **************
 
-
-  /// Firebase Server Timestamp
-  get timestamp() {
-    return firebase.firestore.FieldValue.serverTimestamp();
+  getCol<T>(ref: CollectionPredicate<T>): Promise<T[]> {
+    return this.col$<T>(`${ref}`).pipe(first()).toPromise();
   }
 
   getId() {
@@ -143,24 +137,20 @@ export class FirestoreProvider {
 
   inspectDoc(ref: DocPredicate<any>): void {
     const tick = new Date().getTime();
-    this.doc(ref).snapshotChanges().pipe(
-      take(1),
-      tap(d => {
-        const tock = new Date().getTime() - tick;
-        console.log(`Loaded Document in ${tock}ms`, d);
-      }))
+    this.doc(ref).snapshotChanges().pipe(take(1), tap(d => {
+      const tock = new Date().getTime() - tick;
+      console.log(`Loaded Document in ${tock}ms`, d);
+    }))
       .subscribe();
   }
 
 
   inspectCol(ref: CollectionPredicate<any>): void {
     const tick = new Date().getTime();
-    this.col(ref).snapshotChanges().pipe(
-      take(1),
-      tap(c => {
-        const tock = new Date().getTime() - tick;
-        console.log(`Loaded Collection in ${tock}ms`, c);
-      }))
+    this.col(ref).snapshotChanges().pipe(take(1), tap(c => {
+      const tock = new Date().getTime() - tick;
+      console.log(`Loaded Collection in ${tock}ms`, c);
+    }))
       .subscribe();
   }
 
@@ -209,4 +199,7 @@ export class FirestoreProvider {
     return batch.commit();
   }
 
+  // Convert number inputs to numbers by default
+  public convertToNumber(event): number { return +event;
+  }
 }

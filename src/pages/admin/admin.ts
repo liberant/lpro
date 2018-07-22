@@ -8,10 +8,8 @@ import { IonicPage, NavController } from 'ionic-angular';
  * Ionic pages and navigation.
  */
 
-@IonicPage()
-@Component({
-  selector: 'page-admin',
-  templateUrl: 'admin.html'
+@IonicPage() @Component({
+  selector: 'page-admin', templateUrl: 'admin.html'
 })
 export class AdminPage {
 
@@ -23,6 +21,7 @@ export class AdminPage {
   ordersRoot = 'OrdersPage';
 
 
-  constructor(public navCtrl: NavController) {}
+  constructor(public navCtrl: NavController) {
+  }
 
 }

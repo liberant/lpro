@@ -10,10 +10,8 @@ import { User } from '../../models/user-model';
  * Ionic pages and navigation.
  */
 
-@IonicPage()
-@Component({
-  selector: 'page-dashboard',
-  templateUrl: 'dashboard.html',
+@IonicPage() @Component({
+  selector: 'page-dashboard', templateUrl: 'dashboard.html',
 })
 export class DashboardPage {
 
@@ -24,6 +22,5 @@ export class DashboardPage {
   }
 
   ionViewDidEnter() {
-    this.fireUser = this.auth.user$.getValue();
   }
 }

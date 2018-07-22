@@ -5,34 +5,93 @@
   Ionic pages and navigation.
 -->
 <ion-header>
-
   <ion-navbar>
-    <ion-title>wine-list</ion-title>
+    <ion-title>Active Winelist
+      <button ion-button small [outline] (click)="showuser()">
+        <ion-icon name="person" item></ion-icon>
+      </button>
+    </ion-title>
   </ion-navbar>
-
+  <ion-toolbar>
+    <ion-row justify-content-center>
+      <ion-col col-5>
+        <ion-item>
+          <ion-label floating>Group By</ion-label>
+          <ion-select [(ngModel)]="groupvar" interface="popover">
+            <ion-option value="region">Region</ion-option>
+            <ion-option value="variety">Variety</ion-option>
+            <ion-option value="producer">Producer</ion-option>
+            <ion-option value="vintage">Vintage</ion-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+      <ion-col col-5>
+        <ion-item>
+          <ion-label floating>Order By</ion-label>
+          <ion-select [(ngModel)]="ordervar" interface="popover">
+            <ion-option value="unitCost">Unit Cost</ion-option>
+            <ion-option value="vintage">Vintage</ion-option>
+            <ion-option value="name">Name</ion-option>
+            <ion-option value="updatedAt">Recently Updated</ion-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </ion-toolbar>
 </ion-header>
-
-
 <ion-content padding>
+  <ion-grid *ngIf="showUser">
+    <ion-row>
+      <ion-col *ngIf="auth.user$ | async as user" col-6>
+        <ion-list>
+          <ion-list-header>User</ion-list-header>
+          <ion-item>User ID: {{user.id}}</ion-item>
+          <ion-item>User Name: {{user.firstName}} {{user.lastName}}</ion-item>
+          <ion-item>Phone: {{user.phone}}</ion-item>
+        </ion-list>
+      </ion-col>
+      <ion-col *ngIf="auth.business$ | async as business" col-6>
+        <ion-list>
+          <ion-list-header>Business</ion-list-header>
+          <ion-item>Business ID: {{business.id}}</ion-item>
+          <ion-item>Business Name: {{business.name}}</ion-item>
+          <ion-item>Website: {{business.website}}</ion-item>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 
-  <form [formGroup]="formGroup" *ngIf="formGroup">
+  <ion-grid *ngFor="let group of productsList | async | groupBy: groupvar | pairs; let i=index">
+    <ion-row>
+      <ion-col>
+        <ion-item-divider>{{group[0]}}</ion-item-divider>
+      </ion-col>
+    </ion-row>
+    <ion-row *ngFor="let product of group[1] | orderBy: ordervar">
+      <ion-col col-2>
+        <button>
+          <ion-icon name="trash"></ion-icon>
+        </button>
+      </ion-col>
+      <ion-col col-6 (click)="detail(product.id)">{{product.name}}</ion-col>
+      <ion-col col-2>
+        <ion-item>
+          <ion-input type="number" [(ngModel)]="product.qty" [ngModelOptions]="{standalone: true}" (ionChange)="convertToNumber(product.qty, product.i)">{{product.qty}}
+          </ion-input>
+        </ion-item>
+      </ion-col>
+      <ion-col col-2>
+        <button (click)="saveQty(product.id, product.qty)">
+          <ion-icon name="add"></ion-icon>
+        </button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 
-    <dynamic-ionic-form [group]="formGroup"
-                            [model]="formModel">
-
-    <ng-template modelId="foundationFormArray" let-context="context" let-index="index">
-
-    <div class="small-5 cell">
-
-      <button type="button" class="button success rounded" (click)="insert(context, index + 1)"></button>
-
-    </div>
-    </ng-template>
-
-
-    </dynamic-ionic-form>
-  </form>
-
-
-  <pre>{{(formGroup)?.value | json}}</pre>
+  <button ion-button block (click)="order()">Order</button>
 </ion-content>
+
+
+
+
+

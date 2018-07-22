@@ -22,24 +22,21 @@ export class LpApp {
     this.afs = afs;
     this.initializeApp();
 
-    this.pages = [ { title: 'Admin', component: 'AdminPage' }, {
-      title: 'Producers',
-      component: 'ProducerPage'
-    },             { title: 'Retailers', component: 'RetailerPage' } ];
+    this.pages = [
+      { title: 'Admin', component: 'AdminPage' },
+      { title: 'Producers', component: 'ProducerPage' },
+      { title: 'Retailers', component: 'RetailerPage' }
+      ];
 
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
-        this.afs.get(`user/${user.uid}`, 'busType').then(type => {
-          this.rootPage = `${type}Page`;
-        });
+        const type = this.auth.user$.value.busType;
+        this.rootPage = `${type}Page`;
       } else {
         this.rootPage = 'LoginPage';
       }
-    }, () => {
-      this.rootPage = 'LoginPage';
     });
   }
-
   initializeApp() {
     this.platform.ready().then(() => {
       this.storage.get('user').then((user) => {

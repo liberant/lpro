@@ -3,11 +3,7 @@ import { IonicPageModule } from 'ionic-angular';
 import { DeliveriesPage } from './deliveries';
 
 @NgModule({
-  declarations: [
-    DeliveriesPage,
-  ],
-  imports: [
-    IonicPageModule.forChild(DeliveriesPage),
-  ],
+  declarations: [ DeliveriesPage, ], imports: [ IonicPageModule.forChild(DeliveriesPage), ],
 })
-export class DeliveriesPageModule {}
+export class DeliveriesPageModule {
+}

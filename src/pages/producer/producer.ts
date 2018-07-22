@@ -9,10 +9,8 @@ import { FirestoreProvider } from '../../providers/firestore/firestore';
  * Ionic pages and navigation.
  */
 
-@IonicPage()
-@Component({
-  selector: 'page-producer',
-  templateUrl: 'producer.html'
+@IonicPage() @Component({
+  selector: 'page-producer', templateUrl: 'producer.html'
 })
 export class ProducerPage {
 

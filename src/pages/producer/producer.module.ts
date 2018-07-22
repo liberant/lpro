@@ -3,11 +3,7 @@ import { IonicPageModule } from 'ionic-angular';
 import { ProducerPage } from './producer';
 
 @NgModule({
-  declarations: [
-    ProducerPage,
-  ],
-  imports: [
-    IonicPageModule.forChild(ProducerPage),
-  ]
+  declarations: [ ProducerPage, ], imports: [ IonicPageModule.forChild(ProducerPage), ]
 })
-export class ProducerPageModule {}
+export class ProducerPageModule {
+}

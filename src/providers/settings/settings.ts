@@ -1,9 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AngularFireAuth } from 'angularfire2/auth';
-import {
-  AngularFirestore,
-  AngularFirestoreCollection
-} from 'angularfire2/firestore';
+import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
 import { Item } from '../../models/common-model';
 
 
@@ -12,15 +8,7 @@ export class SettingsProvider {
 
   userId: string;
 
-  constructor(
-    public afs: AngularFirestore,
-    public afAuth: AngularFireAuth
-  ) {
-    afAuth.authState.subscribe(user => {
-      if (user) {
-        this.userId = user.uid;
-      }
-    });
+  constructor(public afs: AngularFirestore) {
   }
 
   get(path): AngularFirestoreCollection<Item> {

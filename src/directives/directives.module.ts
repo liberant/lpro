@@ -3,8 +3,7 @@ import { IonicModule } from 'ionic-angular';
 import { FireFormDirective } from './fire-form/fire-form';
 
 @NgModule({
-  declarations: [FireFormDirective],
-  imports: [IonicModule],
-  exports: [FireFormDirective],
+  declarations: [ FireFormDirective ], imports: [ IonicModule ], exports: [ FireFormDirective ],
 })
-export class DirectivesModule {}
+export class DirectivesModule {
+}

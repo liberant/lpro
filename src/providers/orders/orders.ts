@@ -2,9 +2,6 @@ import { Injectable } from '@angular/core';
 import { FirestoreProvider } from '../firestore/firestore';
 import { Product } from '../../models/product-model';
 import { BehaviorSubject } from 'rxjs';
-import { Business } from '../../models/business-model';
-import { WineList } from '../../models/lists-model';
-import { User } from '../../models/user-model';
 
 
 @Injectable()
@@ -16,19 +13,23 @@ export class OrdersProvider {
   constructor(public afs: FirestoreProvider) {
     console.log('Hello OrdersProvider Provider');
   }
+
   load(bid): void {
-this.afs.col$<Product>(`business/${bid}/winelist`)
-    .subscribe(data => {
-      console.log(data);
-      this.wineList.next(data);
-    });
-this.afs.col$<Product>(`business/${bid}/shortlist`)
+    this.afs.col$<Product>(`business/${bid}/winelist`)
+      .subscribe(data => {
+        console.log(data);
+        this.wineList.next(data);
+      });
+    this.afs.col$<Product>(`business/${bid}/shortlist`)
       .subscribe(data => {
         console.log(data);
         this.shortList.next(data);
       });
   }
 
+  contact(id) {
+    console.log(id);
+  }
 
 
   async placeOrder(order) {
@@ -54,37 +55,40 @@ this.afs.col$<Product>(`business/${bid}/shortlist`)
     order.products.forEach(product => {
       this.afs.update(`business/${order.rid}/winelist/${product.id}`, { qty: null, onOrder: product.qty });
     });
-}
+  }
+
   async placeProducerOrder(order) {
-  console.log(order);
-  const oid = this.afs.getId();
-  const retailer = await this.afs.get(`business/${order.rid}`, 'name');
-  const today = new Date();
-  order[1].forEach(product => {
+    console.log(order);
+    const oid = this.afs.getId();
+    const retailer = await this.afs.get(`business/${order.rid}`, 'name');
+    const today = new Date();
+    order[ 1 ].forEach(product => {
       // total = total + (product.cartonSize * product.unitCost * product.qty);
       this.afs.add(`orders/${oid}/products`, product);
-      this.afs.update(`business/${order.rid}/winelist/${product.id}`, { qty: 0, onOrder: product.onOrder + product.qty });
+      this.afs.update(`business/${order.rid}/winelist/${product.id}`, {
+        qty: 0, onOrder: product.onOrder + product.qty
+      });
     });
-  const newOrder = {
-    id: oid,
-    rid: order.rid,
-    retailer,
-    pid: order[1][0].pid,
-    producer: order[0],
-    total: order.total,
-    orderDate: today,
-    approved: false,
-    shipped: false,
-    received: false,
-    status: 'submitted'
-  };
-  this.afs.set(`orders/${oid}`, newOrder);
+    const newOrder = {
+      id: oid,
+      rid: order.rid,
+      retailer,
+      pid: order[ 1 ][ 0 ].pid,
+      producer: order[ 0 ],
+      total: order.total,
+      orderDate: today,
+      approved: false,
+      shipped: false,
+      received: false,
+      status: 'submitted'
+    };
+    this.afs.set(`orders/${oid}`, newOrder);
 
-}
+  }
 
   async progressOrder(id: string, field: string, val: boolean, rid?: string, products?: Product[]) {
     const date = `${field}Date`;
-    this.afs.change(`orders/${id}`, { [field]: !val, status: `${field}` }, date);
+    this.afs.change(`orders/${id}`, { [ field ]: !val, status: `${field}` }, date);
     if (field === 'received') {
       products.forEach(product => {
         this.afs.get(`business/${rid}/winelist/${product.id}`, 'onOrder').then(res => {

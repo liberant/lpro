@@ -7,10 +7,8 @@ import { User } from '../../models/user-model';
 import { AuthProvider } from '../../providers/auth/auth';
 
 
-@IonicPage()
-@Component({
-  selector: 'page-short-list',
-  templateUrl: 'short-list.html',
+@IonicPage() @Component({
+  selector: 'page-short-list', templateUrl: 'short-list.html',
 })
 export class ShortListPage {
   productsList: Observable<Product[]>;
@@ -22,14 +20,13 @@ export class ShortListPage {
 
   ionViewDidLoad() {
 
-   this.getProducts();
+    this.getProducts();
   }
 
   async getProducts() {
     this.productsList = this.afs.col$<Product>(`business/${this.user.busId}/shortlist`);
 
   }
-
 
 
   detail(id: string) {
@@ -54,9 +51,7 @@ export class ShortListPage {
 
   presentToast(message) {
     const toast = this.toastCtrl.create({
-      message,
-      duration: 3000,
-      position: 'top'
+      message, duration: 3000, position: 'top'
     });
 
     toast.onDidDismiss(() => {

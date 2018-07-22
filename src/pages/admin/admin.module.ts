@@ -3,11 +3,7 @@ import { IonicPageModule } from 'ionic-angular';
 import { AdminPage } from './admin';
 
 @NgModule({
-  declarations: [
-    AdminPage,
-  ],
-  imports: [
-    IonicPageModule.forChild(AdminPage),
-  ]
+  declarations: [ AdminPage, ], imports: [ IonicPageModule.forChild(AdminPage), ]
 })
-export class AdminPageModule {}
+export class AdminPageModule {
+}

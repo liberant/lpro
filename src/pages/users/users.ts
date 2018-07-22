@@ -12,10 +12,8 @@ import { User } from '../../models/user-model';
  * Ionic pages and navigation.
  */
 
-@IonicPage()
-@Component({
-  selector: 'page-users',
-  templateUrl: 'users.html',
+@IonicPage() @Component({
+  selector: 'page-users', templateUrl: 'users.html',
 })
 export class UsersPage {
   usersList: Observable<User[]>;
@@ -29,8 +27,9 @@ export class UsersPage {
   }
 
   detail(uid: string) {
-this.navCtrl.push('UserPage', { uid });
+    this.navCtrl.push('UserPage', { uid });
   }
+
   create() {
     this.navCtrl.push('UserPage');
   }

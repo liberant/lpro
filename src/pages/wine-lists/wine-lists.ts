@@ -8,21 +8,19 @@ import { Product } from '../../models/product-model';
 import { User } from '../../models/user-model';
 
 
-@IonicPage()
-@Component({
-  selector: 'page-wine-lists',
-  templateUrl: 'wine-lists.html',
+@IonicPage() @Component({
+  selector: 'page-wine-lists', templateUrl: 'wine-lists.html',
 })
 export class WineListsPage {
   productsList: Observable<Product[]>;
   user: User;
+
   constructor(public navCtrl: NavController, public navParams: NavParams, private afs: FirestoreProvider, public viewCtrl: ViewController, public toastCtrl: ToastController, public auth: AuthProvider, public op: OrdersProvider) {
     this.user = this.auth.user$.getValue();
   }
 
   ionViewDidLoad() {
-      this.productsList = this.afs.colWithIds$<Product>(`business/${this.user.busId}/winelist`);
-      console.log(this.productsList);
+    this.productsList = this.afs.colWithIds$<Product>(`business/${this.user.busId}/winelist`);
   }
 
   detail(id: string) {
@@ -33,12 +31,11 @@ export class WineListsPage {
     this.viewCtrl.dismiss();
   }
 
-  async placeOrder(product: Product): Promise<any> {
-    await this.op.placeOrder(product);
+  placeOrder(product: Product) {
+    this.op.placeOrder(product);
     this.presentToast(`${product.qty} bottles of ${product.name} ordered`);
   }
-
-
+  // Probably redundant
   addList(product) {
     this.afs.upsert(`business/${this.user.busId}/winelist/${product.id}`, product).then(res => {
       console.log(res);
@@ -53,9 +50,7 @@ export class WineListsPage {
 
   presentToast(message) {
     const toast = this.toastCtrl.create({
-      message,
-      duration: 3000,
-      position: 'top'
+      message, duration: 3000, position: 'top'
     });
 
     toast.onDidDismiss(() => {

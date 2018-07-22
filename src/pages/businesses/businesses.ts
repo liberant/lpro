@@ -11,10 +11,8 @@ import { Business } from '../../models/business-model';
  * Ionic pages and navigation.
  */
 
-@IonicPage()
-@Component({
-  selector: 'page-businesses',
-  templateUrl: 'businesses.html',
+@IonicPage() @Component({
+  selector: 'page-businesses', templateUrl: 'businesses.html',
 })
 export class BusinessesPage {
   businessesList: Observable<Business[]>;
@@ -28,8 +26,9 @@ export class BusinessesPage {
   }
 
   detail(id: string) {
-this.navCtrl.push('BusinessPage', { id });
+    this.navCtrl.push('BusinessPage', { id });
   }
+
   create() {
     this.navCtrl.push('BusinessPage');
   }

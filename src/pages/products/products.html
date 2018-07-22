@@ -15,7 +15,9 @@
 
 <ion-content padding>
   <div *ngIf="user">
-    <button *ngIf="user.busType  == 'Producer'" ion-button item-end icon-only (click)="create()"><ion-icon small name="add-circle"></ion-icon></button>
+    <button *ngIf="user.busType  == 'Producer'" ion-button item-end icon-only (click)="create(bu)">
+      <ion-icon small name="add-circle"></ion-icon>
+    </button>
     <button *ngIf="user.busType == 'Retailer'" ion-button block (click)="openList('short')">Open Shortlist</button>
     <button *ngIf="user.busType == 'Retailer'" ion-button block (click)="openList('wine')">Open Winelist</button>
   </div>
@@ -27,8 +29,14 @@
       <ion-item-divider>{{products[0]}}</ion-item-divider>
       <ion-item *ngFor="let product of products[1] ">
         <h3 (click)="detail(product.id)">{{ product.name}}</h3>
-        <button ion-button left (click)="addToList('shortlist', product)" color="light"><ion-icon name="clipboard"></ion-icon>Shortlist </button>
-        <button ion-button right (click)="addToList('winelist', product)" color="danger"><ion-icon name="trash"></ion-icon>Winelist</button>
+        <button ion-button left (click)="addToList('shortlist', product)" color="light">
+          <ion-icon name="clipboard"></ion-icon>
+          Shortlist
+        </button>
+        <button ion-button right (click)="addToList('winelist', product)" color="danger">
+          <ion-icon name="trash"></ion-icon>
+          Winelist
+        </button>
 
       </ion-item>
     </ion-item-group>

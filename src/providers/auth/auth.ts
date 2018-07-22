@@ -7,20 +7,19 @@ import { Storage } from '@ionic/storage';
 import { User } from '../../models/user-model';
 import { Business } from '../../models/business-model';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { first, map, take, tap } from 'rxjs/operators';
-
+import { first } from 'rxjs/operators';
 
 
 @Injectable()
 export class AuthProvider {
-  private auth: Observable<firebase.User>;
   user$: BehaviorSubject<User> = new BehaviorSubject<User>(null);
   business$: BehaviorSubject<Business> = new BehaviorSubject<Business>(null);
+  private auth: Observable<firebase.User>;
 
   constructor(public afAuth: AngularFireAuth, public afs: AngularFirestore, private storage: Storage) {
-   this.auth = this.afAuth.authState;
-   console.log('authstate: ', this.auth);
-   this.auth.subscribe((user) => {
+    this.auth = this.afAuth.authState;
+    console.log('authstate: ', this.auth);
+    this.auth.subscribe((user) => {
       if (user) {
         this.afs.doc<User>(`user/${user.uid}`).valueChanges().pipe(first()).subscribe(data => {
           this.user$.next(data);
@@ -31,20 +30,22 @@ export class AuthProvider {
   }
 
   async getUserVal(val): Promise<string> {
-    return this.user$.getValue()[val];
+    return this.user$.getValue()[ val ];
   }
 
   async loginUser(email: string, password: string): Promise<firebase.User> {
-   const auth = await this.afAuth.auth.signInWithEmailAndPassword(email, password);
-   if (auth.user) {
-     console.log(auth.user);
-     this.afs.doc<User>(`user/${auth.user.uid}`).valueChanges().pipe(first()).subscribe(async data => {
-       await this.storage.set('user', data).then(res => { console.log('storage: ', res); });
-       await this.user$.next(data);
-       this.loadBusiness(data.busId);
-     }).unsubscribe();
+    const auth = await this.afAuth.auth.signInWithEmailAndPassword(email, password);
+    if (auth.user) {
+      console.log(auth.user);
+      this.afs.doc<User>(`user/${auth.user.uid}`).valueChanges().pipe(first()).subscribe(async data => {
+        await this.storage.set('user', data).then(res => {
+          console.log('storage: ', res);
+        });
+        await this.user$.next(data);
+        this.loadBusiness(data.busId);
+      }).unsubscribe();
     }
-   return auth.user;
+    return auth.user;
   }
 
   loadBusiness(busId) {

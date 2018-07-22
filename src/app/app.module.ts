@@ -2,10 +2,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, Injectable, Injector, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { Pro } from '@ionic/pro';
-
-Pro.init('080aac60', {
-  appVersion: '0.0.2',
-});
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 import { IonicStorageModule } from '@ionic/storage';
@@ -25,6 +21,10 @@ import { FirestoreProvider } from '../providers/firestore/firestore';
 import { OrdersProvider } from '../providers/orders/orders';
 
 import { NgPipesModule } from 'ngx-pipes';
+
+Pro.init('080aac60', {
+  appVersion: '0.0.2',
+});
 
 @Injectable()
 export class LPErrorHandler implements ErrorHandler {
@@ -48,37 +48,18 @@ export class LPErrorHandler implements ErrorHandler {
 }
 
 @NgModule({
-  declarations: [
-    LpApp,
-    HomePage,
-  ],
-  imports: [
-    BrowserModule,
-    IonicModule.forRoot(LpApp),
-    IonicStorageModule.forRoot(),
-    AngularFireModule.initializeApp(firebaseConfig),
-    AngularFireAuthModule,
-    AngularFirestoreModule,
-    AngularFireStorageModule,
-    NgPipesModule,
+  declarations: [ LpApp, HomePage, ],
+  imports: [ BrowserModule, IonicModule.forRoot(LpApp), IonicStorageModule.forRoot(), AngularFireModule.initializeApp(firebaseConfig), AngularFireAuthModule, AngularFirestoreModule, AngularFireStorageModule, NgPipesModule,
 
   ],
-  bootstrap: [IonicApp],
-  entryComponents: [
-    LpApp,
-    HomePage
-  ],
-  providers: [
-    StatusBar,
-    SplashScreen,
-    { provide: ErrorHandler, useClass: IonicErrorHandler },
-    AuthProvider,
-    SettingsProvider,
-    UsersProvider,
-    FirestoreProvider,
-    // IonicErrorHandler,
-    OrdersProvider,
-  ]
+  bootstrap: [ IonicApp ],
+  entryComponents: [ LpApp, HomePage ],
+  providers: [ StatusBar, SplashScreen, {
+    provide: ErrorHandler,
+    useClass: IonicErrorHandler
+  }, AuthProvider, SettingsProvider, UsersProvider, FirestoreProvider, // IonicErrorHandler,
+    OrdersProvider, ]
 })
 
-export class AppModule {}
+export class AppModule {
+}

@@ -14,10 +14,8 @@ import { User } from '../../models/user-model';
  * Ionic pages and navigation.
  */
 
-@IonicPage()
-@Component({
-  selector: 'page-products',
-  templateUrl: 'products.html',
+@IonicPage() @Component({
+  selector: 'page-products', templateUrl: 'products.html',
 })
 export class ProductsPage {
   user: User;
@@ -37,7 +35,7 @@ export class ProductsPage {
   async getProducts() {
     const tid = this.user.busType === 'Retailer' ? 'rid' : 'pid';
     this.productsList = this.user.busType !== 'Producer' ? this.afs.col$<Product>(`product`) : this.afs.col$<Product>(`product`, ref => {
-      ref.where (tid, '==', this.user.busId);
+      ref.where(tid, '==', this.user.busId);
     });
   }
 
@@ -57,8 +55,14 @@ export class ProductsPage {
   async addToList(toList: string, product: Product) {
     console.log(toList, product, this.user);
     const msg = this.afs.upsert(`business/${this.user.busId}/${toList}/${product.id}`, product).then(async res => {
-      await this.afs.upsert(`business/${product.pid}/interested/${this.user.busId}`, { id: this.user.busId, name: this.user.busName });
-      await this.afs.upsert(`business/${product.pid}/interested/${this.user.busId}/${toList}/${product.id}`, { name: product.name, user: `${this.user.firstName} ${this.user.lastName}` });
+      await this.afs.upsert(`business/${product.pid}/interested/${this.user.busId}`, {
+        id: this.user.busId,
+        name: this.user.busName
+      });
+      await this.afs.upsert(`business/${product.pid}/interested/${this.user.busId}/${toList}/${product.id}`, {
+        name: product.name,
+        user: `${this.user.firstName} ${this.user.lastName}`
+      });
     });
     this.presentToast(`${product.name} added successfully to ${toList}`);
     console.log(msg);
@@ -67,9 +71,7 @@ export class ProductsPage {
 
   presentToast(message) {
     const toast = this.toastCtrl.create({
-      message,
-      duration: 3000,
-      position: 'top'
+      message, duration: 3000, position: 'top'
     });
 
     toast.onDidDismiss(() => {
