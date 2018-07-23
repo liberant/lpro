@@ -8,9 +8,9 @@ import { OrdersProvider } from '../../providers/orders/orders';
 import { Product } from '../../models/product-model';
 import { User } from '../../models/user-model';
 import { Business } from '../../models/business-model';
-import { Order} from '../../models/order-model';
+import { Order } from '../../models/order-model';
 
-import { GroupByPipe, PairsPipe} from 'ngx-pipes';
+import { GroupByPipe, PairsPipe } from 'ngx-pipes';
 
 
 @IonicPage() @Component({
@@ -61,9 +61,9 @@ export class WineListPage {
         });
     }).unsubscribe();
     const producers = this.groupBy.transform(orderItems, 'producer');
-  for (const i in producers) {
+    for (const i in producers) {
     console.log(producers[i]);
-        this.op.placeOrder(this.business, producers[i]);
+    this.op.placeOrder(this.business, producers[i]);
     }
   }
 

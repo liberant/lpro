@@ -18,7 +18,7 @@ export class OrdersPage {
   ordersList: Observable<Order[]>;
   business: string;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public afs: FirestoreProvider, public modalCtrl: ModalController, public toastCtrl: ToastController, private auth: AuthProvider, private storage: Storage, private orderby: OrderByPipe, private groupby: GroupByPipe ) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public afs: FirestoreProvider, public modalCtrl: ModalController, public toastCtrl: ToastController, private auth: AuthProvider, private storage: Storage, private orderby: OrderByPipe, private groupby: GroupByPipe) {
     this.user = this.auth.user$.getValue();
   }
 

@@ -57,8 +57,8 @@ export class LPErrorHandler implements ErrorHandler {
   providers: [ StatusBar, SplashScreen, {
     provide: ErrorHandler,
     useClass: IonicErrorHandler
-  }, AuthProvider, SettingsProvider, UsersProvider, FirestoreProvider, // IonicErrorHandler,
-    OrdersProvider, ]
+  },           AuthProvider, SettingsProvider, UsersProvider, FirestoreProvider, // IonicErrorHandler,
+               OrdersProvider, ]
 })
 
 export class AppModule {

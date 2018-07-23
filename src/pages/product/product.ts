@@ -28,7 +28,7 @@ export class ProductPage {
   regionList: Observable<Item[]>;
   varietyList: Observable<Item[]>;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController, public fb: FormBuilder, public afs: FirestoreProvider, public auth: AuthProvider, ) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController, public fb: FormBuilder, public afs: FirestoreProvider, public auth: AuthProvider,) {
     this.user = this.auth.user$.getValue();
     this.id = this.navParams.get('pid');
 

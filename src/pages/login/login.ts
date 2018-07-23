@@ -11,7 +11,7 @@ export class LoginPage {
 
   loginForm: FormGroup;
 
-  constructor(public navCtrl: NavController, public loadingCtrl: LoadingController, public alertCtrl: AlertController, public authProvider: AuthProvider, private formBuilder: FormBuilder,) {
+  constructor(public navCtrl: NavController, public loadingCtrl: LoadingController, public alertCtrl: AlertController, public authProvider: AuthProvider, private formBuilder: FormBuilder, ) {
     this.loginForm = formBuilder.group({
       email: [ '', Validators.compose([ Validators.required, EmailValidator.isValid ]) ],
       password: [ '', Validators.compose([ Validators.required, Validators.minLength(6) ]) ]

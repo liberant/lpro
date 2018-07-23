@@ -61,7 +61,7 @@ export class SettingsPage {
         text: 'Cancel', handler: data => {
           console.log('Cancel clicked');
         },
-      }, {
+      },               {
         text: 'Save', handler: data => {
           console.log(data);
           this.fs.update(type + '/' + item.id, data);
@@ -84,7 +84,7 @@ export class SettingsPage {
         text: 'No', role: 'cancel', handler: () => {
           console.log('Cancel clicked');
         }
-      }, {
+      },                                                                                                {
         text: 'Yes', handler: () => {
           this.fs.delete(type + '/' + id);
         }

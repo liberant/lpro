@@ -200,6 +200,6 @@ export class FirestoreProvider {
   }
 
   // Convert number inputs to numbers by default
-  public convertToNumber(event): number { return +event;
+  convertToNumber(event): number { return +event;
   }
 }
