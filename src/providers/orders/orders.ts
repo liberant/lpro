@@ -4,6 +4,7 @@ import { AuthProvider } from '../auth/auth';
 import { Product } from '../../models/product-model';
 import { BehaviorSubject } from 'rxjs';
 import { ToastController } from 'ionic-angular';
+import { Business } from '../../models/business-model';
 
 
 @Injectable()
@@ -32,18 +33,31 @@ export class OrdersProvider {
   }
 
 
-  async placeOrder(order) {
-    console.log(order);
+  async placeOrder(from: Business, order) {
+    console.log('from: ', from, 'order: ', order);
     const oid = this.afs.getId();
     const today = new Date();
+    let total = 0;
+    const products = [];
+    order.forEach(prod => {
+      const subtotal = prod.unitCost * prod.cartonSize * prod.qty;
+      products.push({
+        name: prod.name, id: prod.id, qty: prod.qty, subtotal
+      });
+      total = +subtotal;
+      this.afs.update(`business/${from.id}/winelist/${prod.id}`, {
+        qty: null,
+        onOrder: (prod.onOrder) ? parseFloat(prod.qty) + parseFloat(prod.onOrder) : parseFloat(prod.qty)
+      });
+    });
     const newOrder = {
       id: oid,
-      rid: order.rid,
-      retailer: order.retailer,
-      pid: order.pid,
-      producer: order.producer,
-      products: order.products,
-      total: parseFloat(order.total),
+      rid: from.id,
+      retailer: from.name,
+      pid: order[0].pid,
+      producer: order[0].name,
+      products,
+      total,
       orderDate: today,
       approved: false,
       shipped: false,
@@ -51,9 +65,6 @@ export class OrdersProvider {
       status: 'submitted'
     };
     this.afs.set('orders/' + oid, newOrder);
-    order.products.forEach(product => {
-      this.afs.update(`business/${order.rid}/winelist/${product.id}`, { qty: null, onOrder: parseFloat(product.qty + product.onOrder) });
-    });
     this.presentToast(`Order successfully placed`);
   }
 /*
@@ -86,7 +97,7 @@ export class OrdersProvider {
 
   }
 */
-  async progressOrder(id: string, field: string, val: boolean, rid?: string, products?: Product[]) {
+  async progressOrder(id: string, field: string, val: boolean, rid ?: string, products ?: Product[]) {
     const date = `${field}Date`;
     this.afs.change(`orders/${id}`, { [ field ]: !val, status: `${field}` }, date);
     if (field === 'received') {

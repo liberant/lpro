@@ -13,7 +13,7 @@ import firebase from 'firebase/app';
 export class LpApp {
   @ViewChild(Nav) nav: Nav;
 
-  rootPage: any;
+  rootPage: any = 'LoginPage';
   pages: { title: string, component: string }[];
 
   afs: FirestoreProvider;
@@ -32,20 +32,20 @@ export class LpApp {
       if (!user) {
         this.rootPage = 'LoginPage';
       } else {
-        this.auth.getUserVal('busType').then( type => {
+        this.auth.getUserVal('busType').then(type => {
           this.rootPage = `${type}Page`;
         });
       }
-    });
+    }, () => this.rootPage = 'LoginPage');
   }
   initializeApp() {
     this.platform.ready().then(() => {
-      this.storage.ready().then(() => {
-      this.storage.get('user').then((user) => {
-        console.log('storage: ', user);
-        this.auth.user$.next(user);
-        });
-      });
+     // this.storage.ready().then(() => {
+      // this.storage.get('user').then((user) => {
+       // console.log('storage: ', user);
+        // this.auth.user$.next(user);
+        // });
+      // });
       this.statusBar.styleDefault();
       this.splashScreen.hide();
     });

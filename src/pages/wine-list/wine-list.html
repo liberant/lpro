@@ -8,13 +8,14 @@
   <ion-navbar>
     <ion-title>Active Winelist
     </ion-title>
-    <ion-buttons end>
+    <!-- <ion-buttons end>
     <button ion-button icon-only small outline (click)="showuser()">
       <ion-icon name="person" ></ion-icon>
     </button>
-    </ion-buttons>
+    </ion-buttons> -->
   </ion-navbar>
   <ion-toolbar>
+    <ion-grid>
     <ion-row justify-content-center>
       <ion-col col-6>
         <ion-item>
@@ -39,31 +40,23 @@
         </ion-item>
       </ion-col>
     </ion-row>
+    <ion-row justify-content-around>
+      <ion-col col-2>
+
+      </ion-col>
+      <ion-col col-6>
+        Name</ion-col>
+      <ion-col col-2>
+        Qty
+      </ion-col>
+      <ion-col col-2>
+        Add
+      </ion-col>
+    </ion-row>
+    </ion-grid>
   </ion-toolbar>
 </ion-header>
 <ion-content padding>
-  <form [form
-  <ion-grid *ngIf="showUser">
-    <ion-row>
-      <ion-col *ngIf="auth.user$ | async as user" col-6>
-        <ion-list>
-          <ion-list-header>User</ion-list-header>
-          <ion-item>User ID: {{user.id}}</ion-item>
-          <ion-item>User Name: {{user.firstName}} {{user.lastName}}</ion-item>
-          <ion-item>Phone: {{user.phone}}</ion-item>
-        </ion-list>
-      </ion-col>
-      <ion-col *ngIf="auth.business$ | async as business" col-6>
-        <ion-list>
-          <ion-list-header>Business</ion-list-header>
-          <ion-item>Business ID: {{business.id}}</ion-item>
-          <ion-item>Business Name: {{business.name}}</ion-item>
-          <ion-item>Website: {{business.website}}</ion-item>
-        </ion-list>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
-
   <ion-grid *ngFor="let group of productsList | async | groupBy: groupvar | pairs; let i=index">
     <ion-row>
       <ion-col col-12>
@@ -76,13 +69,14 @@
           <ion-icon small name="menu"></ion-icon>
         </button>
       </ion-col>
-      <ion-col col-6 (click)="detail(product.id)">{{product.name}} <ion-note>{{product.onOrder}}</ion-note></ion-col>
+      <ion-col col-6> <button ion-item (click)="detail(product.id)">{{product.name}}</button></ion-col>
       <ion-col col-2>
+        <ion-item>
           <ion-input type="number" [(ngModel)]="product.qty" name="qty" [ngModelOptions]="{standalone: true}">
-          </ion-input>
+          </ion-input> </ion-item>
       </ion-col>
       <ion-col col-2>
-        <button ion-button icon-only small (click)="saveQty(product.id, product.qty)">
+        <button ion-button clear icon-only small (click)="saveQty(product.id, product.qty)">
           <ion-icon small name="add"></ion-icon>
         </button>
       </ion-col>

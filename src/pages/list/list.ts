@@ -40,7 +40,7 @@ export class ListPage {
   }
 
   async placeOrder(product: Product): Promise<void> {
-    await this.op.placeOrder(product);
+   // await this.op.placeOrder(product);
     this.presentToast(`${product.qty} bottles of ${product.name} ordered`);
   }
 

@@ -26,7 +26,7 @@ export class LoginPage {
     this.navCtrl.push('PasswordResetPage');
   }
 
-  async loginUser(): Promise<void> {
+  loginUser(): void {
     if (!this.loginForm.valid) {
       console.log('Form not ready');
     } else {
@@ -37,7 +37,7 @@ export class LoginPage {
       const email: string = this.loginForm.value.email;
       const password: string = this.loginForm.value.password;
       try {
-        await this.authProvider.loginUser(email, password);
+        this.authProvider.loginUser(email, password);
       } catch (error) {
         loading.dismiss();
         const alert: Alert = this.alertCtrl.create({

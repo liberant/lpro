@@ -32,7 +32,7 @@ export class WineListsPage {
   }
 
   placeOrder(product: Product) {
-    this.op.placeOrder(product);
+   // this.op.placeOrder(this.user, product);
     this.presentToast(`${product.qty} bottles of ${product.name} ordered`);
   }
   // Probably redundant

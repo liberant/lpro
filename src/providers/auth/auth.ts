@@ -28,20 +28,20 @@ export class AuthProvider {
       }
     });
   }
-  n
 
   async getUserVal(val): Promise<string> {
-    return this.user$.getValue()[ val ];
+    const value = this.user$.getValue()[val];
+    return (value) ? value : null;
   }
   async loginUser(email: string, password: string): Promise<firebase.User> {
     const auth = await this.afAuth.auth.signInWithEmailAndPassword(email, password);
     if (auth.user) {
       console.log(auth.user);
-      this.afs.doc<User>(`user/${auth.user.uid}`).valueChanges().pipe(first()).subscribe(async data => {
-        await this.storage.set('user', data).then(res => {
+      this.afs.doc<User>(`user/${auth.user.uid}`).valueChanges().pipe(first()).subscribe(data => {
+        this.storage.set('user', data).then(res => {
           console.log('storage: ', res);
         });
-        await this.user$.next(data);
+        this.user$.next(data);
         this.loadBusiness(data.busId);
       }).unsubscribe();
     }
