@@ -72,7 +72,7 @@
       <ion-col col-6> <button ion-item (click)="detail(product.id)">{{product.name}}</button></ion-col>
       <ion-col col-2>
         <ion-item>
-          <ion-input type="number" [(ngModel)]="product.qty" name="qty" [ngModelOptions]="{standalone: true}">
+          <ion-input type="number" [(ngModel)]="product.qty" name="qty" [ngModelOptions]="{standalone: true}" (ionChange)="saveQty(product.id, product.qty)">
           </ion-input> </ion-item>
       </ion-col>
       <ion-col col-2>

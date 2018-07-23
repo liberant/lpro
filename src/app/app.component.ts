@@ -6,6 +6,7 @@ import { AuthProvider } from '../providers/auth/auth';
 import { FirestoreProvider } from '../providers/firestore/firestore';
 import { Storage } from '@ionic/storage';
 import firebase from 'firebase/app';
+import { _catch } from 'rxjs-compat/operator/catch';
 
 @Component({
   templateUrl: 'app.html'
@@ -19,7 +20,6 @@ export class LpApp {
   afs: FirestoreProvider;
 
   constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, public menu: MenuController, public auth: AuthProvider, afs: FirestoreProvider, public storage: Storage) {
-    this.afs = afs;
     this.initializeApp();
 
     this.pages = [
@@ -40,17 +40,23 @@ export class LpApp {
   }
   initializeApp() {
     this.platform.ready().then(() => {
-     // this.storage.ready().then(() => {
+      // this.storage.ready().then(() => {
       // this.storage.get('user').then((user) => {
-       // console.log('storage: ', user);
-        // this.auth.user$.next(user);
-        // });
+      // console.log('storage: ', user);
+      // this.auth.user$.next(user);
+      // });
       // });
       this.statusBar.styleDefault();
       this.splashScreen.hide();
+      try {
+        this.auth.getUserVal('busType').then(type => {
+          this.rootPage = `${type}Page`;
+        });
+      } catch (e) {
+        this.rootPage = 'LoginPage';
+      }
     });
   }
-
   openPage(page) {
     // close the menu when clicking a link from the menu
     this.menu.close();

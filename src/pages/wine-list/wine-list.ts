@@ -49,7 +49,7 @@ export class WineListPage {
   saveQty(id: string, qty) {
     qty = parseFloat(qty);
     this.afs.update<Product>(`business/${this.business.id}/winelist/${id}`, { qty });
-    this.op.presentToast(`${qty} bottles were added to yor cart`);
+    // this.op.presentToast(`${qty} bottles were added to yor cart`);
   }
   order() {
     const orderItems = [];
